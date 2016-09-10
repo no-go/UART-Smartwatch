@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/messagePref">
+        <EditTextPreference
+            android:defaultValue="'#'HH:mm:ss dd.MM.yyyy cccc"
+            android:key="dateFormat"
+            android:summary="@string/dateFormat_summary"
+            android:title="@string/dateFormat"/>
+        <EditTextPreference
+            android:defaultValue="200"
+            android:key="messageSize"
+            android:summary="@string/messageSize_summary"
+            android:title="@string/messageSize"/>
+        <EditTextPreference
+            android:defaultValue="100"
+            android:key="messageLimit"
+            android:summary="@string/messageLimit_summary"
+            android:title="@string/messageLimit"/>
+        <EditTextPreference
+            android:defaultValue="~"
+            android:key="timeRequest"
+            android:summary="@string/timeRequest_summary"
+            android:title="@string/timeRequest"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/bleLogic">
+        <EditTextPreference
+            android:defaultValue="DE:D2:4A:F4:F9:47"
+            android:key="ble_addr"
+            android:summary="@string/ble_addr_summary"
+            android:title="@string/ble_addr"/>
+        <EditTextPreference
+            android:defaultValue="8"
+            android:key="packet_limit"
+            android:summary="@string/packetLimit_summary"
+            android:title="@string/packetLimit" />
+        <EditTextPreference
+            android:defaultValue="200"
+            android:key="packet_pause"
+            android:summary="@string/packetPause_summary"
+            android:title="@string/packetPause" />
+    </PreferenceCategory>
+</PreferenceScreen>

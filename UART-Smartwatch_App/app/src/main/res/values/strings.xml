@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UART Smartwatch</string>
+    <string name="send">Send</string>
+    <string name="preferences">Preferences</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="connect">Connect</string>
+    <string name="notConnected">Not Connected</string>
+    <string name="ble_addr">MAC Address</string>
+    <string name="ble_addr_summary">the device address of your Smartwatch bluetooth device</string>
+    <string name="timeRequest">Time Request</string>
+    <string name="timeRequest_summary">Your Smartwatch sends this char to ask for time</string>
+    <string name="Quit">Quit</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="reallyQuit">Do you really want to quit the application?</string>
+    <string name="messageSize">Buffer Size</string>
+    <string name="messageSize_summary">The size of the buffer, to collect messages (700 = MEMOSTR_LIMIT - MESSAGEPOS)</string>
+    <string name="dateFormat">Date and Time Format</string>
+    <string name="dateFormat_summary">Look to java Doc how to set SimpleDateFormat! (Firmware expects e.g.: #07:05:58)</string>
+    <string name="messageLimit">Message Limit</string>
+    <string name="messageLimit_summary">Is message bigger, then use only the message title</string>
+    <string name="messagePref">Message Specific</string>
+    <string name="bleLogic">Bluetooth Transfer</string>
+    <string name="packetLimit">Size of bluetooth packet</string>
+    <string name="packetLimit_summary">BLE supports max 20 Bytes each packet</string>
+    <string name="packetPause">Pause in ms between packets</string>
+    <string name="packetPause_summary">A too short time between packets could cause trouble</string>
+</resources>

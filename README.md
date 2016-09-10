@@ -1,5 +1,7 @@
 # UART-Smartwatch
 
+![logo](UART-Smartwatch_App/app/src/main/res/drawable/icon.png)
+
 Android App, Firmware and Circuit for a DIY Smartwatch working with Bluetooth Low Energy
 
 Features:
