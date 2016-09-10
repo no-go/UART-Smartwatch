@@ -14,9 +14,7 @@ Features:
 - more than 18 hours with LiPo 3.7V (170mA)
 - some emoticons works
 
-Die DIY Smartwatch kann so auch mal ohne Handy die aktuelle Uhrzeit anzeigen.
-Eine Messung ergab, dass nach 6 Stunden die Uhr um ca 1 Min vor geht. Das ist besser,
-als wenn die Uhr nach geht, und Bus/Zug oder so etwas verpasst.
+Die DIY Smartwatch kann so auch mal ohne Handy die aktuelle Uhrzeit anzeigen. Eine Messung ergab, dass nach 6 Stunden die Uhr um ca 1 Min vor geht. Das ist besser, als wenn die Uhr nach geht, und Bus/Zug oder so etwas verpasst.
 
 ## App
 
@@ -60,3 +58,7 @@ In `stuff/` is a small c program to make you own Smartwatch startup logo:
 - open: Arduino/libraries/Micro_OLED_Breakout/src/SFE_MicroOLED.cpp
 - paste it into / replace the hex-chars of `static uint8_t screenmemory [] = {...}`
 - rebuild the UART-Smartwatch Firmware with Arduino IDE
+
+# Sign Of Gratitude
+
+Thank you to [NORDIC SEMICONDUCTOR](http://www.nordicsemi.com/) for the OpenSource App like [nRF UART v2](https://github.com/NordicSemiconductor/Android-nRF-UART) to make it easy to use their products!!
