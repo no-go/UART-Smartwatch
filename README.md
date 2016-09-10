@@ -48,7 +48,7 @@ Devices:
 
 ### Startlogo
 
-In 'stuff/' is a small c program to make you own Smartwatch startup logo:
+In `stuff/` is a small c program to make you own Smartwatch startup logo:
 
 - make a 64x48 s/w Image
 - store it as xbm file (e.g. with Gimp) without x10 option
