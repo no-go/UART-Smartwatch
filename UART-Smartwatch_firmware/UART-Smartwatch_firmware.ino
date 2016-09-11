@@ -47,7 +47,7 @@ DEALINGS IN THE SOFTWARE.
 MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS);
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
-int  memoStrPos   = 0;
+int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
 
 byte hours = 0;

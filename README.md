@@ -6,27 +6,28 @@ Android App, Firmware and Circuit for a DIY Smartwatch working with Bluetooth Lo
 
 Features:
 
-- Taste 1500ms drücken: Uhrzeit (sync), Datum und Nachrichten vom Smartphone holen und durchscrollen
-- Taste 500ms drücken: Uhrzeit (wird intern weiter gezählt), Batterie und Analog Uhr
+- Press Button 1.5 s : sync the time between watch and phone. Show date and notifications as scrolling chars.
+- Press Button 0.5 s : show the time calculated by the watch. Show the battery level and an analog clock
 - small analog clock
 - digital clock
 - Battery Level
 - more than 18 hours with LiPo 3.7V (170mA)
 - some emoticons works
 
-Die DIY Smartwatch kann so auch mal ohne Handy die aktuelle Uhrzeit anzeigen. Eine Messung ergab, dass nach 6 Stunden die Uhr um ca 1 Min vor geht. Das ist besser, als wenn die Uhr nach geht, und Bus/Zug oder so etwas verpasst.
+The DIY smartwatch shows a calculated time without a connection to your phone. This time is a bit faster
+to pretent problems. It is about 1 second in 6 hours.
 
 ## App
 
-[UART-Smartwatch APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/master/UART-Smartwatch_App/app/app-release.apk) or get the App from [f-Droid](http://f-droid.org)
+[UART-Smartwatch APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/master/UART-Smartwatch_App/app/app-release.apk) or get the App from [f-Droid](http://f-droid.org) (pending...)
 
-### Standortzugriff
+### Location Access
 
-Aus irgendeinem Grund braucht Android 6 beim Scannen nach BLE Geräten (kurz) Zugriff auf den Standort.
+It is strange, but Bluetooth Low Energy with Android 6 needs Location access to search for BLE devices.
 
-### Benachrichtigungszugriff
+### Notification Access
 
-Der App muss Zugriff gewährt werden, um die Nachrichten anderer Apps lesen zu können:
+This App needs access to all notifications. You have to add these access in the preferences of your Smartphone:
 
 ![Benachrichtigungszugriff](stuff/zugriff.png)
 
