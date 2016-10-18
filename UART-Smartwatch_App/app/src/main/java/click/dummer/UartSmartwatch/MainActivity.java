@@ -118,7 +118,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBtAdapter == null) {
-            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.BTnotAv, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -147,7 +147,9 @@ public class MainActivity extends Activity {
                     if (btnConnectDisconnect.getText().equals(getString(R.string.connect))) {
 
                         mDevice = mBtAdapter.getRemoteDevice(devAddr);
-                        ((TextView) findViewById(R.id.rssival)).setText("'" + devAddr + "' - Connecting");
+                        ((TextView) findViewById(R.id.rssival)).setText(
+                                "'" + devAddr + "' - "+getString(R.string.Connecting)
+                        );
                         mService.connect(devAddr);
                     } else {
                         //Disconnect button pressed
@@ -237,7 +239,7 @@ public class MainActivity extends Activity {
             action = intent.getAction();
 
             if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
-                showMessage("Device doesn't support UART. Disconnecting");
+                showMessage(getString(R.string.noUART));
                 mService.disconnect();
             }
 
@@ -272,7 +274,7 @@ public class MainActivity extends Activity {
                         new Handler().postDelayed(new Runnable() {
                             public void run() {
                                 if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
-                                    ((TextView) findViewById(R.id.rssival)).setText("Try reconnect ...");
+                                    ((TextView) findViewById(R.id.rssival)).setText(R.string.tryRecon);
                                     btnConnectDisconnect.callOnClick();
                                 }
                             }

@@ -2,7 +2,7 @@
 
 ![logo](UART-Smartwatch_App/app/src/main/res/drawable/icon.png)
 
-Android App, Firmware and Circuit for a DIY Smartwatch working with Bluetooth Low Energy
+Android App, Firmware and Circuit for a DIY Smartwatch working with Bluetooth Low Energy (4.x)
 
 Features:
 
@@ -13,13 +13,18 @@ Features:
 - Battery Level
 - more than 18 hours with LiPo 3.7V (170mA)
 - some emoticons works
+- transmit more than 20 bytes
 
 The DIY smartwatch shows a calculated time without a connection to your phone. This time is a bit faster
 to pretent problems. It is about 1 second in 6 hours.
 
+Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr This](stuff/flattr.png)</a>
+
 ## App
 
-[UART-Smartwatch APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/master/UART-Smartwatch_App/app/app-release.apk) or get the App from [f-Droid](http://f-droid.org) (pending...)
+[UART-Smartwatch APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/master/UART-Smartwatch_App/app/app-release.apk) or get the App from [f-Droid](http://f-droid.org)
+
+![Screenshot App and Watch](stuff/screenshot.png)
 
 ### Location Access
 
