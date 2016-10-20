@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
     private static final int WATCH_REQUEST = 1;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final String FLATTR_LINK = "https://flattr.com/thing/5195407";
+    private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch";
 
     private NotificationReceiver nReceiver;
     private UartService mService = null;
@@ -112,6 +113,10 @@ public class MainActivity extends Activity {
             case R.id.action_flattr:
                 Intent intentFlattr = new Intent(Intent.ACTION_VIEW, Uri.parse(FLATTR_LINK));
                 startActivity(intentFlattr);
+                break;
+            case R.id.action_project:
+                Intent intentProj= new Intent(Intent.ACTION_VIEW, Uri.parse(PROJECT_LINK));
+                startActivity(intentProj);
                 break;
             default:
                 return false;

@@ -4,6 +4,9 @@
         android:id="@+id/action_options"
         android:title="@string/preferences"></item>
     <item
+        android:id="@+id/action_project"
+        android:title="@string/projPage"></item>
+    <item
         android:id="@+id/action_flattr"
         android:title="@string/flattr_this"></item>
 </menu>

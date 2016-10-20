@@ -46,5 +46,6 @@
     <string name="noUART">Device doesn\'t support UART. Disconnecting</string>
     <string name="BTnotAv">Bluetooth is not available</string>
     <string name="Connecting">connecting ...</string>
-    <string name="flattr_this">Micro-Donate</string>
+    <string name="flattr_this">Micro-Donate !</string>
+    <string name="projPage">UART-Smartwatch Page</string>
 </resources>
