@@ -42,6 +42,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -50,6 +51,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -63,6 +65,7 @@ public class MainActivity extends Activity {
 
     private static final int WATCH_REQUEST = 1;
     private static final int REQUEST_ENABLE_BT = 2;
+    private static final String FLATTR_LINK = "https://flattr.com/thing/5195407";
 
     private NotificationReceiver nReceiver;
     private UartService mService = null;
@@ -93,18 +96,25 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(R.string.preferences);
-        MenuItem item = menu.getItem(0);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        item.setIcon(android.R.drawable.ic_menu_preferences);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getTitle() == getString(R.string.preferences)) {
-            Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
-            startActivity(intent);
+        switch (item.getItemId()) {
+            case R.id.action_options:
+                Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_flattr:
+                Intent intentFlattr = new Intent(Intent.ACTION_VIEW, Uri.parse(FLATTR_LINK));
+                startActivity(intentFlattr);
+                break;
+            default:
+                return false;
         }
         return true;
     }
