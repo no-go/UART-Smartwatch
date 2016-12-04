@@ -34,6 +34,7 @@ captures/
 # Intellij
 *.iml
 .idea/workspace.xml
+UART-Smartwatch_App/.idea/*
 
 # Keystore files
 *.jks
