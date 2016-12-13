@@ -1,27 +1,3 @@
-/*
- * The MIT License (MIT)
-
-Copyright (c) 2016 Jochen Peters (JotPe, Krefeld)
-
-Permission is hereby granted, free of charge, to any person obtaining 
-a copy of this software and associated documentation files (the "Software"), 
-to deal in the Software without restriction, including without limitation 
-the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the 
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included 
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-DEALINGS IN THE SOFTWARE.
-*/
-
 #include <SPI.h>
 #include <SFE_MicroOLED.h>
 #include <avr/power.h>
@@ -77,9 +53,34 @@ void setupBle() {
   }
 }
 
+void readTemp() {
+  unsigned int wADC;
+  int t;
+  power_adc_enable();
+  // Set the internal reference and mux.
+  ADMUX = (_BV(REFS1) | _BV(REFS0) | _BV(MUX3));
+  ADCSRA |= _BV(ADEN);  // enable the ADC
+  delay(20);            // wait for voltages to become stable.
+  ADCSRA |= _BV(ADSC);  // Start the ADC
+  // Detect end-of-conversion
+  while (bit_is_set(ADCSRA,ADSC));
+  // Reading register "ADCW" takes care of how to read ADCL and ADCH.
+  wADC = ADCW;
+  power_adc_disable();
+  // The offset of 324.31 could be wrong. It is just an indication.
+  t = ( wADC - 324.31 ) / 1.22;
+  // The returned temperature is in degrees Celcius.
+  oled.setCursor(0, 41);
+  oled.print(t);
+  oled.setCursor(11, 37);
+  oled.print((char)248);
+}
+
 /**
  * because there is a power regulator, it is hard to
- * messure the battery power level.
+ * messure the battery power level. If you do not connect bat 
+ * to battery and connect batery direkt to 3.3V, you can
+ * mesure better, but Display could brake!!
  */
 byte readVcc() {
   int result;
@@ -92,7 +93,8 @@ byte readVcc() {
   result |= ADCH<<8; 
   result = 1126400L / result;
   power_adc_disable();
-  return (result-2700)/26; // scale: 3310 -> 24, 2710 -> 0
+  // return (result-2700)/18; // scale: 3310 -> 34, 2710 -> 0 (USB5v or 3.3v BAT Regulator)
+  return (result-2700)/45; // scale: 4205 -> 34, 2710 -> 0
 }
 
 void filler() {
@@ -114,7 +116,6 @@ void setup() {
   oled.begin();
   oled.clear(ALL); // Clear the display's internal memory logo
   oled.display();
-  delay(500);
   filler();
 }
 
@@ -221,9 +222,12 @@ void analogClock() {
 
 void batteryIcon() {
   byte vccVal = readVcc();
-  oled.pixel(61, 23);
-  oled.pixel(62, 23);
-  oled.rect(60, 24, 4, 24);
+  oled.pixel(61, 13);
+  oled.pixel(62, 13);
+  oled.pixel(59, 35); // 3.3V tick
+  oled.pixel(58, 26); // 3.7V tick
+  oled.pixel(59, 26); // 3.7V tick
+  oled.rect(60, 14, 4, 34);
   oled.rectFill(60, 48-vccVal, 4, vccVal);  
 }
 
@@ -242,6 +246,7 @@ void loop() {
       digitalClock();
       analogClock();
       batteryIcon();
+      readTemp();
       oled.display();
             
       delay(1000);
