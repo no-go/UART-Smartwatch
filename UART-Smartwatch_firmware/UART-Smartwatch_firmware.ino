@@ -8,7 +8,13 @@
 #define PIN_CS    10
 #define DC_JUMPER  0
 
-#define BUTTON     3
+#define BUTTON1     3
+#define BUTTON2     4
+
+#define SPKR        5
+#define LED_RED     6
+#define LED_YELLOW  A1
+#define LED_GREEN   A2
 
 #define MESSAGEPOS     30
 #define MEMOSTR_LIMIT 730
@@ -104,8 +110,22 @@ void filler() {
 }
 
 void setup() {
-  pinMode(BUTTON, INPUT);
-  digitalWrite(BUTTON, HIGH);
+  pinMode(BUTTON1, INPUT);
+  pinMode(BUTTON2, INPUT);
+
+  pinMode(SPKR, OUTPUT);
+  
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_YELLOW, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+
+//  analogWrite(SPKR, 120);
+//  analogWrite(LED_RED, 120);
+//  digitalWrite(LED_YELLOW, HIGH);
+//  digitalWrite(LED_GREEN, HIGH);
+
+  digitalWrite(BUTTON1, HIGH);
+  digitalWrite(BUTTON2, HIGH);
   Serial.begin(9600);
 
   power_timer1_disable();
@@ -234,10 +254,10 @@ void batteryIcon() {
 void loop() {
   delay(93); // is < 100 : makes the seconds a bit faster!
 
-  if (digitalRead(BUTTON) == LOW) {
+  if (digitalRead(BUTTON1) == LOW) {
     delay(500);  
     tick += 5;
-    if (digitalRead(BUTTON) == LOW) {
+    if (digitalRead(BUTTON1) == LOW) {
       
       // ok: You pressed the button more than 500ms
       
@@ -253,7 +273,7 @@ void loop() {
       tick += 10;
       oled.command(DISPLAYOFF);
       
-      if (digitalRead(BUTTON) == LOW) {
+      if (digitalRead(BUTTON1) == LOW) {
         
         // ok: You pressed the button more than 500ms + 1000ms
         
