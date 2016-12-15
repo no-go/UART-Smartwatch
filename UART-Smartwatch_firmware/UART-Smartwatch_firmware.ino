@@ -31,6 +31,7 @@ MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS);
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
+byte mode         = 1;
 
 byte hours = 0;
 byte minutes = 0;
@@ -127,7 +128,7 @@ void setup() {
   power_timer2_disable();
   power_adc_disable();
   power_twi_disable();
-
+  
   oled.begin();
   oled.clear(ALL); // Clear the display's internal memory logo
   oled.display();
@@ -182,16 +183,26 @@ void serialEvent() {
  */
 void ticking() {
   tick++;
-  analogWrite(LED_RED, 25*tick);
+  if (mode > 0) 
+    analogWrite(LED_RED, 25*tick);
+    else
+    digitalWrite(LED_RED, LOW);
+
   if (tick > 9) {
     seconds += tick/10;
-    digitalWrite(LED_YELLOW, seconds%2 ? LOW:HIGH);
-    digitalWrite(LED_GREEN, seconds%10 ? LOW:HIGH);
-
-    if (seconds == 60) {
-      analogWrite(SPKR, 140);
+    if (mode > 0) {
+      digitalWrite(LED_YELLOW, seconds%2 ? LOW:HIGH);
+      digitalWrite(LED_GREEN, seconds%10 ? LOW:HIGH);
     } else {
-      analogWrite(SPKR, 0);      
+      digitalWrite(LED_YELLOW, LOW);
+      digitalWrite(LED_GREEN, LOW);
+    }
+    if (mode == 2) {
+      if (seconds == 60) {
+        analogWrite(SPKR, 140);
+      } else {
+        digitalWrite(SPKR, LOW);      
+      }
     }
 
     tick = tick % 10;
@@ -256,11 +267,36 @@ void batteryIcon() {
   oled.rectFill(60, 48-vccVal, 4, vccVal);  
 }
 
+
+void menu() {
+  mode++;
+  if (mode > 2) mode = 0;
+  
+  oled.clear(PAGE);
+  oled.setCursor(0, 0);
+  oled.println("   MODE  ");
+  oled.print(  "==========");
+  oled.println("- silent ");
+  oled.println("- LEDs   ");
+  oled.println("-  + beep");
+  oled.setCursor(4, 8*mode + 16);
+  oled.print(">");
+  
+  oled.command(DISPLAYON);
+  oled.display();
+  Serial.print("Mode ");
+  Serial.println(mode);
+}
+
+
 void loop() {
   delay(93); // is < 100 : makes the seconds a bit faster!
 
   if (digitalRead(BUTTON2) == LOW) {
-    Serial.println("Button 2 pressed");
+    delay(250);  
+    if (digitalRead(BUTTON2) == LOW) {
+      menu();
+    }
   }
   
   if (digitalRead(BUTTON1) == LOW) {

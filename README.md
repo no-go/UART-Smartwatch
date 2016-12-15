@@ -14,7 +14,8 @@ I add the temperature mesurement for testing, too.
 - switch yellow LED on and off every second
 - blink green LED, if seconds is 0, 10, 20, ...
 - Beep every 60 Seconds
-- send a "Button 2 pressed" if button 2 is pressed
+- Button 2: Menu to select *silent*, *LED* or sound mode
+- Button 2 sends a "Mode X" to your smartphone
 
 ## Circuit
 
