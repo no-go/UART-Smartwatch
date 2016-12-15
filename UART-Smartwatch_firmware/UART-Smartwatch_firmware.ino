@@ -119,11 +119,6 @@ void setup() {
   pinMode(LED_YELLOW, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
 
-//  analogWrite(SPKR, 120);
-//  analogWrite(LED_RED, 120);
-//  digitalWrite(LED_YELLOW, HIGH);
-//  digitalWrite(LED_GREEN, HIGH);
-
   digitalWrite(BUTTON1, HIGH);
   digitalWrite(BUTTON2, HIGH);
   Serial.begin(9600);
@@ -187,8 +182,18 @@ void serialEvent() {
  */
 void ticking() {
   tick++;
+  analogWrite(LED_RED, 25*tick);
   if (tick > 9) {
     seconds += tick/10;
+    digitalWrite(LED_YELLOW, seconds%2 ? LOW:HIGH);
+    digitalWrite(LED_GREEN, seconds%10 ? LOW:HIGH);
+
+    if (seconds == 60) {
+      analogWrite(SPKR, 140);
+    } else {
+      analogWrite(SPKR, 0);      
+    }
+
     tick = tick % 10;
     if (seconds > 59) {
       minutes += seconds / 60;
@@ -254,6 +259,10 @@ void batteryIcon() {
 void loop() {
   delay(93); // is < 100 : makes the seconds a bit faster!
 
+  if (digitalRead(BUTTON2) == LOW) {
+    Serial.println("Button 2 pressed");
+  }
+  
   if (digitalRead(BUTTON1) == LOW) {
     delay(500);  
     tick += 5;
