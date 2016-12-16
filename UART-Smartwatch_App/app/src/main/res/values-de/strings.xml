@@ -31,8 +31,13 @@
     <string name="send">Senden</string>
     <string name="preferences">Einstellungen</string>
     <string name="reallyQuit">Willst du die Anwendung und Verbindung beenden?</string>
+
     <string name="packetPause_summary">Eine zu kurze Zeit zwischen Paketen kann problematisch sein.</string>
     <string name="packetPause">Zeit in ms zwischen Paketen</string>
+
+    <string name="notifyHint">Benachrichtigungs-Vermerk</string>
+    <string name="notifyHint_summary">Wenn die App eine neue Benachrichtigung erkennt, wird dieses Zeichen gefolgt von einem Byte (= Anzahl) gesendet. Nutze z.B. % oder lasse es leer.</string>
+
     <string name="packetLimit">Größe der Bluetooth Pakete</string>
     <string name="packetLimit_summary">BLE kann max. 20 Bytes an einem Stück senden</string>
     <string name="notConnected">nicht verbunden</string>

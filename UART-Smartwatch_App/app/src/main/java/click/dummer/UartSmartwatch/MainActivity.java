@@ -78,6 +78,8 @@ public class MainActivity extends Activity {
     private SharedPreferences mPreferences;
     private String devAddr = PreferencesActivity.DEFAULT_ADDR;
 
+    private byte COUNT = 0;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -308,6 +310,7 @@ public class MainActivity extends Activity {
                             tv.setText(text + tv.getText());
                             String timeRequest = mPreferences.getString("timeRequest", "~");
                             if (txValue[0] == timeRequest.charAt(0)) {
+                                COUNT = 0;
                                 mHandler.sendEmptyMessage(WATCH_REQUEST);
                             }
                         } catch (Exception e) {
@@ -418,6 +421,11 @@ public class MainActivity extends Activity {
                         temp = temp.substring(0, messageSize);
                     }
                     listMessage.setText(temp);
+                    COUNT++;
+                    String notifyHint = mPreferences.getString("notifyHint", "");
+                    if (notifyHint.length() > 0) {
+                        sendMsg(notifyHint + (char) COUNT);
+                    }
                 }
             }
         }

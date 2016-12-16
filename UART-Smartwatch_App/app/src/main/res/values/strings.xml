@@ -24,8 +24,13 @@
     <string name="bleLogic">Bluetooth</string>
     <string name="packetLimit">Size of bluetooth packet</string>
     <string name="packetLimit_summary">BLE supports max 20 Bytes each packet</string>
+
     <string name="packetPause">Pause in ms between packets</string>
     <string name="packetPause_summary">A too short time between packets could cause trouble</string>
+
+    <string name="notifyHint">Notify Hint</string>
+    <string name="notifyHint_summary">If the App detects a new notification, this char is sent followed by a byte (=count of new notifications). Use a char like a %, or keep it empty.</string>
+
     <string name="exit_title">Restart App Now</string>
     <string name="exit_message">Because you changed some preferences, it is better to restart the App.</string>
     <string name="check_device_address">Maybe: check the device address</string>

@@ -23,6 +23,11 @@
             android:key="timeRequest"
             android:summary="@string/timeRequest_summary"
             android:title="@string/timeRequest"/>
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="notifyHint"
+            android:summary="@string/notifyHint_summary"
+            android:title="@string/notifyHint" />
     </PreferenceCategory>
 
     <PreferenceCategory
