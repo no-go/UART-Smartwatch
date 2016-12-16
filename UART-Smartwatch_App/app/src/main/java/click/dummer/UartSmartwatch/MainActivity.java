@@ -304,7 +304,8 @@ public class MainActivity extends Activity {
                     public void run() {
                         try {
                             String text = new String(txValue, "UTF-8");
-                            ((TextView) findViewById(R.id.receiveText)).setText(text);
+                            TextView tv = (TextView) findViewById(R.id.receiveText);
+                            tv.setText(text + tv.getText());
                             String timeRequest = mPreferences.getString("timeRequest", "~");
                             if (txValue[0] == timeRequest.charAt(0)) {
                                 mHandler.sendEmptyMessage(WATCH_REQUEST);
