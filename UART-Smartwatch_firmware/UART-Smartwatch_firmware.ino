@@ -22,6 +22,7 @@
 #define CHAR_TIME_REQUEST '~'
 #define CHAR_TIME_RESPONSE '#'
 #define CHAR_INIT_SETUP '!'
+#define CHAR_NOTIFY_HINT '%'
 // ------------------------------------------------------
 
 
@@ -31,7 +32,8 @@ MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS);
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
-byte mode         = 1;
+byte mode         = 0;
+byte COUNT        = 0;
 
 byte hours = 0;
 byte minutes = 0;
@@ -191,10 +193,8 @@ void ticking() {
   if (tick > 9) {
     seconds += tick/10;
     if (mode > 0) {
-      digitalWrite(LED_YELLOW, seconds%2 ? LOW:HIGH);
-      digitalWrite(LED_GREEN, seconds%10 ? LOW:HIGH);
+      digitalWrite(LED_GREEN, seconds%2 ? LOW:HIGH);
     } else {
-      digitalWrite(LED_YELLOW, LOW);
       digitalWrite(LED_GREEN, LOW);
     }
     if (mode == 2) {
@@ -203,6 +203,8 @@ void ticking() {
       } else {
         digitalWrite(SPKR, LOW);      
       }
+    } else {
+      digitalWrite(SPKR, LOW);
     }
 
     tick = tick % 10;
@@ -329,6 +331,8 @@ void loop() {
         // print ignores everyting behind \0
         memoStr[MESSAGEPOS] = '\0';
         memoStrPos = MESSAGEPOS;
+        COUNT = 0;
+        digitalWrite(LED_YELLOW, LOW);
         Serial.println( CHAR_TIME_REQUEST );
       }
     }
@@ -360,12 +364,21 @@ void loop() {
       minutes = dummy.substring(2,4).toInt();
       seconds = dummy.substring(4,6).toInt();
       
+    } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
+
+      // there is a new message !! (speaker off after 1 sec)
+      
+      COUNT = memoStr[MESSAGEPOS+1];
+      page = memoStrPos; // makes a clear and display off
+      digitalWrite(LED_YELLOW, HIGH);
+      analogWrite(SPKR, 210);
+      
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
       // initialize the DIY Smartwatch + BLE module --------
       
       setup();
-      setupBle();
+      setupBle(); 
     }
   }
 
@@ -380,7 +393,13 @@ void loop() {
   }
 
   /// Safe power and switch display off, if message is at the end
-  if (page == memoStrPos) oled.command(DISPLAYOFF);
+  if (page == memoStrPos) {
+    oled.command(DISPLAYOFF);
+    // "remove" old chars from buffer
+    // print ignores everyting behind \0
+    memoStr[MESSAGEPOS] = '\0';
+    memoStrPos = MESSAGEPOS;
+  }
   
   page++;
   ticking();
