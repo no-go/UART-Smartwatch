@@ -303,7 +303,8 @@ public class MainActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            //String text = new String(txValue, "UTF-8");
+                            String text = new String(txValue, "UTF-8");
+                            ((TextView) findViewById(R.id.receiveText)).setText(text);
                             String timeRequest = mPreferences.getString("timeRequest", "~");
                             if (txValue[0] == timeRequest.charAt(0)) {
                                 mHandler.sendEmptyMessage(WATCH_REQUEST);
