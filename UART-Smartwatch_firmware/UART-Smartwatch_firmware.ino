@@ -370,8 +370,8 @@ void loop() {
 
       // there is a new message !! (speaker off after 1 sec)
       
-      COUNT = memoStr[MESSAGEPOS+1];
-      if (COUNT >0) {
+      COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
+      if (COUNT > 0) {
         page = memoStrPos; // makes a clear and display off
         digitalWrite(LED_RED, HIGH);
         power_adc_enable();
@@ -380,8 +380,9 @@ void loop() {
         digitalWrite(SPKR, LOW);
         power_adc_disable();
       } else {
+        memoStr[MESSAGEPOS] = '\0';
         digitalWrite(LED_RED, LOW);        
-      }      
+      }     
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
       // initialize the DIY Smartwatch + BLE module --------
