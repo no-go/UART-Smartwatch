@@ -10,13 +10,11 @@ is a small tick on it for 3.3V and a bigger tick for 3.7V
 
 I add the temperature mesurement for testing, too.
 
-- Fade red LED every second
-- switch green LED on and off every second
-- beep mode: Beep every 60 Seconds
-- Button 2: Menu to select *silent*, *LED* or beep mode
-- Button 2 sends a "Mode X" to your smartphone
+- Button 2: time, temperatur, power
+- Button 1: sends the request
 - send a %byte from App to get the COUNT of new messages as byte (App > v0.7)
-- is the COUNT > 0, speaker beeps 1 time and yellow LED switch on
+- is the COUNT > 0, speaker beeps 1 time and red LED switch on
+- COUNT = 0 switchs LED off
 
 ## Circuit
 

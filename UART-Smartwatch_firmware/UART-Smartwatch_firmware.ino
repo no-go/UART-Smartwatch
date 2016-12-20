@@ -185,13 +185,17 @@ void serialEvent() {
  */
 void ticking() {
   tick++;
-  if (mode > 0) 
+  /*
+  if (mode > 0) {
     analogWrite(LED_RED, 25*tick);
-    else
+  } else {
     digitalWrite(LED_RED, LOW);
+  }
+  */
 
   if (tick > 9) {
     seconds += tick/10;
+    /*
     if (mode > 0) {
       digitalWrite(LED_GREEN, seconds%2 ? LOW:HIGH);
     } else {
@@ -206,6 +210,7 @@ void ticking() {
     } else {
       digitalWrite(SPKR, LOW);
     }
+    */
 
     tick = tick % 10;
     if (seconds > 59) {
@@ -295,18 +300,11 @@ void loop() {
   delay(93); // is < 100 : makes the seconds a bit faster!
 
   if (digitalRead(BUTTON2) == LOW) {
-    delay(250);  
+    delay(300);
+    tick += 3;
     if (digitalRead(BUTTON2) == LOW) {
-      menu();
-    }
-  }
-  
-  if (digitalRead(BUTTON1) == LOW) {
-    delay(500);  
-    tick += 5;
-    if (digitalRead(BUTTON1) == LOW) {
       
-      // ok: You pressed the button more than 500ms
+      //menu();
       
       oled.command(DISPLAYON);
       oled.clear(PAGE);
@@ -319,22 +317,26 @@ void loop() {
       delay(1000);
       tick += 10;
       oled.command(DISPLAYOFF);
+    }
+  }
+
+  if (digitalRead(BUTTON1) == LOW) {
+    delay(300);  
+    tick += 3;
+    if (digitalRead(BUTTON1) == LOW) {
       
-      if (digitalRead(BUTTON1) == LOW) {
+      // ok: You pressed the button more than 300ms
         
-        // ok: You pressed the button more than 500ms + 1000ms
-        
-        oled.command(DISPLAYON);
-        wakeUpIcon();
-        oled.command(DISPLAYOFF);
-        // "remove" old chars from buffer
-        // print ignores everyting behind \0
-        memoStr[MESSAGEPOS] = '\0';
-        memoStrPos = MESSAGEPOS;
-        COUNT = 0;
-        digitalWrite(LED_YELLOW, LOW);
-        Serial.println( CHAR_TIME_REQUEST );
-      }
+      oled.command(DISPLAYON);
+      wakeUpIcon();
+      oled.command(DISPLAYOFF);
+      // "remove" old chars from buffer
+      // print ignores everyting behind \0
+      memoStr[MESSAGEPOS] = '\0';
+      memoStrPos = MESSAGEPOS;
+      COUNT = 0;
+      digitalWrite(LED_RED, LOW);
+      Serial.println( CHAR_TIME_REQUEST );
     }
   }
 
@@ -369,10 +371,17 @@ void loop() {
       // there is a new message !! (speaker off after 1 sec)
       
       COUNT = memoStr[MESSAGEPOS+1];
-      page = memoStrPos; // makes a clear and display off
-      digitalWrite(LED_YELLOW, HIGH);
-      analogWrite(SPKR, 210);
-      
+      if (COUNT >0) {
+        page = memoStrPos; // makes a clear and display off
+        digitalWrite(LED_RED, HIGH);
+        power_adc_enable();
+        analogWrite(SPKR, 210);
+        delay(500);
+        digitalWrite(SPKR, LOW);
+        power_adc_disable();
+      } else {
+        digitalWrite(LED_RED, LOW);        
+      }      
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
       // initialize the DIY Smartwatch + BLE module --------
