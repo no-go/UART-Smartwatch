@@ -412,19 +412,30 @@ public class MainActivity extends Activity {
             }
 
             if (intent.getStringExtra("MSG") != null) {
-
-                String temp = intent.getStringExtra("MSG").trim();
-                int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "120"));
-                if (btnSend.isEnabled()) {
-                    temp = temp + myNewLine(temp) + listMessage.getText().toString().trim();
-                    if (temp.length() > messageSize) {
-                        temp = temp.substring(0, messageSize);
+                if (intent.getBooleanExtra("posted", true)) {
+                    String temp = intent.getStringExtra("MSG").trim();
+                    int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "120"));
+                    if (btnSend.isEnabled()) {
+                        temp = temp + myNewLine(temp) + listMessage.getText().toString().trim();
+                        if (temp.length() > messageSize) {
+                            temp = temp.substring(0, messageSize);
+                        }
+                        listMessage.setText(temp);
+                        COUNT++;
+                        String notifyHint = mPreferences.getString("notifyHint", "");
+                        if (notifyHint.length() > 0) {
+                            sendMsg(notifyHint + (char) COUNT);
+                            Log.i(TAG, "Count: " + COUNT);
+                        }
                     }
-                    listMessage.setText(temp);
-                    COUNT++;
-                    String notifyHint = mPreferences.getString("notifyHint", "");
-                    if (notifyHint.length() > 0) {
-                        sendMsg(notifyHint + (char) COUNT);
+                } else {
+                    if (COUNT > 0) COUNT--;
+                    if (btnSend.isEnabled()) {
+                        String notifyHint = mPreferences.getString("notifyHint", "");
+                        if (notifyHint.length() > 0) {
+                            sendMsg(notifyHint + (char) COUNT);
+                            Log.i(TAG, "Count: " + COUNT);
+                        }
                     }
                 }
             }

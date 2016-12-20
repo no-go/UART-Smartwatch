@@ -50,6 +50,8 @@ public class NotificationService extends NotificationListenerService {
             lastPost = title;
         }
 
+        if (msg == null) return;
+
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int messageLimit = Integer.parseInt(mPreferences.getString("messageLimit", "100"));
 
@@ -58,10 +60,15 @@ public class NotificationService extends NotificationListenerService {
             msg = title;
         }
         i.putExtra("MSG", msg);
+        i.putExtra("posted", true);
         sendBroadcast(i);
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
+        Intent i = new  Intent("click.dummer.UartNotify.NOTIFICATION_LISTENER");
+        i.putExtra("MSG", "notify removed");
+        i.putExtra("posted", false);
+        sendBroadcast(i);
     }
 }
