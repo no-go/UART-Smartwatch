@@ -368,7 +368,7 @@ void loop() {
       
     } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
 
-      // there is a new message !! (speaker off after 1 sec)
+      // there is a new message !!
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       if (COUNT > 0) {
@@ -381,8 +381,8 @@ void loop() {
         power_adc_disable();
       } else {
         memoStr[MESSAGEPOS] = '\0';
-        digitalWrite(LED_RED, LOW);        
-      }     
+        digitalWrite(LED_RED, LOW);
+      }
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
       // initialize the DIY Smartwatch + BLE module --------
