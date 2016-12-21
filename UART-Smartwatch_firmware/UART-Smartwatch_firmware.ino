@@ -32,7 +32,8 @@ DEALINGS IN THE SOFTWARE.
 #define PIN_CS    10
 #define DC_JUMPER  0
 
-#define BUTTON     3
+#define BUTTON1     3
+// #define LED_RED     6
 
 #define MESSAGEPOS     30
 #define MEMOSTR_LIMIT 730
@@ -40,6 +41,7 @@ DEALINGS IN THE SOFTWARE.
 #define CHAR_TIME_REQUEST '~'
 #define CHAR_TIME_RESPONSE '#'
 #define CHAR_INIT_SETUP '!'
+#define CHAR_NOTIFY_HINT '%'
 // ------------------------------------------------------
 
 
@@ -49,6 +51,7 @@ MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS);
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
+byte COUNT        = 0;
 
 byte hours = 0;
 byte minutes = 0;
@@ -92,6 +95,12 @@ byte readVcc() {
   result |= ADCH<<8; 
   result = 1126400L / result;
   power_adc_disable();
+  
+  // evil hack, if you do not use the BAT power supply and
+  // you didn not cahnge the return line to scale 4.2 Volts or
+  // something like that ;-D
+  if(result>3310) result=3310;
+  
   return (result-2700)/26; // scale: 3310 -> 24, 2710 -> 0
 }
 
@@ -102,9 +111,11 @@ void filler() {
 }
 
 void setup() {
-  pinMode(BUTTON, INPUT);
-  digitalWrite(BUTTON, HIGH);
+  pinMode(BUTTON1, INPUT);
+  digitalWrite(BUTTON1, HIGH);
   Serial.begin(9600);
+
+  //pinMode(LED_RED, OUTPUT);
 
   power_timer1_disable();
   power_timer2_disable();
@@ -230,12 +241,12 @@ void batteryIcon() {
 void loop() {
   delay(93); // is < 100 : makes the seconds a bit faster!
 
-  if (digitalRead(BUTTON) == LOW) {
-    delay(500);  
-    tick += 5;
-    if (digitalRead(BUTTON) == LOW) {
+  if (digitalRead(BUTTON1) == LOW) {
+    delay(300);  
+    tick += 3;
+    if (digitalRead(BUTTON1) == LOW) {
       
-      // ok: You pressed the button more than 500ms
+      // ok: You pressed the button1 more than 300ms
       
       oled.command(DISPLAYON);
       oled.clear(PAGE);
@@ -248,9 +259,9 @@ void loop() {
       tick += 10;
       oled.command(DISPLAYOFF);
       
-      if (digitalRead(BUTTON) == LOW) {
+      if (digitalRead(BUTTON1) == LOW) {
         
-        // ok: You pressed the button more than 500ms + 1000ms
+        // ok: You pressed the button1 more than 300ms + 1000ms
         
         oled.command(DISPLAYON);
         wakeUpIcon();
@@ -259,6 +270,7 @@ void loop() {
         // print ignores everyting behind \0
         memoStr[MESSAGEPOS] = '\0';
         memoStrPos = MESSAGEPOS;
+        COUNT = 0;
         Serial.println( CHAR_TIME_REQUEST );
       }
     }
@@ -289,6 +301,26 @@ void loop() {
       hours = dummy.substring(0,2).toInt();
       minutes = dummy.substring(2,4).toInt();
       seconds = dummy.substring(4,6).toInt();
+
+    } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
+      
+      // there is a new message (or a message is deleted)
+      
+      COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
+      if (COUNT > 0) {
+        // switch a LED on ------------------- start
+        //digitalWrite(LED_RED, HIGH);
+        //page = memoStrPos; // makes a clear and display off
+        // switch a LED on ------------------- end
+
+        // alternative to a LED --- works only < 10 ;-D
+        memoStr[MESSAGEPOS+1] = ' ';
+        memoStr[MESSAGEPOS] = '0' + (char) COUNT;
+        
+      } else {
+        //digitalWrite(LED_RED, LOW);
+        memoStr[MESSAGEPOS] = '\0';
+      }   
       
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
@@ -310,7 +342,13 @@ void loop() {
   }
 
   /// Safe power and switch display off, if message is at the end
-  if (page == memoStrPos) oled.command(DISPLAYOFF);
+  if (page == memoStrPos) {
+    oled.command(DISPLAYOFF);
+    // "remove" old chars from buffer
+    // print ignores everyting behind \0
+    memoStr[MESSAGEPOS] = '\0';
+    memoStrPos = MESSAGEPOS;
+  }
   
   page++;
   ticking();

@@ -42,50 +42,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="426" column="0" selection-start-line="426" selection-start-column="0" selection-end-line="426" selection-end-column="0" />
-              <folding>
-                <element signature="e#3633#4222#0" expanded="true" />
-                <element signature="e#4221#4222#0" expanded="true" />
-                <element signature="e#5615#5631#0" expanded="true" />
-                <element signature="e#6388#7198#0" expanded="true" />
-                <element signature="e#6589#6616#0" expanded="true" />
-                <element signature="e#6821#6851#0" expanded="true" />
-                <element signature="e#7197#7198#0" expanded="true" />
-                <element signature="e#7237#7861#0" expanded="true" />
-                <element signature="e#7860#7861#0" expanded="true" />
-                <element signature="e#10699#10725#0" expanded="true" />
-                <element signature="e#11022#11557#0" expanded="true" />
-                <element signature="e#11132#11151#0" expanded="true" />
-                <element signature="e#11556#11557#0" expanded="true" />
-                <element signature="e#11676#12610#0" expanded="true" />
-                <element signature="e#11786#11802#0" expanded="true" />
-                <element signature="e#11982#12003#0" expanded="true" />
-                <element signature="e#12140#12561#0" expanded="true" />
-                <element signature="e#12380#12397#0" expanded="true" />
-                <element signature="e#12560#12561#0" expanded="true" />
-                <element signature="e#12609#12610#0" expanded="true" />
-                <element signature="e#12815#13598#0" expanded="true" />
-                <element signature="e#13597#13598#0" expanded="true" />
-                <element signature="e#15543#15556#0" expanded="true" />
-                <element signature="e#15582#15601#0" expanded="true" />
-                <element signature="e#15634#15646#0" expanded="true" />
-                <element signature="e#15648#16218#0" expanded="true" />
-                <element signature="e#16217#16218#0" expanded="true" />
-                <element signature="e#16251#16262#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+            <state relative-caret-position="648">
+              <caret line="193" column="44" selection-start-line="193" selection-start-column="24" selection-end-line="193" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -95,9 +56,24 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="262">
-              <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+              <caret line="61" column="31" selection-start-line="61" selection-start-column="31" selection-end-line="61" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="android-manifest">
+            <state />
           </provider>
         </entry>
       </file>
@@ -1737,8 +1713,6 @@
       <pane id="AndroidView">
         <subPane />
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1942,6 +1916,8 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2001,6 +1977,50 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method />
     </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="EXTRA_OPTIONS" value="" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+      </Native>
+      <Profilers>
+        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
+        <option name="GAPID_ENABLED" value="false" />
+        <option name="GAPID_DISABLE_PCS" value="false" />
+        <option name="SUPPORT_LIB_ENABLED" value="true" />
+        <option name="INSTRUMENTATION_ENABLED" value="true" />
+      </Profilers>
+      <method />
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" />
@@ -2014,6 +2034,42 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoRunFileConfiguration" factoryName="Go Single File">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
       <method />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
@@ -2040,6 +2096,27 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Java Scratch" factoryName="Java Scratch">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="SCRATCH_FILE_ID" value="0" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -2062,6 +2139,34 @@
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNGTestDiscovery" factoryName="TestNG Test Discovery" changeList="All">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
       <option name="OUTPUT_DIRECTORY" />
       <option name="ANNOTATION_TYPE" />
       <option name="ENV_VARIABLES" />
@@ -2166,8 +2271,8 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44748858" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21765602" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2179,8 +2284,8 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2214,38 +2319,35 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5430">
+          <caret line="426" column="0" selection-start-line="426" selection-start-column="0" selection-end-line="426" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="63" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
-          <folding>
-            <element signature="e#3633#4222#0" expanded="true" />
-            <element signature="e#4221#4222#0" expanded="true" />
-            <element signature="e#5615#5631#0" expanded="true" />
-            <element signature="e#6388#7198#0" expanded="true" />
-            <element signature="e#6589#6616#0" expanded="true" />
-            <element signature="e#6821#6851#0" expanded="true" />
-            <element signature="e#7197#7198#0" expanded="true" />
-            <element signature="e#7237#7861#0" expanded="true" />
-            <element signature="e#7860#7861#0" expanded="true" />
-            <element signature="e#10699#10725#0" expanded="true" />
-            <element signature="e#11022#11557#0" expanded="true" />
-            <element signature="e#11132#11151#0" expanded="true" />
-            <element signature="e#11556#11557#0" expanded="true" />
-            <element signature="e#11676#12610#0" expanded="true" />
-            <element signature="e#11786#11802#0" expanded="true" />
-            <element signature="e#11982#12003#0" expanded="true" />
-            <element signature="e#12140#12561#0" expanded="true" />
-            <element signature="e#12380#12397#0" expanded="true" />
-            <element signature="e#12560#12561#0" expanded="true" />
-            <element signature="e#12609#12610#0" expanded="true" />
-            <element signature="e#12815#13598#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
-            <element signature="e#15543#15556#0" expanded="true" />
-            <element signature="e#15582#15601#0" expanded="true" />
-            <element signature="e#15634#15646#0" expanded="true" />
-            <element signature="e#15648#16218#0" expanded="true" />
-            <element signature="e#16217#16218#0" expanded="true" />
-            <element signature="e#16251#16262#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2264,7 +2366,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2272,36 +2376,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#3633#4222#0" expanded="true" />
-            <element signature="e#4221#4222#0" expanded="true" />
-            <element signature="e#5615#5631#0" expanded="true" />
-            <element signature="e#6388#7198#0" expanded="true" />
-            <element signature="e#6589#6616#0" expanded="true" />
-            <element signature="e#6821#6851#0" expanded="true" />
-            <element signature="e#7197#7198#0" expanded="true" />
-            <element signature="e#7237#7861#0" expanded="true" />
-            <element signature="e#7860#7861#0" expanded="true" />
-            <element signature="e#10699#10725#0" expanded="true" />
-            <element signature="e#11022#11557#0" expanded="true" />
-            <element signature="e#11132#11151#0" expanded="true" />
-            <element signature="e#11556#11557#0" expanded="true" />
-            <element signature="e#11676#12610#0" expanded="true" />
-            <element signature="e#11786#11802#0" expanded="true" />
-            <element signature="e#11982#12003#0" expanded="true" />
-            <element signature="e#12140#12561#0" expanded="true" />
-            <element signature="e#12380#12397#0" expanded="true" />
-            <element signature="e#12560#12561#0" expanded="true" />
-            <element signature="e#12609#12610#0" expanded="true" />
-            <element signature="e#12815#13598#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
-            <element signature="e#15543#15556#0" expanded="true" />
-            <element signature="e#15582#15601#0" expanded="true" />
-            <element signature="e#15634#15646#0" expanded="true" />
-            <element signature="e#15648#16218#0" expanded="true" />
-            <element signature="e#16217#16218#0" expanded="true" />
-            <element signature="e#16251#16262#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2320,7 +2395,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2328,36 +2405,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5430">
           <caret line="426" column="52" selection-start-line="426" selection-start-column="52" selection-end-line="426" selection-end-column="52" />
-          <folding>
-            <element signature="e#3633#4222#0" expanded="true" />
-            <element signature="e#4221#4222#0" expanded="true" />
-            <element signature="e#5615#5631#0" expanded="true" />
-            <element signature="e#6388#7198#0" expanded="true" />
-            <element signature="e#6589#6616#0" expanded="true" />
-            <element signature="e#6821#6851#0" expanded="true" />
-            <element signature="e#7197#7198#0" expanded="true" />
-            <element signature="e#7237#7861#0" expanded="true" />
-            <element signature="e#7860#7861#0" expanded="true" />
-            <element signature="e#10699#10725#0" expanded="true" />
-            <element signature="e#11022#11557#0" expanded="true" />
-            <element signature="e#11132#11151#0" expanded="true" />
-            <element signature="e#11556#11557#0" expanded="true" />
-            <element signature="e#11676#12610#0" expanded="true" />
-            <element signature="e#11786#11802#0" expanded="true" />
-            <element signature="e#11982#12003#0" expanded="true" />
-            <element signature="e#12140#12561#0" expanded="true" />
-            <element signature="e#12380#12397#0" expanded="true" />
-            <element signature="e#12560#12561#0" expanded="true" />
-            <element signature="e#12609#12610#0" expanded="true" />
-            <element signature="e#12815#13598#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
-            <element signature="e#15543#15556#0" expanded="true" />
-            <element signature="e#15582#15601#0" expanded="true" />
-            <element signature="e#15634#15646#0" expanded="true" />
-            <element signature="e#15648#16218#0" expanded="true" />
-            <element signature="e#16217#16218#0" expanded="true" />
-            <element signature="e#16251#16262#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2376,7 +2424,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2384,36 +2434,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3735">
           <caret line="307" column="58" selection-start-line="307" selection-start-column="58" selection-end-line="307" selection-end-column="58" />
-          <folding>
-            <element signature="e#3633#4222#0" expanded="true" />
-            <element signature="e#4221#4222#0" expanded="true" />
-            <element signature="e#5615#5631#0" expanded="true" />
-            <element signature="e#6388#7198#0" expanded="true" />
-            <element signature="e#6589#6616#0" expanded="true" />
-            <element signature="e#6821#6851#0" expanded="true" />
-            <element signature="e#7197#7198#0" expanded="true" />
-            <element signature="e#7237#7861#0" expanded="true" />
-            <element signature="e#7860#7861#0" expanded="true" />
-            <element signature="e#10699#10725#0" expanded="true" />
-            <element signature="e#11022#11557#0" expanded="true" />
-            <element signature="e#11132#11151#0" expanded="true" />
-            <element signature="e#11556#11557#0" expanded="true" />
-            <element signature="e#11676#12610#0" expanded="true" />
-            <element signature="e#11786#11802#0" expanded="true" />
-            <element signature="e#11982#12003#0" expanded="true" />
-            <element signature="e#12140#12561#0" expanded="true" />
-            <element signature="e#12380#12397#0" expanded="true" />
-            <element signature="e#12560#12561#0" expanded="true" />
-            <element signature="e#12609#12610#0" expanded="true" />
-            <element signature="e#12815#13598#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
-            <element signature="e#15543#15556#0" expanded="true" />
-            <element signature="e#15582#15601#0" expanded="true" />
-            <element signature="e#15634#15646#0" expanded="true" />
-            <element signature="e#15648#16218#0" expanded="true" />
-            <element signature="e#16217#16218#0" expanded="true" />
-            <element signature="e#16251#16262#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2445,36 +2466,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3735">
           <caret line="307" column="60" selection-start-line="307" selection-start-column="60" selection-end-line="307" selection-end-column="60" />
-          <folding>
-            <element signature="e#3633#4222#0" expanded="true" />
-            <element signature="e#4221#4222#0" expanded="true" />
-            <element signature="e#5615#5631#0" expanded="true" />
-            <element signature="e#6388#7198#0" expanded="true" />
-            <element signature="e#6589#6616#0" expanded="true" />
-            <element signature="e#6821#6851#0" expanded="true" />
-            <element signature="e#7197#7198#0" expanded="true" />
-            <element signature="e#7237#7861#0" expanded="true" />
-            <element signature="e#7860#7861#0" expanded="true" />
-            <element signature="e#10699#10725#0" expanded="true" />
-            <element signature="e#11022#11557#0" expanded="true" />
-            <element signature="e#11132#11151#0" expanded="true" />
-            <element signature="e#11556#11557#0" expanded="true" />
-            <element signature="e#11676#12610#0" expanded="true" />
-            <element signature="e#11786#11802#0" expanded="true" />
-            <element signature="e#11982#12003#0" expanded="true" />
-            <element signature="e#12140#12561#0" expanded="true" />
-            <element signature="e#12380#12397#0" expanded="true" />
-            <element signature="e#12560#12561#0" expanded="true" />
-            <element signature="e#12609#12610#0" expanded="true" />
-            <element signature="e#12815#13598#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
-            <element signature="e#15543#15556#0" expanded="true" />
-            <element signature="e#15582#15601#0" expanded="true" />
-            <element signature="e#15634#15646#0" expanded="true" />
-            <element signature="e#15648#16218#0" expanded="true" />
-            <element signature="e#16217#16218#0" expanded="true" />
-            <element signature="e#16251#16262#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2499,36 +2491,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3720">
           <caret line="306" column="69" selection-start-line="306" selection-start-column="69" selection-end-line="306" selection-end-column="69" />
-          <folding>
-            <element signature="e#3633#4222#0" expanded="true" />
-            <element signature="e#4221#4222#0" expanded="true" />
-            <element signature="e#5615#5631#0" expanded="true" />
-            <element signature="e#6388#7198#0" expanded="true" />
-            <element signature="e#6589#6616#0" expanded="true" />
-            <element signature="e#6821#6851#0" expanded="true" />
-            <element signature="e#7197#7198#0" expanded="true" />
-            <element signature="e#7237#7861#0" expanded="true" />
-            <element signature="e#7860#7861#0" expanded="true" />
-            <element signature="e#10699#10725#0" expanded="true" />
-            <element signature="e#11022#11557#0" expanded="true" />
-            <element signature="e#11132#11151#0" expanded="true" />
-            <element signature="e#11556#11557#0" expanded="true" />
-            <element signature="e#11676#12610#0" expanded="true" />
-            <element signature="e#11786#11802#0" expanded="true" />
-            <element signature="e#11982#12003#0" expanded="true" />
-            <element signature="e#12140#12561#0" expanded="true" />
-            <element signature="e#12380#12397#0" expanded="true" />
-            <element signature="e#12560#12561#0" expanded="true" />
-            <element signature="e#12609#12610#0" expanded="true" />
-            <element signature="e#12815#13598#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
-            <element signature="e#15543#15556#0" expanded="true" />
-            <element signature="e#15582#15601#0" expanded="true" />
-            <element signature="e#15634#15646#0" expanded="true" />
-            <element signature="e#15648#16218#0" expanded="true" />
-            <element signature="e#16217#16218#0" expanded="true" />
-            <element signature="e#16251#16262#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2605,55 +2568,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="426" column="0" selection-start-line="426" selection-start-column="0" selection-end-line="426" selection-end-column="0" />
-          <folding>
-            <element signature="e#3633#4222#0" expanded="true" />
-            <element signature="e#4221#4222#0" expanded="true" />
-            <element signature="e#5615#5631#0" expanded="true" />
-            <element signature="e#6388#7198#0" expanded="true" />
-            <element signature="e#6589#6616#0" expanded="true" />
-            <element signature="e#6821#6851#0" expanded="true" />
-            <element signature="e#7197#7198#0" expanded="true" />
-            <element signature="e#7237#7861#0" expanded="true" />
-            <element signature="e#7860#7861#0" expanded="true" />
-            <element signature="e#10699#10725#0" expanded="true" />
-            <element signature="e#11022#11557#0" expanded="true" />
-            <element signature="e#11132#11151#0" expanded="true" />
-            <element signature="e#11556#11557#0" expanded="true" />
-            <element signature="e#11676#12610#0" expanded="true" />
-            <element signature="e#11786#11802#0" expanded="true" />
-            <element signature="e#11982#12003#0" expanded="true" />
-            <element signature="e#12140#12561#0" expanded="true" />
-            <element signature="e#12380#12397#0" expanded="true" />
-            <element signature="e#12560#12561#0" expanded="true" />
-            <element signature="e#12609#12610#0" expanded="true" />
-            <element signature="e#12815#13598#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
-            <element signature="e#15543#15556#0" expanded="true" />
-            <element signature="e#15582#15601#0" expanded="true" />
-            <element signature="e#15634#15646#0" expanded="true" />
-            <element signature="e#15648#16218#0" expanded="true" />
-            <element signature="e#16217#16218#0" expanded="true" />
-            <element signature="e#16251#16262#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="61" column="31" selection-start-line="61" selection-start-column="31" selection-end-line="61" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="648">
+          <caret line="193" column="44" selection-start-line="193" selection-start-column="24" selection-end-line="193" selection-end-column="44" />
           <folding />
         </state>
       </provider>
