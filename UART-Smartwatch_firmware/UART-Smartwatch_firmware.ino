@@ -65,7 +65,6 @@ void setupBle() {
 void readTemp() {
   unsigned int wADC;
   int t;
-  power_adc_enable();
   // Set the internal reference and mux.
   ADMUX = (_BV(REFS1) | _BV(REFS0) | _BV(MUX3));
   ADCSRA |= _BV(ADEN);  // enable the ADC
@@ -75,7 +74,6 @@ void readTemp() {
   while (bit_is_set(ADCSRA,ADSC));
   // Reading register "ADCW" takes care of how to read ADCL and ADCH.
   wADC = ADCW;
-  power_adc_disable();
   // The offset of 324.31 could be wrong. It is just an indication.
   t = ( wADC - 324.31 ) / 1.22;
   // The returned temperature is in degrees Celcius.
@@ -93,7 +91,6 @@ void readTemp() {
  */
 byte readVcc() {
   int result;
-  power_adc_enable();
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   delay(10); // Wait for Vref to settle
   ADCSRA |= _BV(ADSC); // Start conversion
@@ -101,7 +98,6 @@ byte readVcc() {
   result = ADCL; 
   result |= ADCH<<8; 
   result = 1126400L / result;
-  power_adc_disable();
   // return (result-2700)/18; // scale: 3310 -> 34, 2710 -> 0 (USB5v or 3.3v BAT Regulator)
   return (result-2700)/45; // scale: 4205 -> 34, 2710 -> 0
 }
@@ -118,8 +114,8 @@ void setup() {
 
   pinMode(SPKR, OUTPUT);
   
-  pinMode(LED_RED, OUTPUT);
-  pinMode(LED_YELLOW, OUTPUT);
+  //pinMode(LED_RED, OUTPUT);
+  //pinMode(LED_YELLOW, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
 
   digitalWrite(BUTTON1, HIGH);
@@ -310,10 +306,11 @@ void loop() {
       oled.clear(PAGE);
       digitalClock();
       analogClock();
+      power_adc_enable();
       batteryIcon();
       readTemp();
-      oled.display();
-            
+      power_adc_disable();
+      oled.display();      
       delay(1000);
       tick += 10;
       oled.command(DISPLAYOFF);
@@ -373,7 +370,7 @@ void loop() {
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       if (COUNT > 0) {
         page = memoStrPos; // makes a clear and display off
-        digitalWrite(LED_RED, HIGH);
+        digitalWrite(LED_GREEN, HIGH);
         power_adc_enable();
         analogWrite(SPKR, 210);
         delay(500);
@@ -381,7 +378,7 @@ void loop() {
         power_adc_disable();
       } else {
         memoStr[MESSAGEPOS] = '\0';
-        digitalWrite(LED_RED, LOW);
+        digitalWrite(LED_GREEN, LOW);
       }
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
