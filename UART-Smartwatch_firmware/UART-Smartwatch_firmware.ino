@@ -332,7 +332,7 @@ void loop() {
       memoStr[MESSAGEPOS] = '\0';
       memoStrPos = MESSAGEPOS;
       COUNT = 0;
-      digitalWrite(LED_RED, LOW);
+      digitalWrite(LED_GREEN, LOW);
       Serial.println( CHAR_TIME_REQUEST );
     }
   }
