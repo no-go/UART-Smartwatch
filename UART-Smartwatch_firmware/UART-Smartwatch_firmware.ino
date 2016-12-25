@@ -114,9 +114,9 @@ void setup() {
 
   pinMode(SPKR, OUTPUT);
   
-  //pinMode(LED_RED, OUTPUT);
+  pinMode(LED_RED, OUTPUT);
   //pinMode(LED_YELLOW, OUTPUT);
-  pinMode(LED_GREEN, OUTPUT);
+  //pinMode(LED_GREEN, OUTPUT);
 
   digitalWrite(BUTTON1, HIGH);
   digitalWrite(BUTTON2, HIGH);
@@ -311,8 +311,8 @@ void loop() {
       readTemp();
       power_adc_disable();
       oled.display();      
-      delay(1000);
-      tick += 10;
+      delay(2500);
+      tick += 25;
       oled.command(DISPLAYOFF);
     }
   }
@@ -332,7 +332,7 @@ void loop() {
       memoStr[MESSAGEPOS] = '\0';
       memoStrPos = MESSAGEPOS;
       COUNT = 0;
-      digitalWrite(LED_GREEN, LOW);
+      digitalWrite(LED_RED, LOW);
       Serial.println( CHAR_TIME_REQUEST );
     }
   }
@@ -365,12 +365,12 @@ void loop() {
       
     } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
 
-      // there is a new message !!
+      // there are 3 new messages !!
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
-      if (COUNT > 0) {
+      if (COUNT > 2) {
         page = memoStrPos; // makes a clear and display off
-        digitalWrite(LED_GREEN, HIGH);
+        digitalWrite(LED_RED, HIGH);
         power_adc_enable();
         analogWrite(SPKR, 210);
         delay(500);
@@ -378,7 +378,7 @@ void loop() {
         power_adc_disable();
       } else {
         memoStr[MESSAGEPOS] = '\0';
-        digitalWrite(LED_GREEN, LOW);
+        digitalWrite(LED_RED, LOW);
       }
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
