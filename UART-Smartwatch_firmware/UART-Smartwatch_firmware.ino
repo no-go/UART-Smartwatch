@@ -313,7 +313,7 @@ void loop() {
       oled.display();      
       delay(2500);
       tick += 25;
-      oled.command(DISPLAYOFF);
+      page = memoStrPos;
     }
   }
 
@@ -368,7 +368,7 @@ void loop() {
       // there are 3 new messages !!
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
-      if (COUNT > 2) {
+      if (COUNT > 0) {
         page = memoStrPos; // makes a clear and display off
         digitalWrite(LED_RED, HIGH);
         power_adc_enable();
