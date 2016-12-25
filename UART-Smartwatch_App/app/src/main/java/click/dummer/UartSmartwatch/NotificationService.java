@@ -42,15 +42,15 @@ public class NotificationService extends NotificationListenerService {
         String title = extras.getString(Notification.EXTRA_TITLE);
         String msg = (String) noti.tickerText;
 
+        // catch not normal message .-----------------------------
         if (!sbn.isClearable()) return;
-
         if (title.equals(lastPost) && msg == null) {
             return;
         } else {
             lastPost = title;
         }
-
         if (msg == null) return;
+        //--------------------------------------------------------
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int messageLimit = Integer.parseInt(mPreferences.getString("messageLimit", "100"));
@@ -66,6 +66,21 @@ public class NotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
+        Notification noti = sbn.getNotification();
+        Bundle extras = noti.extras;
+        String title = extras.getString(Notification.EXTRA_TITLE);
+        String msg = (String) noti.tickerText;
+
+        // catch not normal message .-----------------------------
+        if (!sbn.isClearable()) return;
+        if (title.equals(lastPost) && msg == null) {
+            return;
+        } else {
+            lastPost = title;
+        }
+        if (msg == null) return;
+        //--------------------------------------------------------
+
         Intent i = new  Intent("click.dummer.UartNotify.NOTIFICATION_LISTENER");
         i.putExtra("MSG", "notify removed");
         i.putExtra("posted", false);

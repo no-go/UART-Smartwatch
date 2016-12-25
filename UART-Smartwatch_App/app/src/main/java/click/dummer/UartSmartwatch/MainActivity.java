@@ -25,10 +25,12 @@ package click.dummer.UartSmartwatch;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -42,13 +44,16 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -353,6 +358,20 @@ public class MainActivity extends Activity {
 
     @Override
     public void onResume() {
+        Set<String> packs = NotificationManagerCompat.getEnabledListenerPackages(getApplicationContext());
+        boolean readNotiPermissions = packs.contains(getPackageName());
+        if (readNotiPermissions == false) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            alertDialogBuilder.setMessage(getString(R.string.sorry, getString(R.string.app_name)));
+            alertDialogBuilder.show();
+        }
+
         devAddr = mPreferences.getString("ble_addr", PreferencesActivity.DEFAULT_ADDR);
         super.onResume();
         if (!mBtAdapter.isEnabled()) {
@@ -361,6 +380,15 @@ public class MainActivity extends Activity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
 
+        ActivityManager.TaskDescription taskDescription = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            taskDescription = new ActivityManager.TaskDescription(
+                    getString(R.string.app_name),
+                    BitmapFactory.decodeResource(getResources(), R.drawable.icon),
+                    ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getTheme())
+            );
+            ((Activity)this).setTaskDescription(taskDescription);
+        }
     }
 
     @Override
@@ -412,6 +440,7 @@ public class MainActivity extends Activity {
             }
 
             if (intent.getStringExtra("MSG") != null) {
+                int notifyHintLimit = Integer.parseInt(mPreferences.getString("notifyHintLimit", "0"));
                 if (intent.getBooleanExtra("posted", true)) {
                     String temp = intent.getStringExtra("MSG").trim();
                     int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "120"));
@@ -423,7 +452,7 @@ public class MainActivity extends Activity {
                         listMessage.setText(temp);
                         COUNT++;
                         String notifyHint = mPreferences.getString("notifyHint", "");
-                        if (notifyHint.length() > 0) {
+                        if (notifyHint.length() > 0 && COUNT > notifyHintLimit) {
                             sendMsg(notifyHint + (char) COUNT);
                             Log.i(TAG, "Count: " + COUNT);
                         }

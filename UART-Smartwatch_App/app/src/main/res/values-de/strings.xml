@@ -7,6 +7,7 @@
     <string name="Connecting">Moment ...</string>
     <string name="No">nein</string>
     <string name="Quit">beenden</string>
+    <string name="ok">Ok</string>
     <string name="RXcharaMissing">RX Charakteristik fehlt</string>
     <string name="RXmissing">RX Service nicht gefunden!</string>
     <string name="TXmissing">TX Service nicht gefunden!</string>
@@ -35,8 +36,18 @@
     <string name="packetPause_summary">Eine zu kurze Zeit zwischen Paketen kann problematisch sein.</string>
     <string name="packetPause">Zeit in ms zwischen Paketen</string>
 
-    <string name="notifyHint">Benachrichtigungs-Vermerk</string>
-    <string name="notifyHint_summary">Wenn die App eine neue Benachrichtigung erkennt, wird dieses Zeichen gefolgt von einem Byte (= Anzahl) gesendet. Nutze z.B. % oder lasse es leer.</string>
+    <string name="hint">Benachrichtigungs-Vermerk</string>
+
+    <string name="notifyHint">Zeichen</string>
+    <string name="notifyHint_summary">Wenn die App eine neue Benachrichtigung erkennt, wird
+        dieses Zeichen gefolgt von einem Byte (= Anzahl) gesendet.
+        Nutze z.B. % oder lasse es leer.</string>
+
+    <string name="notifyHintLimit">Grenze</string>
+    <string name="notifyHintLimit_summary">Um Energie bei deiner UART-Smartwatch zu sparen,
+    wird der Vermerk erst gesendet, wenn mehr als die angegebene Grenze an neuen Nachrichten
+        erreicht ist. Beim Löschen einer Benachrichtigung wird aber weiterhin ein
+    Vermerk gesendet.</string>
 
     <string name="packetLimit">Größe der Bluetooth Pakete</string>
     <string name="packetLimit_summary">BLE kann max. 20 Bytes an einem Stück senden</string>
@@ -53,4 +64,8 @@
     <string name="messageLimit_summary">Sollte die Benachrichtigung eine bestimmte Größe überschreiten, wird nur ihr Titel genommen</string>
     <string name="flattr_this">Micro-Spende !</string>
     <string name="projPage">UART-Smartwatch Webseite</string>
+
+    <string name="sorry">Tut mir leid, aber \'%s\' braucht natürlich Zugriff auf
+        deine Benachrichtigungen. Diesen Zugriff der App musst du in den Einstellungen deines
+        Smartphones gewähren!</string>
 </resources>

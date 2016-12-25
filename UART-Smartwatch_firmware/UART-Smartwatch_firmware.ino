@@ -257,7 +257,7 @@ void loop() {
             
       delay(1000);
       tick += 10;
-      oled.command(DISPLAYOFF);
+      page = memoStrPos;
       
       if (digitalRead(BUTTON1) == LOW) {
         
