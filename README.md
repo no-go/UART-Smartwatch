@@ -10,12 +10,15 @@ is a small tick on it for 3.3V and a bigger tick for 3.7V
 
 I add the temperature mesurement for testing, too.
 
+- Button 2: Dino Game!
+
+*Optional Menu Modes*
+
+- Modes: silent, LEDs, LEDs and beep
 - Fade red LED every second
 - switch yellow LED on and off every second
 - blink green LED, if seconds is 0, 10, 20, ...
 - Beep every 60 Seconds
-- Button 2: Menu to select *silent*, *LED* or sound mode
-- Button 2 sends a "Mode X" to your smartphone
 
 ## Circuit
 
