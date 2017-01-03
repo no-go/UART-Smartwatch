@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
 
-Copyright (c) 2016 Jochen Peters (JotPe, Krefeld)
+Copyright (c) 2016-2017 Jochen Peters (JotPe, Krefeld)
 
 Permission is hereby granted, free of charge, to any person obtaining 
 a copy of this software and associated documentation files (the "Software"), 
@@ -21,6 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 DEALINGS IN THE SOFTWARE.
 */
+
+// avrdude -c usbtiny -p m328p  -B 300 -U flash:w:UART-Smartwatch_firmware.ino.arduino_eightanaloginputs.hex:i
 
 #include <SPI.h>
 #include <SFE_MicroOLED.h>
@@ -58,6 +60,8 @@ byte minutes = 0;
 byte seconds = 0;
 byte tick = 0;
 
+bool usingBATpin;
+
 // save power, because sin/cos is to "expensive"
 const byte xHour[13] = {29,34,38,39,38,34,29,24,20,19,20,24,29};
 const byte yHour[13] = {21,22,26,31,36,40,41,40,36,31,26,22,21};
@@ -80,11 +84,7 @@ void setupBle() {
   }
 }
 
-/**
- * because there is a power regulator, it is hard to
- * messure the battery power level.
- */
-byte readVcc() {
+int readVcc() {
   int result;
   power_adc_enable();
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
@@ -95,13 +95,21 @@ byte readVcc() {
   result |= ADCH<<8; 
   result = 1126400L / result;
   power_adc_disable();
-  
-  // evil hack, if you do not use the BAT power supply and
-  // you didn not cahnge the return line to scale 4.2 Volts or
-  // something like that ;-D
-  if(result>3310) result=3310;
-  
-  return (result-2700)/26; // scale: 3310 -> 24, 2710 -> 0
+  return result;
+}
+
+/**
+ * because there is a power regulator, it is hard to
+ * messure the battery power level. If you do not connect bat 
+ * to battery and connect batery direkt to 3.3V, you can
+ * mesure better, but Display could brake!!
+ */
+byte vcc2hight(int result) {
+  if (usingBATpin) {
+    return (result-2700)/18; // scale: 3310 -> 34, 2710 -> 0 (USB5v or 3.3v BAT Regulator)    
+  } else {
+    return (result-2700)/45; // scale: 4205 -> 34, 2710 -> 0
+  }  
 }
 
 void filler() {
@@ -121,6 +129,9 @@ void setup() {
   power_timer2_disable();
   power_adc_disable();
   power_twi_disable();
+
+  int mv = readVcc();
+  usingBATpin = (mv < 3400);
 
   oled.begin();
   oled.clear(ALL); // Clear the display's internal memory logo
@@ -231,11 +242,19 @@ void analogClock() {
 }
 
 void batteryIcon() {
-  byte vccVal = readVcc();
-  oled.pixel(61, 23);
-  oled.pixel(62, 23);
-  oled.rect(60, 24, 4, 24);
+  byte vccVal = vcc2hight(readVcc());
+  oled.pixel(61, 13);
+  oled.pixel(62, 13);
+  if (usingBATpin == false) {
+    oled.pixel(59, 35); // 3.3V tick
+    oled.pixel(58, 26); oled.pixel(59, 26); // 3.7V tick
+  }
+  oled.rect(60, 14, 4, 34);
   oled.rectFill(60, 48-vccVal, 4, vccVal);  
+}
+
+byte tob(char c) {
+  return c - '0';
 }
 
 void loop() {
@@ -289,18 +308,9 @@ void loop() {
       // extract the time -------------------------
       
       memoStr[MESSAGEPOS] = ' ';
-      char dummyChr[] = {
-        memoStr[MESSAGEPOS+1],
-        memoStr[MESSAGEPOS+2],
-        memoStr[MESSAGEPOS+4],
-        memoStr[MESSAGEPOS+5],
-        memoStr[MESSAGEPOS+7],
-        memoStr[MESSAGEPOS+8]
-      };
-      String dummy(dummyChr);
-      hours = dummy.substring(0,2).toInt();
-      minutes = dummy.substring(2,4).toInt();
-      seconds = dummy.substring(4,6).toInt();
+      hours = tob(memoStr[MESSAGEPOS+1])*10 + tob(memoStr[MESSAGEPOS+2]);
+      minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
+      seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
 
     } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
       
