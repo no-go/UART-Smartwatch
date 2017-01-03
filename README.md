@@ -5,8 +5,7 @@ modified to display the power of the LiPo better.
 
 ## The Firmware
 
-Is full! there is a game added, but my trinket or the arduino IDE is buggy and
-the code does not work :-(
+Is full with my private mods.
 
 ## Circuit
 
