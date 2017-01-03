@@ -24,7 +24,6 @@
 
 #define CHAR_TIME_REQUEST '~'
 #define CHAR_TIME_RESPONSE '#'
-#define CHAR_INIT_SETUP '!'
 #define CHAR_NOTIFY_HINT '%'
 
 // ------------------------------------------------------
@@ -40,7 +39,6 @@ MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS);
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
-int  mode         = -1; // -1 is off
 byte COUNT        = 0;
 
 byte hours = 0;
@@ -49,51 +47,6 @@ byte seconds = 0;
 byte tick = 0;
 
 bool usingBATpin;
-
-// save power, because sin/cos is to "expensive"
-const byte xHour[13] = {29,34,38,39,38,34,29,24,20,19,20,24,29};
-const byte yHour[13] = {21,22,26,31,36,40,41,40,36,31,26,22,21};
-const byte xMin[60]  = {29,30,32,33,34,35,37,38,39,40,40,41,41,42,42,42,42,42,41,41,40,40,39,38,37,35,34,33,32,30,29,28,26,25,24,22,21,20,19,18,18,17,17,16,16,16,16,16,17,17,18,18,19,20,21,23,24,25,26,28};
-const byte yMin[60]  = {18,18,18,19,19,20,20,21,22,23,24,26,27,28,30,31,32,34,35,36,38,39,40,41,42,42,43,43,44,44,44,44,44,43,43,42,42,41,40,39,37,36,35,34,32,31,30,28,27,26,24,23,22,21,20,20,19,19,18,18};
-
-PROGMEM const char comm[][35] = {
-  "+++",
-  "ATE=0",
-  "AT+HWMODELED=BLEUART",
-  "AT+GAPDEVNAME=UART Notify Watch",
-  "AT+BLEPOWERLEVEL=4",
-  "ATZ"
-};
-
-void setupBle() {
-  for(byte i=0; i<6; ++i) {
-    Serial.println(comm[i]); 
-    delay(250);  
-  }
-}
-
-void readTemp() {
-  unsigned int wADC;
-  int t;
-  power_adc_enable();
-  // Set the internal reference and mux.
-  ADMUX = (_BV(REFS1) | _BV(REFS0) | _BV(MUX3));
-  ADCSRA |= _BV(ADEN);  // enable the ADC
-  delay(20);            // wait for voltages to become stable.
-  ADCSRA |= _BV(ADSC);  // Start the ADC
-  // Detect end-of-conversion
-  while (bit_is_set(ADCSRA,ADSC));
-  // Reading register "ADCW" takes care of how to read ADCL and ADCH.
-  wADC = ADCW;
-  power_adc_disable();
-  // The offset of 324.31 could be wrong. It is just an indication.
-  t = ( wADC - 324.31 ) / 1.22;
-  // The returned temperature is in degrees Celcius.
-  oled.setCursor(0, 41);
-  oled.print(t);
-  oled.setCursor(11, 37);
-  oled.print((char)248);
-}
 
 int readVcc() {
   int result;
@@ -208,30 +161,6 @@ void ticking() {
   if (tick > 9) {
     seconds += tick/10;
   }
-
-  // --------------------------------
-  if (mode >= 0) {
-    if (mode > 0) 
-      analogWrite(LED_RED, 25*tick);
-      else
-      digitalWrite(LED_RED, LOW);
-    if (tick > 9) {
-      if (mode > 0) {
-        digitalWrite(LED_YELLOW, seconds%2 ? LOW:HIGH);
-        digitalWrite(LED_GREEN, seconds%10 ? LOW:HIGH);
-      } else {
-        digitalWrite(LED_YELLOW, LOW);
-        digitalWrite(LED_GREEN, LOW);
-      }
-      if (mode == 2) {
-        if (seconds == 60) {
-          analogWrite(SPKR, 140);
-        } else {
-          digitalWrite(SPKR, LOW);      
-        }
-      }
-    }
-  }
   
   if (tick > 9) {
     tick = tick % 10;
@@ -249,65 +178,27 @@ void ticking() {
   }
 }
 
-void wakeUpIcon() {
-  oled.clear(PAGE);
-  oled.circle(32, 23, 10);
-  oled.pixel(31, 20);
-  oled.pixel(35, 19);
-  oled.line (29, 27, 35, 27);
-  oled.display();
-  delay(350);
-  oled.rect(29, 19, 3, 3);
-  oled.rect(35, 19, 3, 3);
-  oled.pixel(35, 26);
-  oled.display();  
-  delay(350);
-  tick += 7; 
-}
-
 void bigClock() {
   oled.setFontType(2);
-  oled.setCursor(0, 2);
+  oled.setCursor(0, 12);
   if (hours<10) oled.print("0");
   oled.print(hours);
 
   oled.setFontType(1);
-  oled.setCursor(24, 3);
-  if(seconds%2 == 0){
-    oled.print(":");
-  } else {
-    oled.print(" ");    
-  }
+  oled.setCursor(24, 13);
+  oled.print(":");
 
   oled.setFontType(2);
-  oled.setCursor(32, 2);
+  oled.setCursor(32, 12);
   if (minutes<10) oled.print("0");
   oled.print(minutes); 
 
   oled.setFontType(0);
-  oled.setCursor(22, 20);
+  oled.setCursor(17, 32);
   if (seconds<10) oled.print("0");
   oled.print(seconds);
-}
-
-void digitalClock() {
-  oled.setCursor(8, 5);
-  if (hours<10) oled.print("0");
-  oled.print(hours);
-  oled.print(":");
-  if (minutes<10) oled.print("0");
-  oled.print(minutes);
-  oled.print(":");
-  if (seconds<10) oled.print("0");
-  oled.print(seconds);  
-}
-
-void analogClock() {
-  oled.circle(29, 31, 13);
-  byte hour = hours;
-  if (hour>12) hour-=12;
-  oled.line(29, 31, xMin[minutes], yMin[minutes]);
-  oled.line(29, 31, xHour[hour], yHour[hour]);  
+  oled.print(".");
+  oled.print(tick);
 }
 
 void batteryIcon() {
@@ -320,31 +211,7 @@ void batteryIcon() {
     oled.pixel(57, 26); // 3.7V tick
   }
   oled.rect(58, 14, 6, 34);
-  oled.rectFill(58, 48-vccVal, 6, vccVal);
-  
-  oled.setCursor(39, 41);
-  oled.print("Bat"); 
-}
-
-
-void menu() {
-  mode++;
-  if (mode > 2) mode = 0;
-  
-  oled.clear(PAGE);
-  oled.setCursor(0, 0);
-  oled.println("   MODE  ");
-  oled.print(  "==========");
-  oled.println("- silent ");
-  oled.println("- LEDs   ");
-  oled.println("-  + beep");
-  oled.setCursor(4, 8*mode + 16);
-  oled.print(">");
-  
-  oled.command(DISPLAYON);
-  oled.display();
-  Serial.print("Mode ");
-  Serial.println(mode);
+  oled.rectFill(58, 48-vccVal, 6, vccVal); 
 }
 
 byte tob(char c) {
@@ -352,7 +219,7 @@ byte tob(char c) {
 }
 
 void loop() {
-  delay(92); // is < 100 : makes the seconds a bit faster!
+  delay(93); // is < 100 : makes the seconds a bit faster!
 
   if (digitalRead(BUTTON2) == LOW) {
     delay(300); 
@@ -364,47 +231,23 @@ void loop() {
       
       oled.command(DISPLAYON);
       oled.clear(PAGE);
-      ticking();
-      bigClock();
-      //digitalClock();
-      //analogClock();
       batteryIcon();
-      readTemp();
-      oled.display();
-            
-      delay(1000);
-      tick += 10;
-      ticking();
-      bigClock();
-      oled.display();
-      
-      delay(1000);
-      tick += 10;
-      ticking();
-      bigClock();
-      oled.display();
-      
-      delay(1000);
-      tick += 10;
-      ticking();
-      bigClock();
-      oled.display();
-            
+
+      for (int j=0; j<40; ++j) {
+        ticking();
+        bigClock();
+        oled.display();
+        delay(100);
+      }
       oled.command(DISPLAYOFF);
 
-      if (digitalRead(BUTTON2) == LOW) {
-      
-        if (mode == -1) {
-          Serial.println("Game !");
-          oled.command(DISPLAYON);
-          power_adc_enable();
-          game();
-          power_adc_disable();
-          oled.command(DISPLAYOFF);
-        } else {
-          menu();        
-        }
-        
+      if (digitalRead(BUTTON2) == LOW) {      
+        Serial.println("Game !");
+        oled.command(DISPLAYON);
+        power_adc_enable();
+        game();
+        power_adc_disable();
+        oled.command(DISPLAYOFF);
       }      
     }
   }
@@ -417,9 +260,6 @@ void loop() {
       COUNT = 0;
       digitalWrite(LED_RED, LOW);
               
-      oled.command(DISPLAYON);
-      wakeUpIcon();
-      oled.command(DISPLAYOFF);
       // "remove" old chars from buffer
       // print ignores everyting behind \0
       memoStr[MESSAGEPOS] = '\0';
@@ -450,25 +290,12 @@ void loop() {
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       if (COUNT > 0) {
-        // switch a LED on ------------------- start
         digitalWrite(LED_RED, HIGH);
-        page = memoStrPos; // makes a clear and display off
-        // switch a LED on ------------------- end
-
-        // alternative to a LED --- works only < 10 ;-D
-        //memoStr[MESSAGEPOS+1] = ' ';
-        //memoStr[MESSAGEPOS] = '0' + (char) COUNT;
-        
+        page = memoStrPos; // makes a clear and display off        
       } else {
         digitalWrite(LED_RED, LOW);
         memoStr[MESSAGEPOS] = '\0';
       }      
-    } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
-      
-      // initialize the DIY Smartwatch + BLE module --------
-      
-      setup();
-      setupBle();
     }
   }
 
@@ -731,7 +558,7 @@ void game() {
     subTick += gamespeed;
     delay(gamespeed);
     if (subTick > 100) {
-      subTick = 0; tick += 1;
+      subTick = 0; ticking();
     }
 
     // jump animation + sound
@@ -753,7 +580,6 @@ void game() {
 
     // jump button
     if (jumpY==0 && digitalRead(BUTTON2) == LOW) jumpY = 1;
-    ticking();
   }
   gameOver();
 }
