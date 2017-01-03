@@ -686,7 +686,7 @@ void game() {
     subTick += gamespeed;
     delay(gamespeed);
     if (subTick > 100) {
-      subTick = 0; tick += 1;
+      subTick = 0; ticking();
     }
 
     // jump animation + sound
@@ -708,7 +708,6 @@ void game() {
 
     // jump button
     if (jumpY==0 && digitalRead(BUTTON2) == LOW) jumpY = 1;
-    ticking();
   }
   gameOver();
 }
