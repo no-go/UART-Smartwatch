@@ -18,9 +18,10 @@
 #define LED_RED     6
 #define LED_YELLOW  A1
 #define LED_GREEN   A2
+#define POTI        A4 // scroll throu message instead of page++; 
 
-#define MESSAGEPOS     30
-#define MEMOSTR_LIMIT 730
+#define MESSAGEPOS     50 // default:  30 = screen middle
+#define MEMOSTR_LIMIT 350 // default: 730 = 700 char buffer
 
 #define CHAR_TIME_REQUEST '~'
 #define CHAR_TIME_RESPONSE '#'
@@ -47,6 +48,15 @@ byte seconds = 0;
 byte tick = 0;
 
 bool usingBATpin;
+
+int readWheel() {
+  power_adc_enable();
+  int reading = analogRead(POTI);
+  power_adc_disable();
+  reading = map(reading, 0, 1023, 0, MEMOSTR_LIMIT - MESSAGEPOS);
+  if (reading > memoStrPos) reading = memoStrPos; // make display off
+  return reading;
+}
 
 int readVcc() {
   int result;
@@ -85,6 +95,7 @@ void filler() {
 void setup() {
   pinMode(BUTTON1, INPUT);
   pinMode(BUTTON2, INPUT);
+  pinMode(POTI, INPUT);
 
   pinMode(SPKR, OUTPUT);
   
@@ -318,7 +329,7 @@ void loop() {
     memoStrPos = MESSAGEPOS;
   }
    
-  page++;
+  page = readWheel();
   ticking();
 }
 
