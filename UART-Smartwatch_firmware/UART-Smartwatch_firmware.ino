@@ -352,7 +352,7 @@ void loop() {
   }
 
   /// Safe power and switch display off, if message is at the end
-  if (page == memoStrPos) {
+  if (page >= memoStrPos) {
     oled.command(DISPLAYOFF);
     // "remove" old chars from buffer
     // print ignores everyting behind \0

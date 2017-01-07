@@ -11,12 +11,11 @@ Features:
 - small analog clock
 - digital clock
 - Battery Level
-- more than 18 hours with LiPo 3.7V (170mA)
+- about 18 hours with LiPo 3.7V (170mA)
 - some emoticons works
 - transmit more than 20 bytes
 
-The DIY smartwatch shows a calculated time without a connection to your phone. This time is a bit faster
-to pretent problems. It is about 1 second in 6 hours.
+The DIY smartwatch shows a calculated time without a connection to your phone. This time is a bit faster to pretent problems. It is about 1 second in 6 hours.
 
 Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr This](stuff/flattr.png)</a>
 

@@ -298,8 +298,11 @@ public class UartService extends Service {
 
     private void showMessage(String msg) {
         Log.d(TAG, msg);
-        try {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {}
+        if (mPrefs.getBoolean("toasty", false) == true) {
+            try {
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+            }
+        }
     }
 }

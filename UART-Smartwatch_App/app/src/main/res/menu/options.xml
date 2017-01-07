@@ -9,4 +9,12 @@
     <item
         android:id="@+id/action_flattr"
         android:title="@string/flattr_this"></item>
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/search"></item>
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/action_toasty"
+            android:title="@string/toasty" />
+    </group>
 </menu>

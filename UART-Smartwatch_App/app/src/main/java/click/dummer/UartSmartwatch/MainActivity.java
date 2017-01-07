@@ -69,6 +69,7 @@ public class MainActivity extends Activity {
     private Context ctx;
 
     private static final int WATCH_REQUEST = 1;
+    private static final int REQUEST_SELECT_DEVICE = 42;
     private static final int REQUEST_ENABLE_BT = 2;
     private static final String FLATTR_LINK = "https://flattr.com/thing/5195407";
     private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch";
@@ -103,6 +104,13 @@ public class MainActivity extends Activity {
     };
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem mi = menu.findItem(R.id.action_toasty);
+        mi.setChecked(mPreferences.getBoolean("toasty", false));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options, menu);
@@ -125,6 +133,19 @@ public class MainActivity extends Activity {
                 Intent intentProj= new Intent(Intent.ACTION_VIEW, Uri.parse(PROJECT_LINK));
                 startActivity(intentProj);
                 break;
+            case R.id.action_search:
+                Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
+                startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                break;
+            case R.id.action_toasty:
+                if (item.isChecked()) {
+                    mPreferences.edit().putBoolean("toasty", false).apply();
+                    item.setChecked(false);
+                } else {
+                    mPreferences.edit().putBoolean("toasty", true).apply();
+                    item.setChecked(true);
+                }
+                break;
             default:
                 return false;
         }
@@ -140,7 +161,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBtAdapter == null) {
-            Toast.makeText(this, R.string.BTnotAv, Toast.LENGTH_LONG).show();
+            showMessage(getString(R.string.BTnotAv));
             finish();
             return;
         }
@@ -216,7 +237,7 @@ public class MainActivity extends Activity {
         message = message.replaceAll("[\\x{1F601}]","E-) ");
         message = message.replaceAll("[\\x{1F604}]","E-) ");
         message = message.replaceAll("[\\x{1F603}]",":-D ");
-        message = message.replaceAll("[\\x{1F600}]",":-D ");
+        message = message.replaceAll("[\\x{1F600}]","o_O ");
         message = message.replaceAll("[\\x{1F606}]","X-D ");
         message = message.replaceAll("[\\x{1F644}]","@@ "); // roll eyes
         message = message.replaceAll("[\\x{1F602}]","=D ");
@@ -397,7 +418,26 @@ public class MainActivity extends Activity {
     }
 
     private void showMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        if (mPreferences.getBoolean("toasty", false) == true) {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SELECT_DEVICE) {
+            //When the DeviceListActivity return, with the selected device address
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                devAddr = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+                mPreferences.edit().putString("ble_addr", devAddr).apply();
+
+                mDevice = mBtAdapter.getRemoteDevice(devAddr);
+                ((TextView) findViewById(R.id.rssival)).setText(
+                        "'" + devAddr + "' - "+getString(R.string.Connecting)
+                );
+                mService.connect(devAddr);
+            }
+        }
     }
 
     @Override

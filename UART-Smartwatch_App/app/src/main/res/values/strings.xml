@@ -18,7 +18,7 @@
     <string name="messageSize">Buffer Size</string>
     <string name="messageSize_summary">The size of the buffer, to collect messages (700 = MEMOSTR_LIMIT - MESSAGEPOS)</string>
     <string name="dateFormat">Date and Time Format</string>
-    <string name="dateFormat_summary">Look to java Doc how to set SimpleDateFormat. The UART-Smartwatch Firmware expects e.g.: #17:05:58 ...</string>
+    <string name="dateFormat_summary">Look to java Doc how to set SimpleDateFormat. The UART-Smartwatch Firmware expects e.g.: #17:05:58 …</string>
     <string name="messageLimit">Message Limit</string>
     <string name="messageLimit_summary">Is message bigger, then use only the message title</string>
     <string name="messagePref">Messages</string>
@@ -57,13 +57,20 @@
     <string name="RXcharaMissing">Rx charateristic not found!</string>
     <string name="all_">All </string>
     <string name="_areSend"> packs sent.</string>
-    <string name="tryRecon">Try reconnect ...</string>
+    <string name="tryRecon">Try reconnect …</string>
     <string name="noUART">Device doesn\'t support UART. Disconnecting</string>
     <string name="BTnotAv">Bluetooth is not available</string>
-    <string name="Connecting">connecting ...</string>
+    <string name="Connecting">connecting …</string>
     <string name="flattr_this">Micro-Donate !</string>
     <string name="projPage">UART-Smartwatch Page</string>
     <string name="sorry">Sorry, but \'%s\' needs really access to
         your notifications. You have to add these access in
         your phone preferences!</string>
+    <string name="toasty">debug hints</string>
+    <string name="search">Search device …</string>
+
+    <string name="paired">paired</string>
+    <string name="scan">scan</string>
+    <string name="cancel">cancel</string>
+    <string name="selectDevice">select device</string>
 </resources>
