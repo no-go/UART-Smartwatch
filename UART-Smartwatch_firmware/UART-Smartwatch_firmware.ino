@@ -407,7 +407,6 @@ void loop() {
       if (COUNT > 0) {
         // switch a LED on ------------------- start
         digitalWrite(LED_RED, HIGH);
-        page = memoStrPos; // makes a clear and display off
         // switch a LED on ------------------- end
 
         // alternative to a LED --- works only < 10 ;-D
@@ -418,6 +417,8 @@ void loop() {
         digitalWrite(LED_RED, LOW);
         memoStr[MESSAGEPOS] = '\0';
       }      
+      page = memoStrPos; // makes a clear and display off
+        
     } else if (memoStr[MESSAGEPOS] == CHAR_INIT_SETUP) {
       
       // initialize the DIY Smartwatch + BLE module --------
