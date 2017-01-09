@@ -7,6 +7,13 @@ modified.
 
 Is full with my private mods.
 
+- Button 1: time and message request
+- Poti: scroll through messages
+- Button 2: shows time and power level for 4 seconds (seconds included)
+- Button 2 (more than 4sec pressed): start Dino Game
+- Dino game: Button 2 for jump, 3 lives, 6 speed levels, stores Highscore in EEPROM
+- Time: Button 2 to switch between digital and analoge Clock!
+
 ## Circuit
 
 The 3.3V regulator (BAT Pin) is used! Drive the display with more than 3.3V

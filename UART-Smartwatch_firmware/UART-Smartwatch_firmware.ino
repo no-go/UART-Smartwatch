@@ -27,6 +27,11 @@
 #define CHAR_TIME_RESPONSE '#'
 #define CHAR_NOTIFY_HINT '%'
 
+const int xHour[13] = {32,40,47,49,47,40,32,23,17,15,17,24,32};
+const int yHour[13] = {6,8,14,23,32,38,40,38,31,23,14,8,6};
+const int xMin[60]  = {32,34,36,38,41,42,44,46,48,49,50,51,52,53,53,53,53,53,52,51,50,49,48,46,44,42,41,38,36,34,32,30,28,26,23,21,20,18,16,15,14,13,12,11,11,11,11,11,12,13,14,15,16,18,20,22,23,26,28,30};
+const int yMin[60]  = {2,2,2,3,4,5,6,7,9,11,12,14,17,19,21,23,25,27,29,32,34,35,37,39,40,41,42,43,44,44,44,44,44,43,42,41,40,39,37,35,33,32,29,27,25,23,21,19,17,14,12,11,9,7,6,5,4,3,2,2};
+
 // ------------------------------------------------------
 
 int eeAddress = 0;
@@ -49,6 +54,7 @@ byte seconds = 0;
 byte tick = 0;
 
 bool usingBATpin;
+bool useAnalogClock = false;
 
 int readWheel() {
   power_adc_enable();
@@ -71,6 +77,57 @@ int readVcc() {
   result = 1126400L / result;
   power_adc_disable();
   return result;
+}
+
+void anaClock() {
+  oled.circle(32, 23, 23);
+  int hour = hours;
+  if (hour>12) hour-=12;
+  oled.line(32,   23, xMin[seconds], yMin[seconds]);
+
+  oled.line(32,   23, xMin[minutes], yMin[minutes]);
+  oled.line(32,   23, xHour[hour],   yHour[hour]);
+  oled.line(32+1, 23, xHour[hour]+1, yHour[hour]);
+  
+  for (int i=0; i<12; ++i) {
+    oled.pixel(xHour[i], yHour[i]);  
+  }
+  // 12 o'clock
+  oled.pixel(30, 3);
+  oled.pixel(30, 4);
+  oled.pixel(30, 5);
+  oled.pixel(30, 6);
+  oled.pixel(32, 3);
+  oled.pixel(33, 3);
+  oled.pixel(33, 4);
+  oled.pixel(32, 5);
+  oled.pixel(33, 6);
+  oled.pixel(34, 6);
+  // 3 o'clock
+  oled.pixel(49, 21);
+  oled.pixel(50, 21);
+  oled.pixel(50, 22);
+  oled.pixel(49, 23);
+  oled.pixel(50, 24);
+  oled.pixel(49, 25);
+  oled.pixel(50, 25);
+  // 6 o'clock
+  oled.pixel(32, 41);
+  oled.pixel(31, 42);
+  oled.pixel(30, 43);
+  oled.pixel(31, 43);
+  oled.pixel(30, 44);
+  oled.pixel(31, 44);
+  oled.pixel(32, 44);
+  oled.pixel(31, 45);
+  // 9 o'clock
+  oled.pixel(14, 21);
+  oled.pixel(13, 22);
+  oled.pixel(15, 22);
+  oled.pixel(14, 23);
+  oled.pixel(15, 23);
+  oled.pixel(14, 24);
+  oled.pixel(13, 25);
 }
 
 /**
@@ -190,7 +247,7 @@ void ticking() {
   }
 }
 
-void bigClock() {
+void digiClock() {
   oled.setFontType(2);
   oled.setCursor(0, 12);
   if (hours<10) oled.print("0");
@@ -241,14 +298,21 @@ void loop() {
       COUNT = 0;
       
       oled.command(DISPLAYON);
-      oled.clear(PAGE);
-      batteryIcon();
 
-      for (int j=0; j<40; ++j) {
+      for (int j=0; j<40; ++j) { // 4sec
+        oled.clear(PAGE);
         ticking();
-        bigClock();
+        if (digitalRead(BUTTON1) == LOW) {
+          useAnalogClock = (useAnalogClock? false : true); // flipflop
+        }
+        if (useAnalogClock) {
+          anaClock();
+        } else {
+          digiClock();
+        }
+        batteryIcon();
         oled.display();
-        delay(100);
+        delay(90); // 10ms in vcc mesurement
       }
       oled.command(DISPLAYOFF);
 
