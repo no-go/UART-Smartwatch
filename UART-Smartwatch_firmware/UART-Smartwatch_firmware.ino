@@ -16,7 +16,7 @@
 
 #define SPKR        5
 #define LED_RED     6
-#define LED_WHITE   A1
+#define LED_YELLOW  A1
 #define LED_GREEN   A2
 #define POTI        A4 // scroll throu message instead of page++; 
 
@@ -40,6 +40,7 @@ MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS);
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
+
 byte COUNT        = 0;
 
 byte hours = 0;
@@ -100,7 +101,7 @@ void setup() {
   pinMode(SPKR, OUTPUT);
   
   pinMode(LED_RED, OUTPUT);
-  pinMode(LED_WHITE, OUTPUT);
+  pinMode(LED_YELLOW, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
 
   digitalWrite(BUTTON1, HIGH);
@@ -238,7 +239,6 @@ void loop() {
     if (digitalRead(BUTTON2) == LOW) {
       
       COUNT = 0;
-      digitalWrite(LED_WHITE, LOW);
       
       oled.command(DISPLAYON);
       oled.clear(PAGE);
@@ -269,7 +269,6 @@ void loop() {
     if (digitalRead(BUTTON1) == LOW) {
       
       COUNT = 0;
-      digitalWrite(LED_WHITE, LOW);
               
       // "remove" old chars from buffer
       // print ignores everyting behind \0
@@ -301,9 +300,7 @@ void loop() {
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       if (COUNT > 0) {
-        digitalWrite(LED_WHITE, HIGH);
       } else {
-        digitalWrite(LED_WHITE, LOW);
         memoStr[MESSAGEPOS] = '\0';
       }
       page = memoStrPos; // makes a clear and display off        
@@ -327,6 +324,14 @@ void loop() {
     // print ignores everyting behind \0
     memoStr[MESSAGEPOS] = '\0';
     memoStrPos = MESSAGEPOS;
+  }
+
+  if (COUNT > 0) {
+    if (tick%9 == 0) {
+      digitalWrite(LED_YELLOW, HIGH);
+    } else {
+      digitalWrite(LED_YELLOW, LOW);      
+    }  
   }
    
   page = readWheel();
