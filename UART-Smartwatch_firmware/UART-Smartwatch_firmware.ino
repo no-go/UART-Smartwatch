@@ -1,8 +1,8 @@
 
 #define BUTTON1    3
 
-#define MESSAGEPOS    120
-#define MEMOSTR_LIMIT 720
+#define MESSAGEPOS     15
+#define MEMOSTR_LIMIT 315
 
 #define CHAR_TIME_REQUEST '~'
 #define CHAR_TIME_RESPONSE '#'
@@ -37,45 +37,9 @@ const int yMin[60]  = {2,2,2,3,4,5,6,7,9,11,12,14,17,19,21,23,25,27,29,32,34,35,
 #include <SPI.h>
 #include <avr/power.h>
 
-
-// Option 1: use any pins but a little slower
-//Adafruit_SSD1331 oled = Adafruit_SSD1331(cs, dc, mosi, sclk, rst);  
-
-// Option 2: must use the hardware SPI pins 
-// (for UNO thats sclk = 13 and sid = 11 ???) and pin 10 must be 
-// an output. This is much faster - also required if you want
-// to use the microSD card (see the image drawing example)
-// (for Spark Core, cs = A2, dc = D3, rst = D2)
+// TextSize 0: 8 lines, 15 chars
+// Pixel: 96x64 waveshare
 Adafruit_SSD1331 oled = Adafruit_SSD1331(cs, dc, rst); 
-
-
-/*
-
-// Scroll
-#define ACTIVATESCROLL              0x2F
-#define DEACTIVATESCROLL            0x2E
-#define SETVERTICALSCROLLAREA       0xA3
-#define RIGHTHORIZONTALSCROLL       0x26
-#define LEFT_HORIZONTALSCROLL       0x27
-#define VERTICALRIGHTHORIZONTALSCROLL 0x29
-#define VERTICALLEFTHORIZONTALSCROLL  0x2A
-
-void scrollStop() {
-  oled.writeCommand(DEACTIVATESCROLL);
-}
-
-void scrollUp() {
-  scrollStop();
-  oled.writeCommand(RIGHTHORIZONTALSCROLL);
-  oled.writeCommand(0x00);
-  oled.writeCommand(0x00);  
-  oled.writeCommand(0x40);
-  oled.writeCommand(0x01);
-  oled.writeCommand(0x02);
-  oled.writeCommand(ACTIVATESCROLL);
-}
-
-*/
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
@@ -85,6 +49,8 @@ byte hours = 0;
 byte minutes = 0;
 byte seconds = 0;
 byte tick = 0;
+
+int showClock = 0;
 
 bool usingBATpin;
 
@@ -103,7 +69,7 @@ byte readVcc() {
 }
 
 byte powerTick(int mv) {
-  float quot = (5100-2700)/batLength; // scale: 5100 -> batLength, 2710 -> 0
+  float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
   return (mv-2700)/quot;  
 }
 
@@ -162,13 +128,17 @@ void anaClock() {
   oled.drawPixel(14, 24, WHITE);
   oled.drawPixel(13, 25, WHITE);
 
-  oled.setCursor(16, 50);
-  oled.setTextSize(1);
+  oled.setCursor(0, 54);
   oled.setTextColor(YELLOW, BLACK);
   oled.print(hours);
   oled.print(":");
+  oled.setTextColor(CYAN, BLACK);
   if (minutes<10) oled.print("0");
   oled.print(minutes);
+  oled.print(":");
+  oled.setTextColor(RED, BLACK);
+  if (seconds<10) oled.print("0");
+  oled.print(seconds);
 }
 
 void filler() {
@@ -189,7 +159,6 @@ void setup(void) {
   power_twi_disable();
   
   oled.begin();
-  //scrollUp();
   filler();
 }
 
@@ -222,10 +191,8 @@ void serialEvent() {
     if (inChar == -61) continue; // symbol before utf-8
     if (inChar == -62) continue; // other symbol before utf-8
     if (inChar == '\n') {
-      
+      showClock = -1;
       oled.writeCommand(SSD1331_CMD_DISPLAYON);
-      oled.fillScreen(oled.Color565(128, 128, 255));
-      
       memoStr[memoStrPos] = '\0';
       page = 0;
       continue;
@@ -263,18 +230,19 @@ void ticking() {
 
 void batteryIcon() {
   byte vccVal = readVcc();
-  oled.drawPixel(oled.width()-4, oled.height() - batLength -1, WHITE);
-  oled.drawPixel(oled.width()-3, oled.height() - batLength -1, WHITE);
-  oled.fillRect(oled.width()-6, oled.height()  -vccVal,    6,    vccVal, GREEN); 
-  oled.drawRect(oled.width()-6, oled.height()  -batLength, 6, batLength, WHITE);
+  oled.drawPixel(oled.width()-4, oled.height() - batLength, WHITE);
+  oled.drawPixel(oled.width()-3, oled.height() - batLength, WHITE);
+  oled.drawRect(oled.width()-6, oled.height()  - batLength+1, 6, batLength-1, WHITE);
+  // clear
+  oled.fillRect(oled.width()-5, oled.height()  - batLength+2, 4, batLength-3, BLACK);  
+  oled.fillRect(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal, GREEN); 
 
   int ptick[5] = {50,42,37,33,20};
   int pos;
   for(int i=0;i<5;++i) {
     pos = oled.height() - powerTick(ptick[i]*100);
     oled.setCursor(oled.width()-30, pos);
-    oled.setTextSize(0);
-    oled.setTextColor(BLUE, BLACK);
+    oled.setTextColor(BLUE);
     oled.print(ptick[i]/10.0, 1);
     oled.drawPixel(oled.width()-7,  pos, WHITE);
   }
@@ -286,30 +254,26 @@ byte tob(char c) {
 
 void loop() {
   delay(90);
-
+  
   if (digitalRead(BUTTON1) == LOW) {
-    delay(300); 
+    delay(300);
     tick += 3; 
     if (digitalRead(BUTTON1) == LOW) {
       
       oled.writeCommand(SSD1331_CMD_DISPLAYON);
       oled.fillScreen(BLACK);
-
+      showClock=60;
+      memoStrPos = MESSAGEPOS;
       batteryIcon();
-      
-      for (int j=0; j<40; ++j) { // 4sec
-        ticking();
-        anaClock();
-        delay(100);
-      }
-      
-      oled.writeCommand(SSD1331_CMD_DISPLAYOFF);
-      
-      if (digitalRead(BUTTON1) == LOW) {
+      anaClock();
+      delay(1000);
+      tick += 10; 
+         
+      if (digitalRead(BUTTON1) == LOW) { 
+        showClock=-1;       
         memoStr[MESSAGEPOS] = '\0';
-        memoStrPos = MESSAGEPOS;
         Serial.println( CHAR_TIME_REQUEST );
-      }
+      }     
     }
   }
   /**
@@ -336,10 +300,10 @@ void loop() {
    */
   if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
     oled.setCursor(0, 0);
-    oled.setTextSize(0);
-    oled.setTextColor(oled.Color565(192, 192, 255), oled.Color565(0, 0, 48));
+    oled.setTextColor(WHITE, BLACK);
     oled.print(&(memoStr[page]));
     oled.print(" ");
+    tick+=10; // because it is realy slow!
   }
 
   /// Safe power and switch display off, if message is at the end
@@ -352,10 +316,18 @@ void loop() {
     memoStr[MESSAGEPOS] = '\0';
     memoStrPos = MESSAGEPOS;
   }
-   
-  page += 15;
-  if (page > memoStrPos) page = memoStrPos;
   
+  if (showClock > 0) {
+    batteryIcon();
+    anaClock();
+    showClock--;
+  }
+  
+  if (showClock == 0) {
+    oled.writeCommand(SSD1331_CMD_DISPLAYOFF);
+  }
+     
+  page++;
   ticking();
 }
 
