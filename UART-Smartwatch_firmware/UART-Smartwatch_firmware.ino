@@ -1,71 +1,60 @@
-
-#define BUTTON1    3
-
-#define MESSAGEPOS     15
-#define MEMOSTR_LIMIT 315
+#define BUTTON1   11
+#define BUTTON2   10
+#define LED_WHITE A5
+#define MESSAGEPOS     50 // default:  30 = screen middle
+#define MEMOSTR_LIMIT 550 // default: 730 = 700 char buffer
 
 #define CHAR_TIME_REQUEST '~'
 #define CHAR_TIME_RESPONSE '#'
+#define CHAR_NOTIFY_HINT '%'
 
 const int batLength = 60;
-
-// ------------------------------------------------------
 
 const int xHour[13] = {32,40,47,49,47,40,32,23,17,15,17,24,32};
 const int yHour[13] = {6,8,14,23,32,38,40,38,31,23,14,8,6};
 const int xMin[60]  = {32,34,36,38,41,42,44,46,48,49,50,51,52,53,53,53,53,53,52,51,50,49,48,46,44,42,41,38,36,34,32,30,28,26,23,21,20,18,16,15,14,13,12,11,11,11,11,11,12,13,14,15,16,18,20,22,23,26,28,30};
 const int yMin[60]  = {2,2,2,3,4,5,6,7,9,11,12,14,17,19,21,23,25,27,29,32,34,35,37,39,40,41,42,43,44,44,44,44,44,43,42,41,40,39,37,35,33,32,29,27,25,23,21,19,17,14,12,11,9,7,6,5,4,3,2,2};
 
-#define sclk   13
-#define mosi   11
-#define cs     10
-#define rst    9
-#define dc     8
+// ------------------------------------------------------
 
-// Color definitions
-#define BLACK           0x0000
-#define BLUE            0x001F
-#define RED             0xF800
-#define GREEN           0x07E0
-#define CYAN            0x07FF
-#define MAGENTA         0xF81F
-#define YELLOW          0xFFE0  
-#define WHITE           0xFFFF
-
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1331.h>
+#include <Arduino.h>
 #include <SPI.h>
-#include <avr/power.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include "Adafruit_BLE.h"
+#include "Adafruit_BluefruitLE_SPI.h"
+#include "Adafruit_BluefruitLE_UART.h"
+#include "BluefruitConfig.h"
 
-// TextSize 0: 8 lines, 15 chars
-// Pixel: 96x64 waveshare
-Adafruit_SSD1331 oled = Adafruit_SSD1331(cs, dc, rst); 
+#define OLED_DC      5
+#define OLED_CS     12
+#define OLED_RESET   6
+
+// A7 = D9 !!!
+#define VBATPIN     A7
+
+Adafruit_SSD1306 oled(OLED_DC, OLED_RESET, OLED_CS);
+Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
+
+byte COUNT        = 0;
 
 byte hours = 0;
 byte minutes = 0;
 byte seconds = 0;
 byte tick = 0;
 
-int showClock = 0;
+bool useAnalogClock = false;
 
-bool usingBATpin;
-
-byte readVcc() {
-  int result;
-  power_adc_enable();
-  ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
-  delay(10); // Wait for Vref to settle
-  ADCSRA |= _BV(ADSC); // Start conversion
-  while (bit_is_set(ADCSRA,ADSC)); // measuring
-  result = ADCL; 
-  result |= ADCH<<8; 
-  result = 1126400L / result;
-  power_adc_disable();
-  return powerTick(result);
+int readVcc() {
+  float mv = analogRead(VBATPIN);
+  mv *= 2;
+  mv *= 3.3;
+  return powerTick(mv);
 }
 
 byte powerTick(int mv) {
@@ -74,25 +63,17 @@ byte powerTick(int mv) {
 }
 
 void anaClock() {
-  oled.drawCircle(32, 23, 23, oled.Color565(8,8,24));
+  oled.drawCircle(32, 23, 23, WHITE);
   int hour = hours;
   if (hour>12) hour-=12;
-  
-  // remove old second
-  if (seconds == 0 || seconds == 1) {
-    oled.drawLine(32, 23, xMin[59], yMin[59], BLACK);
-    oled.drawLine(32, 23, xMin[58], yMin[58], BLACK);
-  } else {
-    oled.drawLine(32, 23, xMin[seconds-2], yMin[seconds-2], BLACK);    
-    oled.drawLine(32, 23, xMin[seconds-1], yMin[seconds-1], BLACK);    
-  }
-  
-  oled.drawLine(32,   23, xMin[seconds], yMin[seconds], RED);
-  oled.drawLine(32,   23, xMin[minutes], yMin[minutes], CYAN);
-  oled.drawLine(32,   23, xHour[hour],   yHour[hour], YELLOW);
+  oled.drawLine(32,   23, xMin[seconds], yMin[seconds], WHITE);
+
+  oled.drawLine(32,   23, xMin[minutes], yMin[minutes], WHITE);
+  oled.drawLine(32,   23, xHour[hour],   yHour[hour], WHITE);
+  oled.drawLine(32+1, 23, xHour[hour]+1, yHour[hour], WHITE);
   
   for (int i=0; i<12; ++i) {
-    oled.drawPixel(xHour[i], yHour[i], MAGENTA);  
+    oled.drawPixel(xHour[i], yHour[i], WHITE);  
   }
   // 12 o'clock
   oled.drawPixel(30, 3, WHITE);
@@ -130,18 +111,6 @@ void anaClock() {
   oled.drawPixel(15, 23, WHITE);
   oled.drawPixel(14, 24, WHITE);
   oled.drawPixel(13, 25, WHITE);
-
-  oled.setCursor(0, 54);
-  oled.setTextColor(YELLOW, BLACK);
-  oled.print(hours);
-  oled.print(":");
-  oled.setTextColor(CYAN, BLACK);
-  if (minutes<10) oled.print("0");
-  oled.print(minutes);
-  oled.print(":");
-  oled.setTextColor(RED, BLACK);
-  if (seconds<10) oled.print("0");
-  oled.print(seconds);
 }
 
 void filler() {
@@ -150,21 +119,9 @@ void filler() {
   }
 }
 
-void setup(void) {
-  pinMode(BUTTON1, INPUT);
-  
-  digitalWrite(BUTTON1, HIGH);
-  Serial.begin(9600);
-
-  power_timer1_disable();
-  power_timer2_disable();
-  power_adc_disable();
-  power_twi_disable();
-  
-  oled.begin();
-  filler();
-}
-
+/**
+ * the hard way to handle with german(?) UTF-8 stuff
+ */
 char umlReplace(char inChar) {
   if (inChar == -97) {
     inChar = 224; // ß
@@ -186,23 +143,6 @@ char umlReplace(char inChar) {
     inChar = 0xAF; // >>
   }
   return inChar;  
-}
-
-void serialEvent() {
-  while (Serial.available()) {
-    char inChar = (char)Serial.read();    
-    if (inChar == -61) continue; // symbol before utf-8
-    if (inChar == -62) continue; // other symbol before utf-8
-    if (inChar == '\n') {
-      showClock = -1;
-      oled.writeCommand(SSD1331_CMD_DISPLAYON);
-      memoStr[memoStrPos] = '\0';
-      page = 0;
-      continue;
-    }
-    memoStr[memoStrPos] = umlReplace(inChar);
-    memoStrPos++;
-  }
 }
 
 /**
@@ -231,21 +171,41 @@ void ticking() {
   }
 }
 
+void digiClock() {
+  oled.setTextSize(3);
+  oled.setCursor(0, 12);
+  if (hours<10) oled.print("0");
+  oled.print(hours);
+
+  oled.setTextSize(2);
+  oled.setCursor(34, 15);
+  oled.print(":");
+
+  oled.setTextSize(3);
+  oled.setCursor(45, 12);
+  if (minutes<10) oled.print("0");
+  oled.print(minutes); 
+
+  oled.setTextSize(1);
+  oled.setCursor(25, 37);
+  if (seconds<10) oled.print("0");
+  oled.print(seconds);
+  oled.print(".");
+  oled.print(tick);
+}
+
 void batteryIcon() {
   byte vccVal = readVcc();
   oled.drawPixel(oled.width()-4, oled.height() - batLength, WHITE);
   oled.drawPixel(oled.width()-3, oled.height() - batLength, WHITE);
-  oled.drawRect(oled.width()-6, oled.height()  - batLength+1, 6, batLength-1, WHITE);
-  // clear
-  oled.fillRect(oled.width()-5, oled.height()  - batLength+2, 4, batLength-3, BLACK);  
-  oled.fillRect(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal, GREEN); 
+  oled.drawRect(oled.width()-6, oled.height()  - batLength+1, 6, batLength-1, WHITE);  
+  oled.fillRect(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal, WHITE); 
 
   int ptick[5] = {50,42,37,33,20};
   int pos;
   for(int i=0;i<5;++i) {
     pos = oled.height() - powerTick(ptick[i]*100);
     oled.setCursor(oled.width()-30, pos);
-    oled.setTextColor(BLUE);
     oled.print(ptick[i]/10.0, 1);
     oled.drawPixel(oled.width()-7,  pos, WHITE);
   }
@@ -255,30 +215,93 @@ byte tob(char c) {
   return c - '0';
 }
 
-void loop() {
-  delay(90);
+void setup()   {
+  pinMode(BUTTON1, INPUT);
+  pinMode(BUTTON2, INPUT);
+  pinMode(LED_WHITE, OUTPUT);
+  digitalWrite(BUTTON1, HIGH);
+  digitalWrite(BUTTON2, HIGH);
+
+  filler();
   
-  if (digitalRead(BUTTON1) == LOW) {
-    delay(300);
-    tick += 3; 
-    if (digitalRead(BUTTON1) == LOW) {
-      
-      oled.writeCommand(SSD1331_CMD_DISPLAYON);
-      oled.fillScreen(BLACK);
-      showClock=60;
-      memoStrPos = MESSAGEPOS;
-      batteryIcon();
-      anaClock();
-      delay(1000);
-      tick += 10; 
-         
-      if (digitalRead(BUTTON1) == LOW) { 
-        showClock=-1;       
-        memoStr[MESSAGEPOS] = '\0';
-        Serial.println( CHAR_TIME_REQUEST );
-      }     
+  // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
+  oled.begin(SSD1306_SWITCHCAPVCC);
+  oled.clearDisplay();
+  oled.setTextSize(1); // 8 line with 21 chars
+  oled.setTextColor(WHITE);
+  oled.setCursor(0,0);
+
+  ble.begin(false);
+  ble.echo(false);
+  ble.sendCommandCheckOK("AT+HWModeLED=BLEUART");
+  ble.setMode(BLUEFRUIT_MODE_DATA);
+}
+
+void loop() {
+  delay(93); // is < 100 : makes the seconds a bit faster!  
+  
+  if (ble.isConnected()) {
+    while ( ble.available() ) {
+      char inChar = (char) ble.read();    
+      if (inChar == -61) continue; // symbol before utf-8
+      if (inChar == -62) continue; // other symbol before utf-8
+      if (inChar == '\n') {
+        oled.ssd1306_command(SSD1306_DISPLAYON);
+        memoStr[memoStrPos] = '\0';
+        page = 0;
+        continue;
+      }
+      memoStr[memoStrPos] = umlReplace(inChar);
+      memoStrPos++;
     }
   }
+
+
+
+
+   if (digitalRead(BUTTON2) == LOW) {
+    delay(300); 
+    tick += 3; 
+    if (digitalRead(BUTTON2) == LOW) {
+      
+      COUNT = 0;
+      
+      oled.ssd1306_command(SSD1306_DISPLAYON);
+
+      for (int j=0; j<40; ++j) { // 4sec
+        oled.clearDisplay();
+        ticking();
+        if (digitalRead(BUTTON1) == LOW) {
+          useAnalogClock = (useAnalogClock? false : true); // flipflop
+        }
+        if (useAnalogClock) {
+          anaClock();
+        } else {
+          digiClock();
+        }
+        batteryIcon();
+        oled.display();
+        delay(90); // 10ms in vcc mesurement
+      }
+      oled.ssd1306_command(SSD1306_DISPLAYOFF);     
+    }
+  }
+  
+  if (digitalRead(BUTTON1) == LOW) {
+    delay(300);  
+    tick += 3;
+    if (digitalRead(BUTTON1) == LOW) {
+      
+      COUNT = 0;
+              
+      // "remove" old chars from buffer
+      // print ignores everyting behind \0
+      memoStr[MESSAGEPOS] = '\0';
+      memoStrPos = MESSAGEPOS;
+      ble.println( CHAR_TIME_REQUEST );
+    }
+  }
+
   /**
    * React, if there is a new message
    */
@@ -295,41 +318,46 @@ void loop() {
       hours = tob(memoStr[MESSAGEPOS+1])*10 + tob(memoStr[MESSAGEPOS+2]);
       minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
       seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
-    }
+    } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
+      
+      // there is a new message (or a message is deleted)
+      
+      COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
+      if (COUNT > 0) {
+      } else {
+        memoStr[MESSAGEPOS] = '\0';
+      }
+      page = memoStrPos; // makes a clear and display off        
+     }
   }
 
   /**
    * Scrolling message through display
    */
   if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
+    oled.clearDisplay();
     oled.setCursor(0, 0);
-    oled.setTextColor(WHITE, BLACK);
     oled.print(&(memoStr[page]));
-    oled.print(" ");
-    tick+=10; // because it is realy slow!
+    oled.display();
   }
 
   /// Safe power and switch display off, if message is at the end
   if (page == memoStrPos) {
-    
-    oled.writeCommand(SSD1331_CMD_DISPLAYOFF);
-    
+    oled.ssd1306_command(SSD1306_DISPLAYOFF);
     // "remove" old chars from buffer
     // print ignores everyting behind \0
     memoStr[MESSAGEPOS] = '\0';
     memoStrPos = MESSAGEPOS;
   }
-  
-  if (showClock > 0) {
-    batteryIcon();
-    anaClock();
-    showClock--;
+
+  if (COUNT > 0) {
+    if (tick%9 == 0) {
+      digitalWrite(LED_WHITE, HIGH);
+    } else {
+      digitalWrite(LED_WHITE, LOW);      
+    }  
   }
-  
-  if (showClock == 0) {
-    oled.writeCommand(SSD1331_CMD_DISPLAYOFF);
-  }
-     
+   
   page++;
   ticking();
 }
