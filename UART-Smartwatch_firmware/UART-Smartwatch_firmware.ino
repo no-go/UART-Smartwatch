@@ -161,6 +161,14 @@ void anaClock() {
   oled.drawPixel(15, 23, WHITE);
   oled.drawPixel(14, 24, WHITE);
   oled.drawPixel(13, 25, WHITE);
+
+  oled.setCursor(16, 50);
+  oled.setTextSize(1);
+  oled.setTextColor(YELLOW, BLACK);
+  oled.print(hours);
+  oled.print(":");
+  if (minutes<10) oled.print("0");
+  oled.print(minutes);
 }
 
 void filler() {
@@ -266,7 +274,7 @@ void batteryIcon() {
     pos = oled.height() - powerTick(ptick[i]*100);
     oled.setCursor(oled.width()-30, pos);
     oled.setTextSize(0);
-    oled.setTextColor(WHITE, BLACK);
+    oled.setTextColor(BLUE, BLACK);
     oled.print(ptick[i]/10.0, 1);
     oled.drawPixel(oled.width()-7,  pos, WHITE);
   }
@@ -289,10 +297,10 @@ void loop() {
 
       batteryIcon();
       
-      for (int j=0; j<8; ++j) { // 4sec
+      for (int j=0; j<40; ++j) { // 4sec
         ticking();
         anaClock();
-        delay(500);
+        delay(100);
       }
       
       oled.writeCommand(SSD1331_CMD_DISPLAYOFF);
