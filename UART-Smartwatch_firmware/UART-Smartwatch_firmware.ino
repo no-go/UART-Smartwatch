@@ -74,17 +74,20 @@ byte powerTick(int mv) {
 }
 
 void anaClock() {
-  oled.drawCircle(32, 23, 23, WHITE);
+  oled.drawCircle(32, 23, 23, oled.Color565(8,8,24));
   int hour = hours;
   if (hour>12) hour-=12;
-  if (seconds == 0) {
+  
+  // remove old second
+  if (seconds == 0 || seconds == 1) {
     oled.drawLine(32, 23, xMin[59], yMin[59], BLACK);
+    oled.drawLine(32, 23, xMin[58], yMin[58], BLACK);
   } else {
+    oled.drawLine(32, 23, xMin[seconds-2], yMin[seconds-2], BLACK);    
     oled.drawLine(32, 23, xMin[seconds-1], yMin[seconds-1], BLACK);    
   }
   
   oled.drawLine(32,   23, xMin[seconds], yMin[seconds], RED);
-
   oled.drawLine(32,   23, xMin[minutes], yMin[minutes], CYAN);
   oled.drawLine(32,   23, xHour[hour],   yHour[hour], YELLOW);
   
