@@ -68,6 +68,7 @@
         your phone preferences!</string>
     <string name="toasty">debug hints</string>
     <string name="search">Search device …</string>
+    <string name="directSend">send new at once</string>
 
     <string name="paired">paired</string>
     <string name="scan">scan</string>

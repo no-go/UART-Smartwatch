@@ -70,6 +70,7 @@
         Smartphones gewähren!</string>
     <string name="toasty">Debug Hinweise</string>
     <string name="search">Gerät suchen …</string>
+    <string name="directSend">sende Neues sofort</string>
 
     <string name="paired">verbunden</string>
     <string name="scan">scannen</string>

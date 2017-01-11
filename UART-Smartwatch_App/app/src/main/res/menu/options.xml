@@ -14,6 +14,11 @@
         android:title="@string/search"></item>
     <group android:checkableBehavior="all">
         <item
+            android:id="@+id/action_directSend"
+            android:title="@string/directSend" />
+    </group>
+    <group android:checkableBehavior="all">
+        <item
             android:id="@+id/action_toasty"
             android:title="@string/toasty" />
     </group>

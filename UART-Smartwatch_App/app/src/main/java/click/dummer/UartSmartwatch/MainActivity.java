@@ -105,8 +105,10 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem mi = menu.findItem(R.id.action_toasty);
-        mi.setChecked(mPreferences.getBoolean("toasty", false));
+        MenuItem mi1 = menu.findItem(R.id.action_toasty);
+        mi1.setChecked(mPreferences.getBoolean("toasty", false));
+        MenuItem mi2 = menu.findItem(R.id.action_directSend);
+        mi2.setChecked(mPreferences.getBoolean("directSend", false));
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -136,6 +138,15 @@ public class MainActivity extends Activity {
             case R.id.action_search:
                 Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
                 startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                break;
+            case R.id.action_directSend:
+                if (item.isChecked()) {
+                    mPreferences.edit().putBoolean("directSend", false).apply();
+                    item.setChecked(false);
+                } else {
+                    mPreferences.edit().putBoolean("directSend", true).apply();
+                    item.setChecked(true);
+                }
                 break;
             case R.id.action_toasty:
                 if (item.isChecked()) {
@@ -482,7 +493,8 @@ public class MainActivity extends Activity {
             if (intent.getStringExtra("MSG") != null) {
                 int notifyHintLimit = Integer.parseInt(mPreferences.getString("notifyHintLimit", "0"));
                 if (intent.getBooleanExtra("posted", true)) {
-                    String temp = intent.getStringExtra("MSG").trim();
+                    String orgMsg = intent.getStringExtra("MSG").trim();
+                    String temp = orgMsg;
                     int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "120"));
                     if (btnSend.isEnabled()) {
                         temp = temp + myNewLine(temp) + listMessage.getText().toString().trim();
@@ -496,6 +508,8 @@ public class MainActivity extends Activity {
                             sendMsg(notifyHint + (char) COUNT);
                             Log.i(TAG, "Count: " + COUNT);
                         }
+                        boolean directSend = mPreferences.getBoolean("directSend", false);
+                        if (directSend) sendMsg(orgMsg);
                     }
                 } else {
                     if (COUNT > 0) COUNT--;
