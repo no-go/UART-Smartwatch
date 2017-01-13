@@ -123,25 +123,27 @@ void filler() {
  * the hard way to handle with german(?) UTF-8 stuff
  */
 char umlReplace(char inChar) {
-  if (inChar == -97) {
+
+  if (inChar == 159) {
     inChar = 224; // ß
-  } else if (inChar == -92) {
+  } else if (inChar == 164) {
     inChar = 132; // ä
-  } else if (inChar == -74) {
+  } else if (inChar == 182) {
     inChar = 148; // ö
-  } else if (inChar == -68) {
+  } else if (inChar == 188) {
     inChar = 129; // ü
-  } else if (inChar == -124) {
+  } else if (inChar == 132) {
     inChar = 142; // Ä
-  } else if (inChar == -106) {
+  } else if (inChar == 150) {
     inChar = 153; // Ö
-  } else if (inChar == -100) {
+  } else if (inChar == 156) {
     inChar = 154; // Ü
-  } else if (inChar == -85) {
+  } else if (inChar == 171) {
     inChar = 0xAE; // <<
-  } else if (inChar == -69) {
+  } else if (inChar == 187) {
     inChar = 0xAF; // >>
   }
+  
   return inChar;  
 }
 
@@ -242,9 +244,9 @@ void loop() {
   
   if (ble.isConnected()) {
     while ( ble.available() ) {
-      char inChar = (char) ble.read();    
-      if (inChar == -61) continue; // symbol before utf-8
-      if (inChar == -62) continue; // other symbol before utf-8
+      char inChar = (char) ble.read();
+      if (inChar == 194) continue; // symbol before utf-8
+      if (inChar == 195) continue; // symbol before utf-8
       if (inChar == '\n') {
         oled.ssd1306_command(SSD1306_DISPLAYON);
         memoStr[memoStrPos] = '\0';
