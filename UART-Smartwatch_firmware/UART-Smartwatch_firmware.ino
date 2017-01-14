@@ -16,16 +16,17 @@
 
 #define SPKR        5
 #define LED_RED     6
-#define LED_YELLOW  A1
+#define LED_YELLOW  A1 // I use a white LED 
 #define LED_GREEN   A2
 #define POTI        A4 // scroll throu message instead of page++; 
 
 #define MESSAGEPOS     50 // default:  30 = screen middle
 #define MEMOSTR_LIMIT 550 // default: 730 = 700 char buffer
 
-#define CHAR_TIME_REQUEST '~'
-#define CHAR_TIME_RESPONSE '#'
-#define CHAR_NOTIFY_HINT '%'
+#define CHAR_TIME_REQUEST     '~'
+#define CHAR_TIME_RESPONSE    '#' //#HH:MM:SS
+#define CHAR_NOTIFY_HINT      '%' //%[byte]
+#define CHAR_NOTIFY_RGB_DELAY '°' //°[chars: 0-9][0-9][0-9][0-9]
 
 const int xHour[13] = {32,40,47,49,47,40,32,23,17,15,17,24,32};
 const int yHour[13] = {6,8,14,23,32,38,40,38,31,23,14,8,6};
@@ -48,20 +49,32 @@ int  page         = 0;
 
 byte COUNT        = 0;
 
-byte hours = 0;
+byte hours   = 0;
 byte minutes = 0;
 byte seconds = 0;
-byte tick = 0;
+byte tick    = 0;
 
 bool usingBATpin;
-bool useAnalogClock = false;
+
+// 0=digi, 1=analog, 2=adjust_hour, 3=adjust_min, 4=digi 4 ever
+int clockMode = 0;
+
+byte redValue   = 100;
+byte greenValue = 100;
+byte blueValue  = 100;
+
+// Check it -------------------------
+// 0 always on
+// 1 = 100 ms of a second on
+// 2 = 200 ms of a second on
+// 9 = 900 ms of a second on
+byte delayValue = 1;
 
 int readWheel() {
   power_adc_enable();
   int reading = analogRead(POTI);
   power_adc_disable();
-  reading = map(reading, 0, 1023, 0, MEMOSTR_LIMIT - MESSAGEPOS);
-  if (reading > memoStrPos) reading = memoStrPos; // make display off
+  reading = map(reading, 0, 1023, 0, 60);
   return reading;
 }
 
@@ -185,6 +198,8 @@ void setup() {
 char umlReplace(char inChar) {
   if (inChar == -97) {
     inChar = 224; // ß
+  } else if (inChar == -78) {
+    inChar = 248; // °
   } else if (inChar == -92) {
     inChar = 132; // ä
   } else if (inChar == -74) {
@@ -290,31 +305,49 @@ byte tob(char c) {
 void loop() {
   delay(93); // is < 100 : makes the seconds a bit faster!
 
-  if (digitalRead(BUTTON2) == LOW) {
+  if (digitalRead(BUTTON2) == LOW || clockMode > 1) {
     delay(300); 
     tick += 3; 
-    if (digitalRead(BUTTON2) == LOW) {
+    if (digitalRead(BUTTON2) == LOW || clockMode > 1) {
       
-      COUNT = 0;
+      if (clockMode < 2) {
+        COUNT = 0;
+        digitalWrite(LED_RED, LOW);
+      }
       
       oled.command(DISPLAYON);
 
       for (int j=0; j<40; ++j) { // 4sec
         oled.clear(PAGE);
         ticking();
-        if (digitalRead(BUTTON1) == LOW) {
-          useAnalogClock = (useAnalogClock? false : true); // flipflop
-        }
-        if (useAnalogClock) {
+        if (clockMode == 0) {
+          digiClock();
+        } else if (clockMode == 1) {
           anaClock();
+        } else if (clockMode == 2) {
+          oled.pixel(5, 0);
+          hours = readWheel();
+          digiClock();
+        } else if (clockMode == 3) {
+          oled.pixel(30, 0);
+          minutes = readWheel();
+          digiClock();
         } else {
+          oled.pixel(5, 0);
+          oled.pixel(30, 0);
           digiClock();
         }
         batteryIcon();
         oled.display();
         delay(90); // 10ms in vcc mesurement
       }
-      oled.command(DISPLAYOFF);
+      
+      if (digitalRead(BUTTON1) == LOW) {
+        clockMode++;
+        if (clockMode > 4) clockMode = 0;
+      }
+      
+      if (clockMode == 0 || clockMode == 1) oled.command(DISPLAYOFF);
 
       if (digitalRead(BUTTON2) == LOW) {      
         Serial.println("Game !");
@@ -333,6 +366,7 @@ void loop() {
     if (digitalRead(BUTTON1) == LOW) {
       
       COUNT = 0;
+      digitalWrite(LED_RED, LOW);
               
       // "remove" old chars from buffer
       // print ignores everyting behind \0
@@ -358,6 +392,15 @@ void loop() {
       hours = tob(memoStr[MESSAGEPOS+1])*10 + tob(memoStr[MESSAGEPOS+2]);
       minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
       seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
+
+    } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_RGB_DELAY) {
+      
+      redValue   = tob((unsigned char) memoStr[MESSAGEPOS+1])*28; // "1" -> 28, "9" -> 252
+      greenValue = tob((unsigned char) memoStr[MESSAGEPOS+2])*28;
+      blueValue  = tob((unsigned char) memoStr[MESSAGEPOS+3])*28;
+      
+      delayValue = tob((unsigned char) memoStr[MESSAGEPOS+4]);
+
     } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
       
       // there is a new message (or a message is deleted)
@@ -391,18 +434,36 @@ void loop() {
   }
 
   if (COUNT > 0) {
-    if (tick%9 == 0) {
-      digitalWrite(LED_YELLOW, HIGH);
+    if (delayValue==0) {
+        // I only connect Red to analoge ... bad idea, I think
+        analogWrite(LED_RED, redValue);      
     } else {
-      digitalWrite(LED_YELLOW, LOW);      
-    }  
+      if (tick <= delayValue) {
+        analogWrite(LED_RED, redValue);
+      } else {
+        digitalWrite(LED_RED, LOW);      
+      }
+    }
   }
    
-  page = readWheel();
+  page++;
   ticking();
 }
 
+
+
+
+
+
+
 // =====================================================================
+
+
+
+
+
+
+
 
 void setByte(byte & b, int x, int y) {
   int tmp;
