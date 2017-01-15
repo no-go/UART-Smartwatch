@@ -26,7 +26,7 @@
 #define CHAR_TIME_REQUEST     '~'
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
-#define RGB_DELAY             248 //°[chars: 0-9][0-9][0-9][0-9]
+#define RGB_DELAY             '^' //^[chars: 0-9][0-9][0-9][0-9]
 
 const int xHour[13] = {32,40,47,49,47,40,32,23,17,15,17,24,32};
 const int yHour[13] = {6,8,14,23,32,38,40,38,31,23,14,8,6};
