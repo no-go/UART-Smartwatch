@@ -24,9 +24,9 @@
 #define MEMOSTR_LIMIT 550 // default: 730 = 700 char buffer
 
 #define CHAR_TIME_REQUEST     '~'
-#define CHAR_TIME_RESPONSE    '#' //#HH:MM:SS
+#define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
-#define CHAR_NOTIFY_RGB_DELAY '°' //°[chars: 0-9][0-9][0-9][0-9]
+#define RGB_DELAY             248 //°[chars: 0-9][0-9][0-9][0-9]
 
 const int xHour[13] = {32,40,47,49,47,40,32,23,17,15,17,24,32};
 const int yHour[13] = {6,8,14,23,32,38,40,38,31,23,14,8,6};
@@ -59,16 +59,16 @@ bool usingBATpin;
 // 0=digi, 1=analog, 2=adjust_hour, 3=adjust_min, 4=digi 4 ever
 int clockMode = 0;
 
-byte redValue   = 100;
-byte greenValue = 100;
-byte blueValue  = 100;
+int redValue   = 250;
+int greenValue = 100;
+int blueValue  = 100;
 
 // Check it -------------------------
 // 0 always on
 // 1 = 100 ms of a second on
 // 2 = 200 ms of a second on
 // 9 = 900 ms of a second on
-byte delayValue = 1;
+int delayValue = 8;
 
 int readWheel() {
   power_adc_enable();
@@ -198,8 +198,12 @@ void setup() {
 char umlReplace(char inChar) {
   if (inChar == -97) {
     inChar = 224; // ß
-  } else if (inChar == -78) {
+  } else if (inChar == -80) {
     inChar = 248; // °
+  } else if (inChar == -67) {
+    inChar = 171; // 1/2
+  } else if (inChar == -78) {
+    inChar = 253; // ²
   } else if (inChar == -92) {
     inChar = 132; // ä
   } else if (inChar == -74) {
@@ -393,14 +397,14 @@ void loop() {
       minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
       seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
 
-    } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_RGB_DELAY) {
+    } else if (memoStr[MESSAGEPOS] == RGB_DELAY) {
       
-      redValue   = tob((unsigned char) memoStr[MESSAGEPOS+1])*28; // "1" -> 28, "9" -> 252
-      greenValue = tob((unsigned char) memoStr[MESSAGEPOS+2])*28;
-      blueValue  = tob((unsigned char) memoStr[MESSAGEPOS+3])*28;
+      redValue   = 28 * ((unsigned char) memoStr[MESSAGEPOS+1] - '0'); // "1" -> 28, "9" -> 252
+      greenValue = 28 * ((unsigned char) memoStr[MESSAGEPOS+2] - '0');
+      blueValue  = 28 * ((unsigned char) memoStr[MESSAGEPOS+3] - '0');
       
-      delayValue = tob((unsigned char) memoStr[MESSAGEPOS+4]);
-
+      delayValue = (unsigned char) memoStr[MESSAGEPOS+4] - '0';
+      
     } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
       
       // there is a new message (or a message is deleted)
