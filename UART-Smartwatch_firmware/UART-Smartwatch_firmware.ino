@@ -1,6 +1,9 @@
-#define BUTTON1   11
-#define BUTTON2   10
-#define LED_WHITE A5
+#define BUTTON1   10 // time+msg request
+#define BUTTON2   13 // show time
+#define LED_RED   11
+#define LED_GREEN 12
+#define LED_BLUE   5
+
 #define MESSAGEPOS     50 // default:  30 = screen middle
 #define MEMOSTR_LIMIT 550 // default: 730 = 700 char buffer
 
@@ -17,19 +20,15 @@ const int yMin[60]  = {2,2,2,3,4,5,6,7,9,11,12,14,17,19,21,23,25,27,29,32,34,35,
 
 // ------------------------------------------------------
 
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "Adafruit_BLE.h"
 #include "Adafruit_BluefruitLE_SPI.h"
-#include "Adafruit_BluefruitLE_UART.h"
 #include "BluefruitConfig.h"
 
-#define OLED_DC      5
-#define OLED_CS     12
-#define OLED_RESET   6
+#define OLED_CS     A3
+#define OLED_DC     A4
+#define OLED_RESET  A5
 
 // A7 = D9 !!!
 #define VBATPIN     A7
@@ -50,6 +49,19 @@ byte tick = 0;
 
 bool useAnalogClock = false;
 
+// analogWrite on feather M0 not working for A1..A5 :-(
+int redValue   = 250;
+int greenValue = 50;
+int blueValue  = 50;
+#define analogHACK    false // 0..99 -> 0 and 100..255 -> 255
+
+// Check it -------------------------
+// 0 always on
+// 1 = 100 ms of a second on
+// 2 = 200 ms of a second on ..
+// 9 = 900 ms of a second on
+int delayValue = 8;
+
 int readVcc() {
   float mv = analogRead(VBATPIN);
   mv *= 2;
@@ -60,6 +72,22 @@ int readVcc() {
 byte powerTick(int mv) {
   float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
   return (mv-2700)/quot;  
+}
+
+void wakeUpIcon() {
+  oled.clearDisplay();
+  oled.drawCircle(32, 23, 10, WHITE);
+  oled.drawPixel(31, 20, WHITE);
+  oled.drawPixel(35, 19, WHITE);
+  oled.drawLine(29, 27, 35, 27, WHITE);
+  oled.display();
+  delay(500);
+  oled.drawRect(29, 19, 3, 3, WHITE);
+  oled.drawRect(35, 19, 3, 3, WHITE);
+  oled.drawPixel(35, 26, WHITE);
+  oled.display();  
+  delay(500);
+  tick += 10; 
 }
 
 void anaClock() {
@@ -218,11 +246,11 @@ byte tob(char c) {
 }
 
 void setup()   {
-  pinMode(BUTTON1, INPUT);
-  pinMode(BUTTON2, INPUT);
-  pinMode(LED_WHITE, OUTPUT);
-  digitalWrite(BUTTON1, HIGH);
-  digitalWrite(BUTTON2, HIGH);
+  pinMode(BUTTON1, INPUT_PULLUP);
+  pinMode(BUTTON2, INPUT_PULLUP);
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
 
   filler();
   
@@ -240,7 +268,7 @@ void setup()   {
 }
 
 void loop() {
-  delay(93); // is < 100 : makes the seconds a bit faster!  
+  delay(100); 
   
   if (ble.isConnected()) {
     while ( ble.available() ) {
@@ -261,12 +289,15 @@ void loop() {
 
 
 
-   if (digitalRead(BUTTON2) == LOW) {
+  if (digitalRead(BUTTON2) == LOW) {
     delay(300); 
     tick += 3; 
     if (digitalRead(BUTTON2) == LOW) {
       
       COUNT = 0;
+      digitalWrite(LED_RED,   LOW);
+      digitalWrite(LED_GREEN, LOW);
+      digitalWrite(LED_BLUE,  LOW);
       
       oled.ssd1306_command(SSD1306_DISPLAYON);
 
@@ -294,7 +325,14 @@ void loop() {
     tick += 3;
     if (digitalRead(BUTTON1) == LOW) {
       
+      oled.ssd1306_command(SSD1306_DISPLAYON);
+      wakeUpIcon();
+      oled.ssd1306_command(SSD1306_DISPLAYOFF);
+      
       COUNT = 0;
+      digitalWrite(LED_RED,   LOW);
+      digitalWrite(LED_GREEN, LOW);
+      digitalWrite(LED_BLUE,  LOW);
               
       // "remove" old chars from buffer
       // print ignores everyting behind \0
@@ -326,6 +364,15 @@ void loop() {
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       if (COUNT > 0) {
+        redValue   = (unsigned char) memoStr[MESSAGEPOS+2] - 'a';
+        greenValue = (unsigned char) memoStr[MESSAGEPOS+3] - 'a';
+        blueValue  = (unsigned char) memoStr[MESSAGEPOS+4] - 'a';
+        if (analogHACK == true) {
+          redValue   = (redValue<100   ? 0:255);
+          greenValue = (greenValue<100 ? 0:255);
+          blueValue  = (blueValue<100  ? 0:255);
+        }
+        delayValue = (unsigned char) memoStr[MESSAGEPOS+5] - 'a';
       } else {
         memoStr[MESSAGEPOS] = '\0';
       }
@@ -353,13 +400,27 @@ void loop() {
   }
 
   if (COUNT > 0) {
-    if (tick%9 == 0) {
-      digitalWrite(LED_WHITE, HIGH);
+    if (delayValue==0) {
+        analogWrite(LED_RED,   redValue);
+        analogWrite(LED_GREEN, greenValue);
+        analogWrite(LED_BLUE,  blueValue);
     } else {
-      digitalWrite(LED_WHITE, LOW);      
-    }  
+      if (tick <= delayValue) {
+        analogWrite(LED_RED,   redValue);
+        analogWrite(LED_GREEN, greenValue);
+        analogWrite(LED_BLUE,  blueValue);
+      } else {
+        analogWrite(LED_RED,   0);      
+        analogWrite(LED_GREEN, 0);      
+        analogWrite(LED_BLUE,  0);      
+      }
+    }
+  } else {
+    analogWrite(LED_RED,   0);      
+    analogWrite(LED_GREEN, 0);      
+    analogWrite(LED_BLUE,  0);    
   }
-   
+
   page++;
   ticking();
 }
