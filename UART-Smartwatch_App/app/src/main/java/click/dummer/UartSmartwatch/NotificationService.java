@@ -30,6 +30,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.graphics.Color;
+
+import java.util.ArrayList;
 
 public class NotificationService extends NotificationListenerService {
     private SharedPreferences mPreferences;
@@ -41,6 +44,12 @@ public class NotificationService extends NotificationListenerService {
         Bundle extras = noti.extras;
         String title = extras.getString(Notification.EXTRA_TITLE);
         String msg = (String) noti.tickerText;
+        String pack = sbn.getPackageName();
+
+        ArrayList<Integer> rgb = new ArrayList<Integer>(3);
+        rgb.add(Color.red(noti.ledARGB));
+        rgb.add(Color.green(noti.ledARGB));
+        rgb.add(Color.blue(noti.ledARGB));
 
         // catch not normal message .-----------------------------
         if (!sbn.isClearable()) return;
@@ -61,6 +70,10 @@ public class NotificationService extends NotificationListenerService {
         }
         i.putExtra("MSG", msg);
         i.putExtra("posted", true);
+        i.putIntegerArrayListExtra("RGB", rgb);
+        i.putExtra("App", pack);
+        i.putExtra("delayOn", noti.ledOnMS);
+        i.putExtra("delayOff", noti.ledOffMS);
         sendBroadcast(i);
     }
 

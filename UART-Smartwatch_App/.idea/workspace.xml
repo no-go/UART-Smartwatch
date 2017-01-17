@@ -42,13 +42,89 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="511" column="54" selection-start-line="511" selection-start-column="54" selection-end-line="511" selection-end-column="54" />
+            <state relative-caret-position="352">
+              <caret line="520" column="44" selection-start-line="520" selection-start-column="44" selection-end-line="520" selection-end-column="44" />
               <folding>
-                <element signature="e#0#22429#0" expanded="true" />
+                <element signature="e#0#23021#0" expanded="true" />
+                <element signature="e#3927#4516#0" expanded="true" />
+                <element signature="e#4515#4516#0" expanded="true" />
+                <element signature="e#7283#7310#0" expanded="true" />
+                <element signature="e#8041#8851#0" expanded="true" />
+                <element signature="e#8242#8269#0" expanded="true" />
+                <element signature="e#8474#8504#0" expanded="true" />
+                <element signature="e#8850#8851#0" expanded="true" />
+                <element signature="e#8890#9514#0" expanded="true" />
+                <element signature="e#9513#9514#0" expanded="true" />
+                <element signature="e#12393#12419#0" expanded="true" />
+                <element signature="e#12716#13251#0" expanded="true" />
+                <element signature="e#12826#12845#0" expanded="true" />
+                <element signature="e#13250#13251#0" expanded="true" />
+                <element signature="e#13370#14304#0" expanded="true" />
+                <element signature="e#13480#13496#0" expanded="true" />
+                <element signature="e#13676#13697#0" expanded="true" />
+                <element signature="e#13834#14255#0" expanded="true" />
+                <element signature="e#14074#14091#0" expanded="true" />
+                <element signature="e#14254#14255#0" expanded="true" />
+                <element signature="e#14303#14304#0" expanded="true" />
+                <element signature="e#14509#15292#0" expanded="true" />
+                <element signature="e#15291#15292#0" expanded="true" />
+                <element signature="e#16797#16808#0" expanded="true" />
+                <element signature="e#17060#17115#0" expanded="true" />
+                <element signature="e#17086#17114#0" expanded="true" />
+                <element signature="e#17786#17814#0" expanded="true" />
+                <element signature="e#19045#19075#0" expanded="true" />
+                <element signature="e#19334#19347#0" expanded="true" />
+                <element signature="e#19373#19392#0" expanded="true" />
+                <element signature="e#19425#19437#0" expanded="true" />
+                <element signature="e#19439#20009#0" expanded="true" />
+                <element signature="e#20008#20009#0" expanded="true" />
+                <element signature="e#20042#20053#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values-de/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="212">
+              <caret line="42" column="67" selection-start-line="42" selection-start-column="67" selection-end-line="43" selection-end-column="72" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="287">
+              <caret line="36" column="61" selection-start-line="36" selection-start-column="61" selection-end-line="36" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NotificationService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="74">
+              <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="30" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2041#2050#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1388,7 +1464,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="4452494647598" />
+        <entry key="$PROJECT_DIR$" value="4453845197067" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -1655,7 +1731,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/app/src/main/res/layout/main.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/xml/preferences.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/UartService.java" />
@@ -1663,11 +1738,12 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/device_list.xml" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/DeviceListActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/options.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       </list>
     </option>
   </component>
@@ -1687,7 +1763,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator currentView="AndroidView" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -1702,188 +1778,112 @@
     </navigator>
     <panes>
       <pane id="AndroidView">
-        <subPane />
-      </pane>
-      <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Gradle Scripts" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidBuildScriptsGroupNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="xml" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values-de" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="values" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UART-Smartwatch_App" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="menu" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="strings.xml" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResGroupNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="UART-Smartwatch_App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="UART-Smartwatch_App" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="ProjectPane">
+        <subPane />
+      </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$PROJECT_DIR$/../../../Sdk" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Android-nRF-UART-master" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Arduino/bleSensor/rgb-Notify" />
     <property name="UI_DESIGNER_EDITOR_MODE.NlPropertiesWindowManager-NlEditorPanel.WIDTH" value="250" />
     <property name="device.picker.selection" value="5b38c29a" />
     <property name="UI_DESIGNER_EDITOR_MODE.NlPaletteManager-NlEditorPanel.WIDTH" value="163" />
@@ -2228,37 +2228,37 @@
     <frame x="33" y="0" width="1247" height="800" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44748858" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2648402" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.61491627" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.61491627" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2857143" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2907268" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -2285,10 +2285,86 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5355">
           <caret line="424" column="0" selection-start-line="424" selection-start-column="0" selection-end-line="424" selection-end-column="0" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2333,7 +2409,40 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2351,7 +2460,40 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2378,7 +2520,40 @@
         <state relative-caret-position="5430">
           <caret line="426" column="0" selection-start-line="426" selection-start-column="0" selection-end-line="426" selection-end-column="0" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2403,19 +2578,52 @@
         <state relative-caret-position="105">
           <caret line="63" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/xml/preferences.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="27" column="35" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="35" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
@@ -2430,19 +2638,52 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/xml/preferences.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="27" column="35" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="35" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
@@ -2457,19 +2698,52 @@
         <state relative-caret-position="5430">
           <caret line="426" column="52" selection-start-line="426" selection-start-column="52" selection-end-line="426" selection-end-column="52" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/xml/preferences.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="27" column="35" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="35" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
@@ -2484,7 +2758,40 @@
         <state relative-caret-position="3735">
           <caret line="307" column="58" selection-start-line="307" selection-start-column="58" selection-end-line="307" selection-end-column="58" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2497,13 +2804,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="1080">
           <caret line="72" column="21" selection-start-line="72" selection-start-column="21" selection-end-line="72" selection-end-column="21" />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/UartService.java">
@@ -2518,19 +2825,52 @@
         <state relative-caret-position="3735">
           <caret line="307" column="60" selection-start-line="307" selection-start-column="60" selection-end-line="307" selection-end-column="60" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="1920">
           <caret line="128" column="44" selection-start-line="128" selection-start-column="44" selection-end-line="128" selection-end-column="44" />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/UartService.java">
@@ -2545,19 +2885,52 @@
         <state relative-caret-position="3720">
           <caret line="306" column="69" selection-start-line="306" selection-start-column="69" selection-end-line="306" selection-end-column="69" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/UartService.java">
@@ -2568,13 +2941,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="1080">
           <caret line="72" column="21" selection-start-line="72" selection-start-column="21" selection-end-line="72" selection-end-column="21" />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
@@ -2592,13 +2965,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/xml/preferences.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
         </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MyPreferenceFragment.java">
@@ -2617,29 +2990,22 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/device_element.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
           <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/device_list.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/device_list.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="990">
           <caret line="66" column="38" selection-start-line="66" selection-start-column="38" selection-end-line="66" selection-end-column="38" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -2683,15 +3049,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values-de/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="72" column="28" selection-start-line="72" selection-start-column="18" selection-end-line="72" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/menu/options.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" column="45" selection-start-line="17" selection-start-column="45" selection-end-line="17" selection-end-column="45" />
@@ -2700,33 +3061,82 @@
           </folding>
         </state>
       </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="70" column="39" selection-start-line="70" selection-start-column="39" selection-end-line="70" selection-end-column="39" />
+        <state relative-caret-position="135">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="511" column="54" selection-start-line="511" selection-start-column="54" selection-end-line="511" selection-end-column="54" />
+        <state relative-caret-position="352">
+          <caret line="520" column="44" selection-start-line="520" selection-start-column="44" selection-end-line="520" selection-end-column="44" />
           <folding>
-            <element signature="e#0#22429#0" expanded="true" />
+            <element signature="e#0#23021#0" expanded="true" />
+            <element signature="e#3927#4516#0" expanded="true" />
+            <element signature="e#4515#4516#0" expanded="true" />
+            <element signature="e#7283#7310#0" expanded="true" />
+            <element signature="e#8041#8851#0" expanded="true" />
+            <element signature="e#8242#8269#0" expanded="true" />
+            <element signature="e#8474#8504#0" expanded="true" />
+            <element signature="e#8850#8851#0" expanded="true" />
+            <element signature="e#8890#9514#0" expanded="true" />
+            <element signature="e#9513#9514#0" expanded="true" />
+            <element signature="e#12393#12419#0" expanded="true" />
+            <element signature="e#12716#13251#0" expanded="true" />
+            <element signature="e#12826#12845#0" expanded="true" />
+            <element signature="e#13250#13251#0" expanded="true" />
+            <element signature="e#13370#14304#0" expanded="true" />
+            <element signature="e#13480#13496#0" expanded="true" />
+            <element signature="e#13676#13697#0" expanded="true" />
+            <element signature="e#13834#14255#0" expanded="true" />
+            <element signature="e#14074#14091#0" expanded="true" />
+            <element signature="e#14254#14255#0" expanded="true" />
+            <element signature="e#14303#14304#0" expanded="true" />
+            <element signature="e#14509#15292#0" expanded="true" />
+            <element signature="e#15291#15292#0" expanded="true" />
+            <element signature="e#16797#16808#0" expanded="true" />
+            <element signature="e#17060#17115#0" expanded="true" />
+            <element signature="e#17086#17114#0" expanded="true" />
+            <element signature="e#17786#17814#0" expanded="true" />
+            <element signature="e#19045#19075#0" expanded="true" />
+            <element signature="e#19334#19347#0" expanded="true" />
+            <element signature="e#19373#19392#0" expanded="true" />
+            <element signature="e#19425#19437#0" expanded="true" />
+            <element signature="e#19439#20009#0" expanded="true" />
+            <element signature="e#20008#20009#0" expanded="true" />
+            <element signature="e#20042#20053#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/click/dummer/UartSmartwatch/NotificationService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="74">
+          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2041#2050#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values-de/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="42" column="67" selection-start-line="42" selection-start-column="67" selection-end-line="43" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="36" column="61" selection-start-line="36" selection-start-column="61" selection-end-line="36" selection-end-column="61" />
+          <folding />
         </state>
       </provider>
     </entry>

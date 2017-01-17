@@ -40,7 +40,8 @@
 
     <string name="notifyHint">Zeichen</string>
     <string name="notifyHint_summary">Wenn die App eine neue Benachrichtigung erkennt, wird
-        dieses Zeichen gefolgt von einem Byte (= Anzahl) gesendet.
+        dieses Zeichen gefolgt von einem Byte (= Anzahl) gesendet. Danach drei A-z für RGB gefolgt
+        von einem B (=1), um in einer Sekunde nur 100ms lang zu blinken.
         Nutze z.B. % oder lasse es leer.</string>
 
     <string name="notifyHintLimit">Grenze</string>

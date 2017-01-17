@@ -33,8 +33,9 @@
 
     <string name="notifyHint">Char</string>
     <string name="notifyHint_summary">If the App detects a new notification, this char is sent
-        followed by a byte (=count of new notifications). Use a char like a %, or
-        keep it empty.</string>
+        followed by a byte (=count of new notifications). The next 3 Chars are A-z for RGB values
+        and a B (=1), to let a LED blink for 100ms every 1sec.
+        Use a char like a %, or keep it empty.</string>
 
     <string name="notifyHintLimit">Limit</string>
     <string name="notifyHintLimit_summary">To save power on your UART-Smartwatch,

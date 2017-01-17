@@ -24,6 +24,7 @@
 package click.dummer.UartSmartwatch;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -261,6 +262,8 @@ public class MainActivity extends Activity {
         Matcher unicodeOutlierMatcher = unicodeOutliers.matcher(message);
         message = unicodeOutlierMatcher.replaceAll("\2");
 
+        Log.i(TAG, "send: " + message);
+
         byte[] value;
         try {
             value = (message + "\n").getBytes("UTF-8");
@@ -478,6 +481,11 @@ public class MainActivity extends Activity {
         return "/";
     }
 
+    char byteInt2ABC(int val) {
+        int out = 65 + (int) Math.floor( (float) val * 57.0/255.0);
+        return Character.toChars(out)[0];
+    }
+
     class NotificationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -494,6 +502,7 @@ public class MainActivity extends Activity {
                 int notifyHintLimit = Integer.parseInt(mPreferences.getString("notifyHintLimit", "0"));
                 if (intent.getBooleanExtra("posted", true)) {
                     String orgMsg = intent.getStringExtra("MSG").trim();
+                    ArrayList<Integer> rgb = intent.getIntegerArrayListExtra("RGB");
                     String temp = orgMsg;
                     int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "120"));
                     if (btnSend.isEnabled()) {
@@ -505,7 +514,12 @@ public class MainActivity extends Activity {
                         COUNT++;
                         String notifyHint = mPreferences.getString("notifyHint", "");
                         if (notifyHint.length() > 0 && COUNT > notifyHintLimit) {
-                            sendMsg(notifyHint + (char) COUNT);
+                            notifyHint += (char) COUNT;
+                            notifyHint += byteInt2ABC(rgb.get(0));
+                            notifyHint += byteInt2ABC(rgb.get(1));
+                            notifyHint += byteInt2ABC(rgb.get(2));
+                            notifyHint += 'B';
+                            sendMsg(notifyHint);
                             Log.i(TAG, "Count: " + COUNT);
                         }
                         boolean directSend = mPreferences.getBoolean("directSend", false);
