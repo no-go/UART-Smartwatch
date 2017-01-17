@@ -53,7 +53,6 @@ bool useAnalogClock = false;
 int redValue   = 250;
 int greenValue = 50;
 int blueValue  = 50;
-#define analogHACK    false // 0..99 -> 0 and 100..255 -> 255
 
 // Check it -------------------------
 // 0 always on
@@ -364,15 +363,10 @@ void loop() {
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       if (COUNT > 0) {
-        redValue   = (unsigned char) memoStr[MESSAGEPOS+2] - 'a';
-        greenValue = (unsigned char) memoStr[MESSAGEPOS+3] - 'a';
-        blueValue  = (unsigned char) memoStr[MESSAGEPOS+4] - 'a';
-        if (analogHACK == true) {
-          redValue   = (redValue<100   ? 0:255);
-          greenValue = (greenValue<100 ? 0:255);
-          blueValue  = (blueValue<100  ? 0:255);
-        }
-        delayValue = (unsigned char) memoStr[MESSAGEPOS+5] - 'a';
+        redValue   = (unsigned char) memoStr[MESSAGEPOS+2] - 'A';
+        greenValue = (unsigned char) memoStr[MESSAGEPOS+3] - 'A';
+        blueValue  = (unsigned char) memoStr[MESSAGEPOS+4] - 'A';
+        delayValue = (unsigned char) memoStr[MESSAGEPOS+5] - 'A';
       } else {
         memoStr[MESSAGEPOS] = '\0';
       }
