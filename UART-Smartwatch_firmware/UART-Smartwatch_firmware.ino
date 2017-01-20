@@ -1,39 +1,43 @@
+
+// avrdude -c usbtiny -p m328p  -B 300 -U flash:w:UART-Smartwatch_firmware.ino.arduino_eightanaloginputs.hex:i
+
+// ---------------------------- Configure YOUR CONNECTIONS !! -------
+
+// OLED (13 -> MISO/DIN, 11 ->SCK)
+#define PIN_CS     5
+#define PIN_RESET  6
+#define PIN_DC     8
+#define DC_JUMPER  0
+
+#define BUTTON1    A0
+#define BUTTON2    A1
+
+#define LED_RED     10
+#define LED_GREEN   9 
+#define LED_BLUE    3
+// unconnected
+#define POTI        A4 
+#define SPKR        A5 // A5 has no analog Out
+
+
+#define CHAR_TIME_REQUEST     '~'
+#define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
+#define CHAR_NOTIFY_HINT      '%' //%[byte]
+
+// ------------------------------------------------------
+
+#define MESSAGEPOS     40 // default:  30 = screen middle
+#define MEMOSTR_LIMIT 740 // default: 730 = 700 char buffer
+
 #include <SPI.h>
 #include <SFE_MicroOLED.h>
 #include <avr/power.h>
 #include <EEPROM.h>
 
-// avrdude -c usbtiny -p m328p  -B 300 -U flash:w:UART-Smartwatch_firmware.ino.arduino_eightanaloginputs.hex:i
-
-// ---------------------------- Configure ! -------------
-#define PIN_RESET  9
-#define PIN_DC     8
-#define PIN_CS    10
-#define DC_JUMPER  0
-
-#define BUTTON1     3
-#define BUTTON2     4
-
-#define SPKR        5
-#define LED_RED     6
-#define LED_YELLOW  A1 // I use a white LED 
-#define LED_GREEN   A2
-#define POTI        A4 // scroll throu message instead of page++; 
-
-#define MESSAGEPOS     50 // default:  30 = screen middle
-#define MEMOSTR_LIMIT 550 // default: 730 = 700 char buffer
-
-#define CHAR_TIME_REQUEST     '~'
-#define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
-#define CHAR_NOTIFY_HINT      '%' //%[byte]
-#define RGB_DELAY             '^' //^[chars: 0-9][0-9][0-9][0-9]
-
 const int xHour[13] = {32,40,47,49,47,40,32,23,17,15,17,24,32};
 const int yHour[13] = {6,8,14,23,32,38,40,38,31,23,14,8,6};
 const int xMin[60]  = {32,34,36,38,41,42,44,46,48,49,50,51,52,53,53,53,53,53,52,51,50,49,48,46,44,42,41,38,36,34,32,30,28,26,23,21,20,18,16,15,14,13,12,11,11,11,11,11,12,13,14,15,16,18,20,22,23,26,28,30};
 const int yMin[60]  = {2,2,2,3,4,5,6,7,9,11,12,14,17,19,21,23,25,27,29,32,34,35,37,39,40,41,42,43,44,44,44,44,44,43,42,41,40,39,37,35,33,32,29,27,25,23,21,19,17,14,12,11,9,7,6,5,4,3,2,2};
-
-// ------------------------------------------------------
 
 int eeAddress = 0;
 int score     = 0;
@@ -59,9 +63,9 @@ bool usingBATpin;
 // 0=digi, 1=analog, 2=adjust_hour, 3=adjust_min, 4=digi 4 ever
 int clockMode = 0;
 
-int redValue   = 250;
-int greenValue = 100;
-int blueValue  = 100;
+int redValue   = 255;
+int greenValue = 255;
+int blueValue  = 255;
 
 // Check it -------------------------
 // 0 always on
@@ -171,8 +175,8 @@ void setup() {
   pinMode(SPKR, OUTPUT);
   
   pinMode(LED_RED, OUTPUT);
-  pinMode(LED_YELLOW, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
 
   digitalWrite(BUTTON1, HIGH);
   digitalWrite(BUTTON2, HIGH);
@@ -316,7 +320,9 @@ void loop() {
       
       if (clockMode < 2) {
         COUNT = 0;
-        digitalWrite(LED_RED, LOW);
+        digitalWrite(LED_RED, HIGH);
+        digitalWrite(LED_GREEN, HIGH);
+        digitalWrite(LED_BLUE, HIGH);
       }
       
       oled.command(DISPLAYON);
@@ -324,21 +330,21 @@ void loop() {
       for (int j=0; j<40; ++j) { // 4sec
         oled.clear(PAGE);
         ticking();
-        if (clockMode == 0) {
-          digiClock();
-        } else if (clockMode == 1) {
+        if (clockMode == 1) {
           anaClock();
         } else if (clockMode == 2) {
           oled.pixel(5, 0);
-          hours = readWheel();
+          oled.pixel(30, 0);
           digiClock();
         } else if (clockMode == 3) {
+          oled.pixel(5, 0);
+          hours = readWheel();
+          digiClock();
+        } else if (clockMode == 4) {
           oled.pixel(30, 0);
           minutes = readWheel();
           digiClock();
         } else {
-          oled.pixel(5, 0);
-          oled.pixel(30, 0);
           digiClock();
         }
         batteryIcon();
@@ -348,7 +354,10 @@ void loop() {
       
       if (digitalRead(BUTTON1) == LOW) {
         clockMode++;
-        if (clockMode > 4) clockMode = 0;
+        // all 0-3 modes
+        //if (clockMode > 4) clockMode = 0;
+        // without analog poti to change clock
+        if (clockMode > 2) clockMode = 0;
       }
       
       if (clockMode == 0 || clockMode == 1) oled.command(DISPLAYOFF);
@@ -370,7 +379,10 @@ void loop() {
     if (digitalRead(BUTTON1) == LOW) {
       
       COUNT = 0;
-      digitalWrite(LED_RED, LOW);
+      digitalWrite(LED_RED, HIGH);
+      digitalWrite(LED_GREEN, HIGH);
+      digitalWrite(LED_BLUE, HIGH);
+
               
       // "remove" old chars from buffer
       // print ignores everyting behind \0
@@ -397,21 +409,19 @@ void loop() {
       minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
       seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
 
-    } else if (memoStr[MESSAGEPOS] == RGB_DELAY) {
-      
-      redValue   = 28 * ((unsigned char) memoStr[MESSAGEPOS+1] - '0'); // "1" -> 28, "9" -> 252
-      greenValue = 28 * ((unsigned char) memoStr[MESSAGEPOS+2] - '0');
-      blueValue  = 28 * ((unsigned char) memoStr[MESSAGEPOS+3] - '0');
-      
-      delayValue = (unsigned char) memoStr[MESSAGEPOS+4] - '0';
-      
     } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
       
       // there is a new message (or a message is deleted)
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
-      if (COUNT > 0) {
+      
+      if (COUNT > 0) { // 4*57 = 228
+        redValue   = 228 - 4 * ((unsigned char) memoStr[MESSAGEPOS+2] - 'A'); // "A" -> 255, "z" -> 0
+        greenValue = 228 - 4 * ((unsigned char) memoStr[MESSAGEPOS+3] - 'A');
+        blueValue  = 228 - 4 * ((unsigned char) memoStr[MESSAGEPOS+4] - 'A');        
+        delayValue = (unsigned char) memoStr[MESSAGEPOS+5] - 'A';
       } else {
+        redValue = greenValue = blueValue = 255;
         memoStr[MESSAGEPOS] = '\0';
       }
       page = memoStrPos; // makes a clear and display off        
@@ -439,15 +449,24 @@ void loop() {
 
   if (COUNT > 0) {
     if (delayValue==0) {
-        // I only connect Red to analoge ... bad idea, I think
         analogWrite(LED_RED, redValue);      
+        analogWrite(LED_GREEN, greenValue);      
+        analogWrite(LED_BLUE, blueValue);      
     } else {
       if (tick <= delayValue) {
-        analogWrite(LED_RED, redValue);
+        analogWrite(LED_RED, redValue);      
+        analogWrite(LED_GREEN, greenValue);      
+        analogWrite(LED_BLUE, blueValue);      
       } else {
-        digitalWrite(LED_RED, LOW);      
+        digitalWrite(LED_RED, HIGH);
+        digitalWrite(LED_GREEN, HIGH);
+        digitalWrite(LED_BLUE, HIGH);     
       }
     }
+  } else {
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, HIGH);
+    digitalWrite(LED_BLUE, HIGH);     
   }
    
   page++;
