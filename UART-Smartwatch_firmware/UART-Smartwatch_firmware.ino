@@ -337,9 +337,9 @@ void loop() {
       
       if (clockMode < 2) {
         COUNT = 0;
-        digitalWrite(LED_RED, HIGH);
-        digitalWrite(LED_GREEN, HIGH);
-        digitalWrite(LED_BLUE, HIGH);
+        analogWrite(LED_RED, 255);
+        analogWrite(LED_GREEN, 255);
+        analogWrite(LED_BLUE, 255);
       }
       
       oled.command(DISPLAYON);
@@ -396,9 +396,10 @@ void loop() {
     if (digitalRead(BUTTON1) == LOW) {
       
       COUNT = 0;
-      digitalWrite(LED_RED, HIGH);
-      digitalWrite(LED_GREEN, HIGH);
-      digitalWrite(LED_BLUE, HIGH);
+      analogWrite(LED_RED, 255);
+      analogWrite(LED_GREEN, 255);
+      analogWrite(LED_BLUE, 255);
+
 
       oled.command(DISPLAYON);
       wakeUpIcon();
@@ -469,32 +470,24 @@ void loop() {
 
   if (COUNT > 0) {
     if (delayValue==0) {
-        power_timer1_enable();
-        power_timer2_enable();
         analogWrite(LED_RED, redValue);      
         analogWrite(LED_GREEN, greenValue);      
         analogWrite(LED_BLUE, blueValue);      
     } else {
       if (tick <= delayValue) {
-        power_timer1_enable();
-        power_timer2_enable();
         analogWrite(LED_RED, redValue);      
         analogWrite(LED_GREEN, greenValue);      
         analogWrite(LED_BLUE, blueValue);      
       } else {
-        power_timer1_disable();
-        power_timer2_disable(); 
-        digitalWrite(LED_RED, HIGH);
-        digitalWrite(LED_GREEN, HIGH);
-        digitalWrite(LED_BLUE, HIGH);     
+        analogWrite(LED_RED, 255);
+        analogWrite(LED_GREEN, 255);
+        analogWrite(LED_BLUE, 255);
       }
     }
   } else {
-    power_timer1_disable();
-    power_timer2_disable(); 
-    digitalWrite(LED_RED, HIGH);
-    digitalWrite(LED_GREEN, HIGH);
-    digitalWrite(LED_BLUE, HIGH);
+    analogWrite(LED_RED, 255);
+    analogWrite(LED_GREEN, 255);
+    analogWrite(LED_BLUE, 255);
   }
    
   page++;
@@ -555,8 +548,8 @@ void gameStart() {
   delay(1000); // to see the highscore!
   analogWrite(LED_BLUE, 127); // 50%
   delay(2000);
-  digitalWrite(LED_BLUE, HIGH); // off
-  digitalWrite(LED_GREEN, HIGH); // off
+  analogWrite(LED_BLUE, 255); // off
+  analogWrite(LED_GREEN, 255); // off
   tick += 30;
 }
 
@@ -566,7 +559,7 @@ void gameOver() {
     highscore = score;
     EEPROM.put(eeAddress, highscore);
   }
-  digitalWrite(LED_GREEN, HIGH);
+  analogWrite(LED_GREEN, 255);
   analogWrite(SPKR, 5);
   oled.setCursor(0, 0);
   oled.print("0");
@@ -682,8 +675,6 @@ void game() {
   int cloud = 56;
   int cactus1 = 70;
   int subTick = 0;
-  power_timer1_enable();
-  power_timer2_enable();
 
   gameStart();
     
@@ -784,7 +775,5 @@ void game() {
     if (jumpY==0 && digitalRead(BUTTON2) == LOW) jumpY = 1;
   }
   gameOver();
-  power_timer1_disable();
-  power_timer2_disable();
 }
 
