@@ -15,9 +15,10 @@
 #define LED_RED     10
 #define LED_GREEN   9 
 #define LED_BLUE    3
-// unconnected
+
+// NOT connected
 #define POTI        A4 
-#define SPKR        A5 // A5 has no analog Out
+#define SPKR        A5 // A5 has no analog(PWM) Out
 
 
 #define CHAR_TIME_REQUEST     '~'
@@ -182,8 +183,8 @@ void setup() {
   digitalWrite(BUTTON2, HIGH);
   Serial.begin(9600);
 
-  power_timer1_disable();
-  power_timer2_disable();
+  //power_timer1_disable(); // timer needed for PWM on pin 9/10 ?!
+  //power_timer2_disable(); // timer needed for PWM on pin 3 ?!
   power_adc_disable();
   power_twi_disable();
 
@@ -306,6 +307,22 @@ void batteryIcon() {
   oled.rectFill(58, 48-vccVal, 6, vccVal); 
 }
 
+void wakeUpIcon() {
+  oled.clear(PAGE);
+  oled.circle(32, 23, 10);
+  oled.pixel(31, 20);
+  oled.pixel(35, 19);
+  oled.line (29, 27, 35, 27);
+  oled.display();
+  delay(350);
+  oled.rect(29, 19, 3, 3);
+  oled.rect(35, 19, 3, 3);
+  oled.pixel(35, 26);
+  oled.display();  
+  delay(350);
+  tick += 7; 
+}
+
 byte tob(char c) {
   return c - '0';
 }
@@ -383,7 +400,10 @@ void loop() {
       digitalWrite(LED_GREEN, HIGH);
       digitalWrite(LED_BLUE, HIGH);
 
-              
+      oled.command(DISPLAYON);
+      wakeUpIcon();
+      oled.command(DISPLAYOFF);
+                      
       // "remove" old chars from buffer
       // print ignores everyting behind \0
       memoStr[MESSAGEPOS] = '\0';
@@ -416,9 +436,9 @@ void loop() {
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       
       if (COUNT > 0) { // 4*57 = 228
-        redValue   = 228 - 4 * ((unsigned char) memoStr[MESSAGEPOS+2] - 'A'); // "A" -> 255, "z" -> 0
-        greenValue = 228 - 4 * ((unsigned char) memoStr[MESSAGEPOS+3] - 'A');
-        blueValue  = 228 - 4 * ((unsigned char) memoStr[MESSAGEPOS+4] - 'A');        
+        redValue   = 255 - 4 * ((unsigned char) memoStr[MESSAGEPOS+2] - 'A'); // "A" -> 255, "z" -> 0
+        greenValue = 255 - 4 * ((unsigned char) memoStr[MESSAGEPOS+3] - 'A');
+        blueValue  = 255 - 4 * ((unsigned char) memoStr[MESSAGEPOS+4] - 'A');        
         delayValue = (unsigned char) memoStr[MESSAGEPOS+5] - 'A';
       } else {
         redValue = greenValue = blueValue = 255;
@@ -449,24 +469,32 @@ void loop() {
 
   if (COUNT > 0) {
     if (delayValue==0) {
+        power_timer1_enable();
+        power_timer2_enable();
         analogWrite(LED_RED, redValue);      
         analogWrite(LED_GREEN, greenValue);      
         analogWrite(LED_BLUE, blueValue);      
     } else {
       if (tick <= delayValue) {
+        power_timer1_enable();
+        power_timer2_enable();
         analogWrite(LED_RED, redValue);      
         analogWrite(LED_GREEN, greenValue);      
         analogWrite(LED_BLUE, blueValue);      
       } else {
+        power_timer1_disable();
+        power_timer2_disable(); 
         digitalWrite(LED_RED, HIGH);
         digitalWrite(LED_GREEN, HIGH);
         digitalWrite(LED_BLUE, HIGH);     
       }
     }
   } else {
+    power_timer1_disable();
+    power_timer2_disable(); 
     digitalWrite(LED_RED, HIGH);
     digitalWrite(LED_GREEN, HIGH);
-    digitalWrite(LED_BLUE, HIGH);     
+    digitalWrite(LED_BLUE, HIGH);
   }
    
   page++;
@@ -515,6 +543,8 @@ void setByte90(byte & b, int x, int y) {
 void gameStart() {
   oled.clear(PAGE);
   EEPROM.get(eeAddress, highscore);
+  analogWrite(LED_BLUE, 0); // 100%
+  analogWrite(LED_GREEN, 0); // 100%
 
   oled.setCursor(0, 0);
   oled.println("   Dino");
@@ -522,8 +552,11 @@ void gameStart() {
   oled.println("Highscore:");
   oled.print(highscore);
   oled.display();
-
-  delay(3000); // to see the highscore!
+  delay(1000); // to see the highscore!
+  analogWrite(LED_BLUE, 127); // 50%
+  delay(2000);
+  digitalWrite(LED_BLUE, HIGH); // off
+  digitalWrite(LED_GREEN, HIGH); // off
   tick += 30;
 }
 
@@ -533,7 +566,7 @@ void gameOver() {
     highscore = score;
     EEPROM.put(eeAddress, highscore);
   }
-  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_GREEN, HIGH);
   analogWrite(SPKR, 5);
   oled.setCursor(0, 0);
   oled.print("0");
@@ -649,6 +682,8 @@ void game() {
   int cloud = 56;
   int cactus1 = 70;
   int subTick = 0;
+  power_timer1_enable();
+  power_timer2_enable();
 
   gameStart();
     
@@ -683,12 +718,15 @@ void game() {
       died();
       
       oled.display();
-      digitalWrite(LED_GREEN, LOW);
+      digitalWrite(LED_GREEN, HIGH);
+      digitalWrite(LED_RED, LOW); // 100 %
       analogWrite(SPKR, 120);
       delay(500);
+      analogWrite(LED_RED, 127); // 50 %
       analogWrite(SPKR, 32);
       delay(500);
       digitalWrite(SPKR, LOW);
+      digitalWrite(LED_RED, HIGH);
       tick += 10;
       
     } else {
@@ -727,7 +765,7 @@ void game() {
 
     // jump animation + sound
     switch(jumpY) {          
-      case 1: jumpY = 7; analogWrite(SPKR, 60); digitalWrite(LED_GREEN, HIGH); break;
+      case 1: jumpY = 7; analogWrite(SPKR, 60); analogWrite(LED_GREEN, 127); break;
       case 7: jumpY = 11;  break;
       case 11: jumpY = 13; analogWrite(SPKR, 65); break;
       case 13: jumpY = 15; analogWrite(SPKR, 85); break;
@@ -738,7 +776,7 @@ void game() {
       case 9:  jumpY = 8; break;
       case 8:  jumpY = 6; break;
       case 6: jumpY = 4;  break;
-      case 4: jumpY = 2;  digitalWrite(LED_GREEN, LOW); break;
+      case 4: jumpY = 2;  digitalWrite(LED_GREEN, HIGH); break;
       case 2: jumpY = 0; break;
     }
 
@@ -746,5 +784,7 @@ void game() {
     if (jumpY==0 && digitalRead(BUTTON2) == LOW) jumpY = 1;
   }
   gameOver();
+  power_timer1_disable();
+  power_timer2_disable();
 }
 
