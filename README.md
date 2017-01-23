@@ -33,4 +33,4 @@ B=1 is 100ms on and 900ms of. H=8 is 800ms on and 200ms off ...
 
 ## Circuit
 
-![](circuit.svg)
+![give it a try](circuit.svg)
