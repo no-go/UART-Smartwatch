@@ -7,8 +7,8 @@ android {
         applicationId "click.dummer.UartSmartwatch"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 12
-        versionName "1.2"
+        versionCode 13
+        versionName "1.3"
     }
 
 

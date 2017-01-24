@@ -69,11 +69,13 @@ public class MainActivity extends Activity {
     public static final String TAG = MainActivity.class.getSimpleName();
     private Context ctx;
 
+    private static final String FLATTR_LINK = "https://flattr.com/thing/5195407";
+    private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch";
+
+    private static final char DEFAULT_BLINK_LENGTH = 'B';
     private static final int WATCH_REQUEST = 1;
     private static final int REQUEST_SELECT_DEVICE = 42;
     private static final int REQUEST_ENABLE_BT = 2;
-    private static final String FLATTR_LINK = "https://flattr.com/thing/5195407";
-    private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch";
 
     private NotificationReceiver nReceiver;
     private UartService mService = null;
@@ -518,7 +520,7 @@ public class MainActivity extends Activity {
                             notifyHint += byteInt2ABC(rgb.get(0));
                             notifyHint += byteInt2ABC(rgb.get(1));
                             notifyHint += byteInt2ABC(rgb.get(2));
-                            notifyHint += 'B';
+                            notifyHint += DEFAULT_BLINK_LENGTH;
                             sendMsg(notifyHint);
                             Log.i(TAG, "Count: " + COUNT);
                         }
@@ -530,7 +532,12 @@ public class MainActivity extends Activity {
                     if (btnSend.isEnabled()) {
                         String notifyHint = mPreferences.getString("notifyHint", "");
                         if (notifyHint.length() > 0) {
-                            sendMsg(notifyHint + (char) COUNT);
+                            notifyHint += (char) COUNT;
+                            notifyHint += byteInt2ABC(0);
+                            notifyHint += byteInt2ABC(0);
+                            notifyHint += byteInt2ABC(0);
+                            notifyHint += DEFAULT_BLINK_LENGTH;
+                            sendMsg(notifyHint);
                             Log.i(TAG, "Count: " + COUNT);
                         }
                     }

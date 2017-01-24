@@ -35,6 +35,7 @@ import android.graphics.Color;
 import java.util.ArrayList;
 
 public class NotificationService extends NotificationListenerService {
+    public static final int DEFAULT_COLOR = 0xffddff88;
     private SharedPreferences mPreferences;
     private String lastPost = "";
 
@@ -44,7 +45,16 @@ public class NotificationService extends NotificationListenerService {
         Bundle extras = noti.extras;
         String title = extras.getString(Notification.EXTRA_TITLE);
         String msg = (String) noti.tickerText;
+        String msg2 = extras.getString(Notification.EXTRA_TEXT);
+        String msg3 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            msg3 = extras.getString(Notification.EXTRA_BIG_TEXT);
+        }
+        if (msg2 != null && msg2.length()>0) msg = msg2;
+        if (msg3 != null && msg3.length()>0) msg = msg3;
         String pack = sbn.getPackageName();
+
+        if (noti.ledARGB == 0) noti.ledARGB = DEFAULT_COLOR;
 
         ArrayList<Integer> rgb = new ArrayList<Integer>(3);
         rgb.add(Color.red(noti.ledARGB));

@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="@android:color/black">
+    android:background="@android:color/holo_red_dark">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,13 +20,12 @@
             android:textStyle="italic"
             android:textIsSelectable="false"
             android:textSize="15dp"
-            android:alpha="0.6"
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/btn_select"
             android:gravity="left|center_vertical"
             android:padding="5dp"
             android:layout_alignParentStart="true"
-            android:background="@android:color/holo_blue_bright"
+            android:background="@android:color/holo_blue_dark"
             android:layout_toStartOf="@+id/btn_select" />
 
         <Button
@@ -43,7 +42,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray">
+        android:background="@android:color/holo_blue_bright">
 
         <Button
             android:id="@+id/sendButton"
@@ -89,11 +88,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fastScrollAlwaysVisible="false"
-                android:text="Buffer:"
+                android:text="Buffer"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:padding="3dp"
                 android:background="@android:color/holo_green_dark"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:id="@+id/listMessage"
@@ -112,18 +112,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/receiveTitle"
-                android:background="@android:color/holo_orange_dark"
+                android:background="@android:color/holo_orange_light"
                 android:textColor="@android:color/black"
-                android:text="Receive:"
-                android:padding="3dp" />
+                android:text="Receive"
+                android:padding="3dp"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/receiveText"
-                android:background="@android:color/holo_red_dark"
+                android:background="@android:color/holo_orange_dark"
                 android:textStyle="bold"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/background_light"
                 android:typeface="monospace"
                 android:padding="5dp"
                 android:textSize="12dp"
