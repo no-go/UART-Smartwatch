@@ -389,8 +389,8 @@ public class MainActivity extends Activity {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(UARTStatusChangeReceiver);
+        super.onDestroy();
     }
 
     @Override
@@ -502,6 +502,7 @@ public class MainActivity extends Activity {
 
             if (intent.getStringExtra("MSG") != null) {
                 int notifyHintLimit = Integer.parseInt(mPreferences.getString("notifyHintLimit", "0"));
+                String pack = intent.getStringExtra("App");
                 if (intent.getBooleanExtra("posted", true)) {
                     String orgMsg = intent.getStringExtra("MSG").trim();
                     ArrayList<Integer> rgb = intent.getIntegerArrayListExtra("RGB");
@@ -521,6 +522,7 @@ public class MainActivity extends Activity {
                             notifyHint += byteInt2ABC(rgb.get(1));
                             notifyHint += byteInt2ABC(rgb.get(2));
                             notifyHint += DEFAULT_BLINK_LENGTH;
+                            notifyHint += pack;
                             sendMsg(notifyHint);
                             Log.i(TAG, "Count: " + COUNT);
                         }
@@ -537,6 +539,7 @@ public class MainActivity extends Activity {
                             notifyHint += byteInt2ABC(0);
                             notifyHint += byteInt2ABC(0);
                             notifyHint += DEFAULT_BLINK_LENGTH;
+                            notifyHint += pack;
                             sendMsg(notifyHint);
                             Log.i(TAG, "Count: " + COUNT);
                         }
