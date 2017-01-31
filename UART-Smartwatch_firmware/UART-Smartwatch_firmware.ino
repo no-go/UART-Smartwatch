@@ -61,7 +61,7 @@ byte tick    = 0;
 
 bool usingBATpin;
 
-// 0=digi, 1=analog, 2=adjust_hour, 3=adjust_min, 4=digi 4 ever
+// 0=digi, 1=analog, 2=digi 4 ever, 3=adjust_hour, 4=adjust_min
 int clockMode = 0;
 
 int redValue   = 255;
