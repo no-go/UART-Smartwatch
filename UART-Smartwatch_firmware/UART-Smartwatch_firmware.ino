@@ -169,8 +169,8 @@ void filler() {
 }
 
 void setup() {
-  pinMode(BUTTON1, INPUT);
-  pinMode(BUTTON2, INPUT);
+  pinMode(BUTTON1, INPUT_PULLUP);
+  pinMode(BUTTON2, INPUT_PULLUP);
   pinMode(POTI, INPUT);
 
   pinMode(SPKR, OUTPUT);
@@ -179,8 +179,8 @@ void setup() {
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
 
-  digitalWrite(BUTTON1, HIGH);
-  digitalWrite(BUTTON2, HIGH);
+  //digitalWrite(BUTTON1, HIGH);
+  //digitalWrite(BUTTON2, HIGH);
   Serial.begin(9600);
 
   //power_timer1_disable(); // timer needed for PWM on pin 9/10 ?!
