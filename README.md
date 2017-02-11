@@ -1,7 +1,7 @@
 # UART-Smartwatch
 
 This branch is a bit different than the master. Firmware and circuit are
-modified.
+modified for a low cost version.
 
 ## The Firmware
 
@@ -33,4 +33,4 @@ B=1 is 100ms on and 900ms of. H=8 is 800ms on and 200ms off ...
 
 ## Circuit
 
-![give it a try](circuit.svg)
+![give it a try](circuit.png)

@@ -18,7 +18,7 @@
 
 // NOT connected
 #define POTI        A4 
-#define SPKR        A5 // A5 has no analog(PWM) Out
+#define SPKR        A5 // A5 has no analog(PWM) Out !!!!
 
 
 #define CHAR_TIME_REQUEST     '~'
@@ -28,7 +28,7 @@
 // ------------------------------------------------------
 
 #define MESSAGEPOS     40 // default:  30 = screen middle
-#define MEMOSTR_LIMIT 740 // default: 730 = 700 char buffer
+#define MEMOSTR_LIMIT 440 // default: 730 = 700 char buffer
 
 #include <SPI.h>
 #include <SFE_MicroOLED.h>
