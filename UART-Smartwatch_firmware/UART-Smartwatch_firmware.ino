@@ -10,26 +10,20 @@
 #define LED_GREEN   9 
 #define LED_BLUE    3
 
-// NOT connected
-#define POTI        A4 
-
 #define CHAR_TIME_REQUEST     '~'
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
 // ------------------------------------------------------
 
-#define MESSAGEPOS     40 // default:  30 = screen middle
-#define MEMOSTR_LIMIT 440 // default: 730 = 700 char buffer
+#define MESSAGEPOS     20
+#define MEMOSTR_LIMIT 250 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
+
+const int batLength = 60;
 
 #include "OledWrapper.cpp"
 #include <avr/power.h>
 #include <EEPROM.h>
-
-const int xHour[13] = {32,40,47,49,47,40,32,23,17,15,17,24,32};
-const int yHour[13] = {6,8,14,23,32,38,40,38,31,23,14,8,6};
-const int xMin[60]  = {32,34,36,38,41,42,44,46,48,49,50,51,52,53,53,53,53,53,52,51,50,49,48,46,44,42,41,38,36,34,32,30,28,26,23,21,20,18,16,15,14,13,12,11,11,11,11,11,12,13,14,15,16,18,20,22,23,26,28,30};
-const int yMin[60]  = {2,2,2,3,4,5,6,7,9,11,12,14,17,19,21,23,25,27,29,32,34,35,37,39,40,41,42,43,44,44,44,44,44,43,42,41,40,39,37,35,33,32,29,27,25,23,21,19,17,14,12,11,9,7,6,5,4,3,2,2};
 
 int eeAddress = 0;
 int score     = 0;
@@ -44,9 +38,9 @@ int  page         = 0;
 
 byte COUNT        = 0;
 
-byte hours   = 0;
-byte minutes = 0;
-byte seconds = 0;
+byte hours   = 10;
+byte minutes = 10;
+byte seconds = 15;
 byte tick    = 0;
 
 bool usingBATpin;
@@ -65,40 +59,54 @@ int blueValue  = 255;
 // 9 = 900 ms of a second on
 int delayValue = 8;
 
-int readWheel() {
-  power_adc_enable();
-  int reading = analogRead(POTI);
-  power_adc_disable();
-  reading = map(reading, 0, 1023, 0, 60);
-  return reading;
+byte powerTick(int mv) {
+  float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
+  return (mv-2700)/quot;  
 }
 
 int readVcc() {
-  int result;
+  int mv;
   power_adc_enable();
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   delay(10); // Wait for Vref to settle
   ADCSRA |= _BV(ADSC); // Start conversion
   while (bit_is_set(ADCSRA,ADSC)); // measuring
-  result = ADCL; 
-  result |= ADCH<<8; 
-  result = 1126400L / result;
+  mv = ADCL; 
+  mv |= ADCH<<8; 
+  mv = 1126400L / mv;
   power_adc_disable();
-  return result;
+  return powerTick(mv);
 }
 
 void anaClock() {
   oled.circle(32, 23, 23);
   int hour = hours;
   if (hour>12) hour-=12;
-  oled.line(32,   23, xMin[seconds], yMin[seconds]);
-
-  oled.line(32,   23, xMin[minutes], yMin[minutes]);
-  oled.line(32,   23, xHour[hour],   yHour[hour]);
-  oled.line(32+1, 23, xHour[hour]+1, yHour[hour]);
+  oled.line(
+    32, 23,
+    32 + 23*cos(PI * ((float)seconds-15.0) / 30),
+    23 + 23*sin(PI * ((float)seconds-15.0) / 30)
+  );
   
-  for (int i=0; i<12; ++i) {
-    oled.pixel(xHour[i], yHour[i]);  
+  oled.line(
+    32, 23,
+    32 + 20*cos(PI * ((float)minutes-15.0) / 30),
+    23 + 20*sin(PI * ((float)minutes-15.0) / 30)
+  );
+  
+  oled.line(
+    32, 23,
+    32 + 13*cos(PI * ((float)hour-3.0) / 6),
+    23 + 13*sin(PI * ((float)hour-3.0) / 6)
+  );
+  oled.line(
+    32+1, 23,
+    32-1 + 13*cos(PI * ((float)hour-3.0) / 6),
+    23 + 13*sin(PI * ((float)hour-3.0) / 6)
+  );
+  
+  for (byte i=0; i<12; ++i) {
+    oled.pixel(32 + 20*cos(PI * ((float)i) / 6), 23 + 20*sin(PI * ((float)i) / 6));  
   }
   // 12 o'clock
   oled.pixel(30, 3);
@@ -138,20 +146,6 @@ void anaClock() {
   oled.pixel(13, 25);
 }
 
-/**
- * because there is a power regulator, it is hard to
- * messure the battery power level. If you do not connect bat 
- * to battery and connect batery direkt to 3.3V, you can
- * mesure better, but Display could brake!!
- */
-byte vcc2hight(int result) {
-  if (usingBATpin) {
-    return (result-2700)/18; // scale: 3310 -> 34, 2710 -> 0 (USB5v or 3.3v BAT Regulator)    
-  } else {
-    return (result-2700)/45; // scale: 4205 -> 34, 2710 -> 0
-  }  
-}
-
 void filler() {
   for (int i=0; i<MESSAGEPOS; ++i) {
     memoStr[i] = ' ';
@@ -161,14 +155,11 @@ void filler() {
 void setup() {
   pinMode(BUTTON1, INPUT_PULLUP);
   pinMode(BUTTON2, INPUT_PULLUP);
-  pinMode(POTI, INPUT);
 
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
-
-  //digitalWrite(BUTTON1, HIGH);
-  //digitalWrite(BUTTON2, HIGH);
+  
   Serial.begin(9600);
 
   //power_timer1_disable(); // timer needed for PWM on pin 9/10 ?!
@@ -187,7 +178,7 @@ void setup() {
 
 void serialEvent() {
   while (Serial.available()) {
-    char inChar = (char)Serial.read();    
+    char inChar = (char)Serial.read();
     if (inChar == -61) continue; // symbol before utf-8
     if (inChar == -62) continue; // other symbol before utf-8
     if (inChar == '\n') {
@@ -198,6 +189,7 @@ void serialEvent() {
     }
     memoStr[memoStrPos] = oled.umlReplace(inChar);
     memoStrPos++;
+    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MESSAGEPOS;
   }
 }
 
@@ -250,17 +242,23 @@ void digiClock() {
   oled.print(tick);
 }
 
+
+
 void batteryIcon() {
-  byte vccVal = vcc2hight(readVcc());
-  oled.pixel(60, 13);
-  oled.pixel(61, 13);
-  if (usingBATpin == false) {
-    oled.pixel(57, 35); // 3.3V tick
-    oled.pixel(56, 26); // 3.7V tick
-    oled.pixel(57, 26); // 3.7V tick
+  byte vccVal = readVcc();
+  oled.pixel   (oled.width()-4, oled.height() - batLength);
+  oled.pixel   (oled.width()-3, oled.height() - batLength);
+  oled.rect    (oled.width()-6, oled.height()  - batLength+1, 6, batLength-1);  
+  oled.rectFill(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal); 
+
+  int ptick[5] = {50,42,37,33,20};
+  int pos;
+  for(int i=0;i<5;++i) {
+    pos = oled.height() - powerTick(ptick[i]*100);
+    oled.setCursor(oled.width()-30, pos);
+    oled.print(ptick[i]/10.0, 1);
+    oled.pixel(oled.width()-7,  pos);
   }
-  oled.rect(58, 14, 6, 34);
-  oled.rectFill(58, 48-vccVal, 6, vccVal); 
 }
 
 void wakeUpIcon() {
@@ -309,14 +307,6 @@ void loop() {
           oled.pixel(5, 0);
           oled.pixel(30, 0);
           digiClock();
-        } else if (clockMode == 3) {
-          oled.pixel(5, 0);
-          hours = readWheel();
-          digiClock();
-        } else if (clockMode == 4) {
-          oled.pixel(30, 0);
-          minutes = readWheel();
-          digiClock();
         } else {
           digiClock();
         }
@@ -327,9 +317,6 @@ void loop() {
       
       if (digitalRead(BUTTON1) == LOW) {
         clockMode++;
-        // all 0-3 modes
-        //if (clockMode > 4) clockMode = 0;
-        // without analog poti to change clock
         if (clockMode > 2) clockMode = 0;
       }
       
@@ -495,8 +482,8 @@ void gameStart() {
   analogWrite(LED_GREEN, 0); // 100%
 
   oled.setCursor(0, 0);
-  oled.println("   Dino");
-  oled.print(  "==========");
+  oled.println("  Dino");
+  oled.println("=========");
   oled.println("Highscore:");
   oled.print(highscore);
   oled.display();
@@ -515,6 +502,8 @@ void gameOver() {
     EEPROM.put(eeAddress, highscore);
   }
   analogWrite(LED_GREEN, 255);
+  oled.setCursor(0, 0);
+  oled.print("  ");
   oled.setCursor(0, 0);
   oled.print("0");
   oled.setCursor(0, 22);

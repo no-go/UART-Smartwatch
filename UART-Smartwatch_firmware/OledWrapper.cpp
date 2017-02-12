@@ -1,5 +1,5 @@
-#include <SPI.h>
-#include <SFE_MicroOLED.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 // OLED (13 -> MISO/DIN, 11 ->SCK)
 #define PIN_CS     5
@@ -8,115 +8,126 @@
 #define DC_JUMPER  0
 
 struct OledWrapper {
-    MicroOLED * _oled;
+
+    Adafruit_SSD1306 * _oled;
     
     OledWrapper() {
-      // display 64x48
-      _oled = new MicroOLED(PIN_RESET, PIN_DC, PIN_CS);      
+       _oled = new Adafruit_SSD1306(PIN_DC, PIN_RESET, PIN_CS);
     }
     
     void begin() {
-      _oled->begin();
+      _oled->begin(SSD1306_SWITCHCAPVCC);
+      clear();
+      _oled->setTextSize(1); // 8 line with 21 chars
+      _oled->setTextColor(WHITE);
+      setCursor(0,0);
     }
     
     void display() {
       _oled->display();
     }
 
-    void line(int x, int y, int xx, int yy) {
-      _oled->line(x,y,xx,yy);
+    int height() {
+      return _oled->height();
     }
     
-    void pixel(int x, int y) {
-      _oled->pixel(x,y);
-    }
-    
-    void rect(int x, int y, int w, int h) {
-      _oled->rect(x,y,w,h);
-    }
-    
-    void rectFill(int x, int y, int w, int h) {
-      _oled->rectFill(x,y,w,h);
-    }
-    
-    void circle(int radius, int x, int y) {
-      _oled->circle(radius,x,y);
+    int width() {
+      return _oled->width();
     }
 
-    void setFontType(int t) {
-      _oled->setFontType(t);
+    void line(const int & x, const int & y, const int & xx, const int & yy) {
+      _oled->drawLine(x,y,xx,yy, WHITE);
+    }
+    
+    void pixel(const int & x, const int & y) {
+      _oled->drawPixel(x,y, WHITE);
+    }
+    
+    void rect(const int & x, const int & y, const int & w, const int & h) {
+      _oled->drawRect(x,y,w,h, WHITE);
+    }
+    
+    void rectFill(const int & x, const int & y, const int & w, const int & h) {
+      _oled->fillRect(x,y,w,h, WHITE);
+    }
+    
+    void circle(const int & x, const int & y, const int & radius) {
+      _oled->drawCircle(x,y,radius, WHITE);
+    }
+
+    void setFontType(const int & t) {
+      _oled->setTextSize(t);
     }
     
     void print(int c) {
       _oled->print(c);
     } 
     void println(int c) {
-      print(c);
-      print('\n');
+      _oled->println(c);
     }
     void print(long c) {
       _oled->print(c);
     } 
     void println(long c) {
-      print(c);
-      print('\n');
+      _oled->println(c);
     }
     
     void print(unsigned int c) {
       _oled->print(c);
     } 
     void println(unsigned int c) {
-      print(c);
-      print('\n');
+      _oled->println(c);
     }
     void print(unsigned long c) {
       _oled->print(c);
     } 
     void println(unsigned long c) {
-      print(c);
-      print('\n');
+      _oled->println(c);
     }
     
     void print(char c) {
       _oled->print(c);
     } 
     void println(char c) {
-      print(c);
-      print('\n');
+      _oled->println(c);
     }    
     void print(unsigned char c) {
       _oled->print(c);
     } 
     void println(unsigned char c) {
-      print(c);
-      print('\n');
+      _oled->println(c);
     }
     void print(const char c[]) {
       _oled->print(c);
     } 
     void println(const char c[]) {
-      print(c);
-      print('\n');
+      _oled->println(c);
     }
-
+    void print(double d, int i) {
+      _oled->print(d,i);
+    } 
+    void println(double d, int i) {
+      _oled->println(d,i);
+    }
+    
     void setCursor(int x, int y) {
       _oled->setCursor(x,y);
     }
 
     void clear() {
-      _oled->clear(PAGE);
+      _oled->clearDisplay();
     }
     
     void free() {
-      _oled->clear(ALL);
+      _oled->clearDisplay();
     }
 
     void on() {
-      _oled->command(DISPLAYON);
+      _oled->ssd1306_command(SSD1306_DISPLAYON);
     }
     
     void off() {
-      _oled->command(DISPLAYOFF);
+      _oled->ssd1306_command(SSD1306_DISPLAYOFF);
     }
 
     /**
