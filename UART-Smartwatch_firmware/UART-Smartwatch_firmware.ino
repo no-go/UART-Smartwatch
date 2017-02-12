@@ -3,12 +3,6 @@
 
 // ---------------------------- Configure YOUR CONNECTIONS !! -------
 
-// OLED (13 -> MISO/DIN, 11 ->SCK)
-#define PIN_CS     5
-#define PIN_RESET  6
-#define PIN_DC     8
-#define DC_JUMPER  0
-
 #define BUTTON1    A0
 #define BUTTON2    A1
 
@@ -18,8 +12,6 @@
 
 // NOT connected
 #define POTI        A4 
-#define SPKR        A5 // A5 has no analog(PWM) Out !!!!
-
 
 #define CHAR_TIME_REQUEST     '~'
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
@@ -30,8 +22,7 @@
 #define MESSAGEPOS     40 // default:  30 = screen middle
 #define MEMOSTR_LIMIT 440 // default: 730 = 700 char buffer
 
-#include <SPI.h>
-#include <SFE_MicroOLED.h>
+#include "OledWrapper.cpp"
 #include <avr/power.h>
 #include <EEPROM.h>
 
@@ -45,8 +36,7 @@ int score     = 0;
 int highscore = 0;
 void game();
 
-// display 64x48
-MicroOLED oled(PIN_RESET, PIN_DC, PIN_CS);
+OledWrapper oled;
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
@@ -173,8 +163,6 @@ void setup() {
   pinMode(BUTTON2, INPUT_PULLUP);
   pinMode(POTI, INPUT);
 
-  pinMode(SPKR, OUTPUT);
-  
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
@@ -192,41 +180,9 @@ void setup() {
   usingBATpin = (mv < 3400);
   
   oled.begin();
-  oled.clear(ALL); // Clear the display's internal memory logo
+  oled.free(); // Clear the display's internal memory logo
   oled.display();
   filler();
-}
-
-/**
- * the hard way to handle with german(?) UTF-8 stuff
- */
-char umlReplace(char inChar) {
-  if (inChar == -97) {
-    inChar = 224; // ß
-  } else if (inChar == -80) {
-    inChar = 248; // °
-  } else if (inChar == -67) {
-    inChar = 171; // 1/2
-  } else if (inChar == -78) {
-    inChar = 253; // ²
-  } else if (inChar == -92) {
-    inChar = 132; // ä
-  } else if (inChar == -74) {
-    inChar = 148; // ö
-  } else if (inChar == -68) {
-    inChar = 129; // ü
-  } else if (inChar == -124) {
-    inChar = 142; // Ä
-  } else if (inChar == -106) {
-    inChar = 153; // Ö
-  } else if (inChar == -100) {
-    inChar = 154; // Ü
-  } else if (inChar == -85) {
-    inChar = 0xAE; // <<
-  } else if (inChar == -69) {
-    inChar = 0xAF; // >>
-  }
-  return inChar;  
 }
 
 void serialEvent() {
@@ -235,12 +191,12 @@ void serialEvent() {
     if (inChar == -61) continue; // symbol before utf-8
     if (inChar == -62) continue; // other symbol before utf-8
     if (inChar == '\n') {
-      oled.command(DISPLAYON);
+      oled.on();
       memoStr[memoStrPos] = '\0';
       page = 0;
       continue;
     }
-    memoStr[memoStrPos] = umlReplace(inChar);
+    memoStr[memoStrPos] = oled.umlReplace(inChar);
     memoStrPos++;
   }
 }
@@ -308,7 +264,7 @@ void batteryIcon() {
 }
 
 void wakeUpIcon() {
-  oled.clear(PAGE);
+  oled.clear();
   oled.circle(32, 23, 10);
   oled.pixel(31, 20);
   oled.pixel(35, 19);
@@ -342,10 +298,10 @@ void loop() {
         analogWrite(LED_BLUE, 255);
       }
       
-      oled.command(DISPLAYON);
+      oled.on();
 
       for (int j=0; j<40; ++j) { // 4sec
-        oled.clear(PAGE);
+        oled.clear();
         ticking();
         if (clockMode == 1) {
           anaClock();
@@ -377,15 +333,15 @@ void loop() {
         if (clockMode > 2) clockMode = 0;
       }
       
-      if (clockMode == 0 || clockMode == 1) oled.command(DISPLAYOFF);
+      if (clockMode == 0 || clockMode == 1) oled.off();
 
       if (digitalRead(BUTTON2) == LOW) {      
         Serial.println("Game !");
-        oled.command(DISPLAYON);
+        oled.on();
         power_adc_enable();
         game();
         power_adc_disable();
-        oled.command(DISPLAYOFF);
+        oled.off();
       }      
     }
   }
@@ -400,10 +356,9 @@ void loop() {
       analogWrite(LED_GREEN, 255);
       analogWrite(LED_BLUE, 255);
 
-
-      oled.command(DISPLAYON);
+      oled.on();
       wakeUpIcon();
-      oled.command(DISPLAYOFF);
+      oled.off();
                       
       // "remove" old chars from buffer
       // print ignores everyting behind \0
@@ -453,7 +408,7 @@ void loop() {
    * Scrolling message through display
    */
   if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
-    oled.clear(PAGE);
+    oled.clear();
     oled.setCursor(0, 0);
     oled.print(&(memoStr[page]));
     oled.display();
@@ -461,7 +416,7 @@ void loop() {
 
   /// Safe power and switch display off, if message is at the end
   if (page == memoStrPos) {
-    oled.command(DISPLAYOFF);
+    oled.off();
     // "remove" old chars from buffer
     // print ignores everyting behind \0
     memoStr[MESSAGEPOS] = '\0';
@@ -534,7 +489,7 @@ void setByte90(byte & b, int x, int y) {
 }
 
 void gameStart() {
-  oled.clear(PAGE);
+  oled.clear();
   EEPROM.get(eeAddress, highscore);
   analogWrite(LED_BLUE, 0); // 100%
   analogWrite(LED_GREEN, 0); // 100%
@@ -560,15 +515,12 @@ void gameOver() {
     EEPROM.put(eeAddress, highscore);
   }
   analogWrite(LED_GREEN, 255);
-  analogWrite(SPKR, 5);
   oled.setCursor(0, 0);
   oled.print("0");
   oled.setCursor(0, 22);
   oled.println(" Game Over");
   oled.display();
-  delay(1500);
-  digitalWrite(SPKR, LOW);
-  delay(2000); // read your score
+  delay(3500); // read your score
   tick += 35;
 }
 
@@ -682,7 +634,7 @@ void game() {
     // score is time :-D
     score++;
     
-    oled.clear(PAGE);
+    oled.clear();
     oled.setCursor(0, 0);
     oled.print(lives);
     oled.print("  ");
@@ -711,12 +663,9 @@ void game() {
       oled.display();
       digitalWrite(LED_GREEN, HIGH);
       digitalWrite(LED_RED, LOW); // 100 %
-      analogWrite(SPKR, 120);
       delay(500);
       analogWrite(LED_RED, 127); // 50 %
-      analogWrite(SPKR, 32);
       delay(500);
-      digitalWrite(SPKR, LOW);
       digitalWrite(LED_RED, HIGH);
       tick += 10;
       
@@ -756,14 +705,14 @@ void game() {
 
     // jump animation + sound
     switch(jumpY) {          
-      case 1: jumpY = 7; analogWrite(SPKR, 60); analogWrite(LED_GREEN, 127); break;
+      case 1: jumpY = 7; analogWrite(LED_GREEN, 127); break;
       case 7: jumpY = 11;  break;
-      case 11: jumpY = 13; analogWrite(SPKR, 65); break;
-      case 13: jumpY = 15; analogWrite(SPKR, 85); break;
-      case 15: jumpY = 14;  break;
-      case 14: jumpY = 12; analogWrite(SPKR, 95); break;
-      case 12: jumpY = 10;  break;
-      case 10: jumpY = 9;  digitalWrite(SPKR, LOW); break;
+      case 11: jumpY = 13; break;
+      case 13: jumpY = 15; break;
+      case 15: jumpY = 14; break;
+      case 14: jumpY = 12; break;
+      case 12: jumpY = 10; break;
+      case 10: jumpY = 9;  break;
       case 9:  jumpY = 8; break;
       case 8:  jumpY = 6; break;
       case 6: jumpY = 4;  break;
