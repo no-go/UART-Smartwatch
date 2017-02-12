@@ -43,8 +43,6 @@ byte minutes = 10;
 byte seconds = 15;
 byte tick    = 0;
 
-bool usingBATpin;
-
 // 0=digi, 1=analog, 2=digi 4 ever, 3=adjust_hour, 4=adjust_min
 int clockMode = 0;
 
@@ -57,11 +55,12 @@ int blueValue  = 255;
 // 1 = 100 ms of a second on
 // 2 = 200 ms of a second on
 // 9 = 900 ms of a second on
-int delayValue = 8;
+int delayValue = 1;
 
 byte powerTick(int mv) {
-  float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
-  return (mv-2700)/quot;  
+  //float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
+  float quot = (3400-2740)/(batLength-3);
+  return (mv-2740)/quot;  
 }
 
 int readVcc() {
@@ -166,9 +165,6 @@ void setup() {
   //power_timer2_disable(); // timer needed for PWM on pin 3 ?!
   power_adc_disable();
   power_twi_disable();
-
-  int mv = readVcc();
-  usingBATpin = (mv < 3400);
   
   oled.begin();
   oled.free(); // Clear the display's internal memory logo
@@ -220,29 +216,27 @@ void ticking() {
 }
 
 void digiClock() {
-  oled.setFontType(2);
+  oled.setFontType(3);
   oled.setCursor(0, 12);
   if (hours<10) oled.print("0");
   oled.print(hours);
 
-  oled.setFontType(1);
-  oled.setCursor(24, 13);
+  oled.setFontType(2);
+  oled.setCursor(36, 15);
   oled.print(":");
 
-  oled.setFontType(2);
-  oled.setCursor(32, 12);
+  oled.setFontType(3);
+  oled.setCursor(46, 12);
   if (minutes<10) oled.print("0");
   oled.print(minutes); 
 
   oled.setFontType(0);
-  oled.setCursor(17, 32);
+  oled.setCursor(30, 40);
   if (seconds<10) oled.print("0");
   oled.print(seconds);
   oled.print(".");
   oled.print(tick);
 }
-
-
 
 void batteryIcon() {
   byte vccVal = readVcc();
@@ -251,14 +245,10 @@ void batteryIcon() {
   oled.rect    (oled.width()-6, oled.height()  - batLength+1, 6, batLength-1);  
   oled.rectFill(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal); 
 
-  int ptick[5] = {50,42,37,33,20};
-  int pos;
-  for(int i=0;i<5;++i) {
-    pos = oled.height() - powerTick(ptick[i]*100);
-    oled.setCursor(oled.width()-30, pos);
-    oled.print(ptick[i]/10.0, 1);
-    oled.pixel(oled.width()-7,  pos);
-  }
+  int pos = oled.height() - powerTick(3000);
+  oled.setCursor(oled.width()-30, pos);
+  oled.print(3.0, 1);
+  oled.pixel(oled.width()-7,  pos);
 }
 
 void wakeUpIcon() {
@@ -503,7 +493,7 @@ void gameOver() {
   }
   analogWrite(LED_GREEN, 255);
   oled.setCursor(0, 0);
-  oled.print("  ");
+  oled.black("1");
   oled.setCursor(0, 0);
   oled.print("0");
   oled.setCursor(0, 22);

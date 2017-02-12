@@ -23,6 +23,12 @@ struct OledWrapper {
       setCursor(0,0);
     }
     
+    void black(const char c[]) {
+      _oled->setTextColor(BLACK);
+      _oled->print(c);
+      _oled->setTextColor(WHITE);
+    } 
+    
     void display() {
       _oled->display();
     }
