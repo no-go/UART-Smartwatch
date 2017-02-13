@@ -14,21 +14,28 @@
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
+// uncomment it, if you need 330 chars as Buffer!!
+#define WITHGAME 42
+
 // ------------------------------------------------------
 
-#define MESSAGEPOS     20
-#define MEMOSTR_LIMIT 250 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
+#ifdef WITHGAME
+  #define MESSAGEPOS     20
+  #define MEMOSTR_LIMIT 250 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
+  #include <EEPROM.h>
+  int eeAddress = 0;
+  int score     = 0;
+  int highscore = 0;
+  void game();
+#else
+  #define MESSAGEPOS     20
+  #define MEMOSTR_LIMIT 350 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
+#endif
 
 const int batLength = 60;
 
 #include "OledWrapper.cpp"
 #include <avr/power.h>
-#include <EEPROM.h>
-
-int eeAddress = 0;
-int score     = 0;
-int highscore = 0;
-void game();
 
 OledWrapper oled;
 
@@ -312,6 +319,7 @@ void loop() {
       
       if (clockMode == 0 || clockMode == 1) oled.off();
 
+#ifdef WITHGAME
       if (digitalRead(BUTTON2) == LOW) {      
         Serial.println("Game !");
         oled.on();
@@ -319,7 +327,8 @@ void loop() {
         game();
         power_adc_disable();
         oled.off();
-      }      
+      }
+#endif    
     }
   }
   
@@ -426,22 +435,11 @@ void loop() {
   ticking();
 }
 
-
-
-
-
-
-
 // =====================================================================
 
+#ifdef WITHGAME
 
-
-
-
-
-
-
-void setByte(byte & b, int x, int y) {
+void setByte(byte b, int x, int y) {
   int tmp;
   if (x<0 || x>63 || y<0 || y>47) return;
   for (byte bitNr=0; bitNr<8; ++bitNr) {
@@ -453,7 +451,7 @@ void setByte(byte & b, int x, int y) {
   }
 }
 
-void setByte90(byte & b, int x, int y) {
+void setByte90(byte b, int x, int y) {
   int tmp;
   if (x<0 || x>63 || y<0 || y>47) return;
   for (byte bitNr=0; bitNr<8; ++bitNr) {
@@ -505,7 +503,7 @@ void gameOver() {
 
 void dino(byte y) {
   byte i;
-  byte a[] ={
+  static const byte a[] ={
     0b00111000,
     0b00101100,
     0b00111110,
@@ -524,7 +522,7 @@ void dino(byte y) {
 
 void died() {
   byte i;
-  byte a[] ={
+  static const byte a[] ={
     0b00011100,
     0b01111100,
     0b01010100,
@@ -543,9 +541,9 @@ void died() {
   }
 }
 
-void feet1(byte y) {
+void feet1(const byte & y) {
   byte i;
-  byte a[] ={ 
+  static const byte a[] ={ 
     0b00111000,
     0b00100100
   };
@@ -554,9 +552,9 @@ void feet1(byte y) {
   }
 }
 
-void feet2(byte y) {
+void feet2(const byte & y) {
   byte i;
-  byte a[] ={
+  static const byte a[] ={
     0b01111000,
     0b00001000
   };
@@ -565,9 +563,9 @@ void feet2(byte y) {
   }
 }
 
-void feet3(byte y) {
+void feet3(const byte & y) {
   byte i;
-  byte a[] ={
+  static const byte a[] ={
     0b00110000,
     0b00101000
   };
@@ -576,10 +574,10 @@ void feet3(byte y) {
   }
 }
 
-void printCactus(int & x) {
+void printCactus(const int & x) {
   byte i;
   int tmp;
-  byte a[] = {
+  static const byte a[] = {
     0b00100000,
     0b01100000,
     0b00101000,
@@ -600,11 +598,11 @@ void printCactus(int & x) {
 
 void game() {
   score = 0;
-  int gamespeed;
-  int lives = 3;
-  int jumpY = 0;
-  int cloud = 56;
-  int cactus1 = 70;
+  byte gamespeed;
+  byte lives = 3;
+  byte jumpY = 0;
+  byte cloud = 56;
+  short cactus1 = 70;
   int subTick = 0;
 
   gameStart();
@@ -705,3 +703,4 @@ void game() {
   gameOver();
 }
 
+#endif //  WITHGAME
