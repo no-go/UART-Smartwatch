@@ -12,7 +12,7 @@ The UART Smartwatch (mini) App is a smaller and easier version of the non-mini A
 
 [UART-Smartwatch (mini) APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/gplay/UART-Smartwatch_App/app/app-release.apk) or get the non mini App from [f-Droid](http://f-droid.org)
 
-Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr This](flattr.png)</a>
+Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr This](img/flattr.png)</a>
 
 ## The Firmware
 
@@ -38,7 +38,7 @@ Is full with my private mods.
 
 ## Circuit
 
-![circuit for the UART Smartwatch](circuit.png)
+![circuit for the UART Smartwatch](img/circuit.png)
 
 **Attention!** You need a serial USB device (less than US 4$) to store the firmware on the ProMini chip. You need a small circuit (less tan US 1$ on aliexpress) to load the Lithium polimere akku (Lipo).
 
