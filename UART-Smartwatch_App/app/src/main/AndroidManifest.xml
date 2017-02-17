@@ -24,10 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="click.dummer.UartSmartwatch.PreferencesActivity"
-            android:parentActivityName="click.dummer.UartSmartwatch.MainActivity"></activity>
-
         <service android:enabled="true" android:name="click.dummer.UartSmartwatch.UartService" />
 
         <service android:name="click.dummer.UartSmartwatch.NotificationService"

@@ -1,26 +1,3 @@
-/*
- * Copyright (c) 2015, Nordic Semiconductor
- * All rights reserved.
- * 
- * 2016 - modified many parts by Jochen Peters
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package click.dummer.UartSmartwatch;
 
 import java.text.SimpleDateFormat;
@@ -61,7 +38,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +46,7 @@ public class MainActivity extends Activity {
     private Context ctx;
 
     private static final String FLATTR_LINK = "https://flattr.com/thing/5195407";
-    private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch";
+    private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch/tree/gplay";
 
     private static final char DEFAULT_BLINK_LENGTH = 'B';
     private static final int WATCH_REQUEST = 1;
@@ -82,10 +58,9 @@ public class MainActivity extends Activity {
     private BluetoothDevice mDevice = null;
     private BluetoothAdapter mBtAdapter = null;
     private TextView listMessage;
-    private Button btnConnectDisconnect, btnSend;
-    private EditText edtMessage;
+    private Button btnConnectDisconnect;
     private SharedPreferences mPreferences;
-    private String devAddr = PreferencesActivity.DEFAULT_ADDR;
+    private String devAddr = "DE:AD:FA:CE:BE:EF";
 
     private byte COUNT = 0;
 
@@ -94,26 +69,17 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             if (msg.what == WATCH_REQUEST) {
                 Date dNow = new Date();
-                String dateFormat = mPreferences.getString("dateFormat", "'#'HH:mm:ss");
+                String dateFormat = "'#'HH:mm:ss";
                 SimpleDateFormat ft =
                         new SimpleDateFormat(dateFormat);
                 String timeStr = ft.format(dNow);
 
-                if (btnSend.isEnabled()) {
+                if (btnConnectDisconnect.getText().equals(getString(R.string.disconnect))) {
                     sendMsg(timeStr  + myNewLine(timeStr) + listMessage.getText().toString());
                 }
             }
         }
     };
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem mi1 = menu.findItem(R.id.action_toasty);
-        mi1.setChecked(mPreferences.getBoolean("toasty", false));
-        MenuItem mi2 = menu.findItem(R.id.action_directSend);
-        mi2.setChecked(mPreferences.getBoolean("directSend", false));
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,10 +92,6 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_options:
-                Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
-                startActivity(intent);
-                break;
             case R.id.action_flattr:
                 Intent intentFlattr = new Intent(Intent.ACTION_VIEW, Uri.parse(FLATTR_LINK));
                 startActivity(intentFlattr);
@@ -141,24 +103,6 @@ public class MainActivity extends Activity {
             case R.id.action_search:
                 Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
                 startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
-                break;
-            case R.id.action_directSend:
-                if (item.isChecked()) {
-                    mPreferences.edit().putBoolean("directSend", false).apply();
-                    item.setChecked(false);
-                } else {
-                    mPreferences.edit().putBoolean("directSend", true).apply();
-                    item.setChecked(true);
-                }
-                break;
-            case R.id.action_toasty:
-                if (item.isChecked()) {
-                    mPreferences.edit().putBoolean("toasty", false).apply();
-                    item.setChecked(false);
-                } else {
-                    mPreferences.edit().putBoolean("toasty", true).apply();
-                    item.setChecked(true);
-                }
                 break;
             default:
                 return false;
@@ -190,8 +134,6 @@ public class MainActivity extends Activity {
 
 
         btnConnectDisconnect = (Button) findViewById(R.id.btn_select);
-        btnSend = (Button) findViewById(R.id.sendButton);
-        edtMessage = (EditText) findViewById(R.id.sendText);
         listMessage = (TextView) findViewById(R.id.listMessage);
 
         service_init();
@@ -215,19 +157,6 @@ public class MainActivity extends Activity {
                         }
                     }
                 }
-            }
-        });
-
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            // --------------------------------------------------------------------------------------------------------
-            @Override
-            public void onClick(View v) {
-                String message = edtMessage.getText().toString().trim();
-                int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "200"));
-                if (message.length() > messageSize) message = message.substring(0, messageSize);
-                listMessage.setText(message);
-                sendMsg(message);
-                edtMessage.setText("");
             }
         });
 
@@ -310,8 +239,6 @@ public class MainActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         btnConnectDisconnect.setText(R.string.disconnect);
-                        edtMessage.setEnabled(true);
-                        btnSend.setEnabled(true);
                         String name = mDevice.getName();
                         if (name == null) name = mDevice.getAddress();
                         ((TextView) findViewById(R.id.rssival)).setText(
@@ -324,8 +251,6 @@ public class MainActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         btnConnectDisconnect.setText(R.string.connect);
-                        edtMessage.setEnabled(false);
-                        btnSend.setEnabled(false);
                         ((TextView) findViewById(R.id.rssival)).setText(R.string.notConnected);
                         mService.close();
 
@@ -348,9 +273,7 @@ public class MainActivity extends Activity {
                     public void run() {
                         try {
                             String text = new String(txValue, "UTF-8");
-                            TextView tv = (TextView) findViewById(R.id.receiveText);
-                            tv.setText(text + tv.getText());
-                            String timeRequest = mPreferences.getString("timeRequest", "~");
+                            String timeRequest = "~";
                             if (txValue[0] == timeRequest.charAt(0)) {
                                 COUNT = 0;
                                 mHandler.sendEmptyMessage(WATCH_REQUEST);
@@ -409,7 +332,7 @@ public class MainActivity extends Activity {
             alertDialogBuilder.show();
         }
 
-        devAddr = mPreferences.getString("ble_addr", PreferencesActivity.DEFAULT_ADDR);
+        devAddr = mPreferences.getString("ble_addr", "DE:AD:FA:CE:BE:EF");
         super.onResume();
         if (!mBtAdapter.isEnabled()) {
             Log.i(TAG, "onResume - BT not enabled yet");
@@ -434,9 +357,7 @@ public class MainActivity extends Activity {
     }
 
     private void showMessage(String msg) {
-        if (mPreferences.getBoolean("toasty", false) == true) {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -501,22 +422,22 @@ public class MainActivity extends Activity {
             }
 
             if (intent.getStringExtra("MSG") != null) {
-                int notifyHintLimit = Integer.parseInt(mPreferences.getString("notifyHintLimit", "0"));
+                int notifyHintLimit = 0;
                 String pack = intent.getStringExtra("App");
                 if (intent.getBooleanExtra("posted", true)) {
                     String orgMsg = intent.getStringExtra("MSG").trim();
                     ArrayList<Integer> rgb = intent.getIntegerArrayListExtra("RGB");
                     String temp = orgMsg;
-                    int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "120"));
-                    if (btnSend.isEnabled()) {
+                    int messageSize = 315; // + time!
+                    if (btnConnectDisconnect.getText().equals(getString(R.string.disconnect))) {
                         temp = temp + myNewLine(temp) + listMessage.getText().toString().trim();
                         if (temp.length() > messageSize) {
                             temp = temp.substring(0, messageSize);
                         }
                         listMessage.setText(temp);
                         COUNT++;
-                        String notifyHint = mPreferences.getString("notifyHint", "");
-                        if (notifyHint.length() > 0 && COUNT > notifyHintLimit) {
+                        String notifyHint = "%";
+                        if (COUNT > notifyHintLimit) {
                             notifyHint += (char) COUNT;
                             notifyHint += byteInt2ABC(rgb.get(0));
                             notifyHint += byteInt2ABC(rgb.get(1));
@@ -526,23 +447,20 @@ public class MainActivity extends Activity {
                             sendMsg(notifyHint);
                             Log.i(TAG, "Count: " + COUNT);
                         }
-                        boolean directSend = mPreferences.getBoolean("directSend", false);
-                        if (directSend) sendMsg(orgMsg);
+                        sendMsg(orgMsg);
                     }
                 } else {
                     if (COUNT > 0) COUNT--;
-                    if (btnSend.isEnabled()) {
-                        String notifyHint = mPreferences.getString("notifyHint", "");
-                        if (notifyHint.length() > 0) {
-                            notifyHint += (char) COUNT;
-                            notifyHint += byteInt2ABC(0);
-                            notifyHint += byteInt2ABC(0);
-                            notifyHint += byteInt2ABC(0);
-                            notifyHint += DEFAULT_BLINK_LENGTH;
-                            notifyHint += pack;
-                            sendMsg(notifyHint);
-                            Log.i(TAG, "Count: " + COUNT);
-                        }
+                    if (btnConnectDisconnect.getText().equals(getString(R.string.disconnect))) {
+                        String notifyHint = "%";
+                        notifyHint += (char) COUNT;
+                        notifyHint += byteInt2ABC(0);
+                        notifyHint += byteInt2ABC(0);
+                        notifyHint += byteInt2ABC(0);
+                        notifyHint += DEFAULT_BLINK_LENGTH;
+                        notifyHint += pack;
+                        sendMsg(notifyHint);
+                        Log.i(TAG, "Count: " + COUNT);
                     }
                 }
             }

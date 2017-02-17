@@ -2,7 +2,7 @@
  * Copyright (c) 2015, Nordic Semiconductor
  * All rights reserved.
  * 
- * 2016 - modified many parts by Jochen Peters
+ * 2017 - modified many parts by Jochen Peters
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  *
@@ -59,7 +59,6 @@ public class UartService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
-    private SharedPreferences mPrefs;
 
     public final static String ACTION_GATT_CONNECTED =
             "click.dummer.UartNotify.ACTION_GATT_CONNECTED";
@@ -175,8 +174,7 @@ public class UartService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        setHM10(mPrefs.getBoolean("isHm10", false));
+        setHM10(true);
         return mBinder;
     }
 
@@ -282,8 +280,8 @@ public class UartService extends Service {
             protected Void doInBackground(byte[]... bytes) {
                 byte[] value = bytes[0];
 
-                int BYTE_LIMIT = Integer.parseInt(mPrefs.getString("packet_limit", "8"));
-                int SPLIT_MS = Integer.parseInt(mPrefs.getString("packet_pause", "60"));
+                int BYTE_LIMIT = 8;
+                int SPLIT_MS = 60;
 
                 int packs = (int) Math.ceil(
                         (float) value.length / (float) BYTE_LIMIT
@@ -330,11 +328,8 @@ public class UartService extends Service {
 
     private void showMessage(String msg) {
         Log.d(TAG, msg);
-        if (mPrefs.getBoolean("toasty", false) == true) {
-            try {
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-            }
-        }
+        try {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {}
     }
 }

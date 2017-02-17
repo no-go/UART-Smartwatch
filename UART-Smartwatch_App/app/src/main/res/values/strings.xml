@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">UART Smartwatch</string>
+    <string name="app_name">UART Smartwatch (mini)</string>
     <string name="send">Send</string>
     <string name="preferences">Preferences</string>
     <string name="disconnect">Disconnect</string>
@@ -46,7 +46,7 @@
 
     <string name="exit_title">Restart App Now</string>
     <string name="exit_message">Because you changed some preferences, it is better to restart the App.</string>
-    <string name="check_device_address">Maybe: check the device address</string>
+    <string name="check_device_address">Please search the device (address)!</string>
     <string name="noInitBT">Unable to initialize BluetoothManager.</string>
     <string name="getNoBT">Unable to obtain a BluetoothAdapter.</string>
     <string name="strangeBTaddr">Bluetooth Adapter not initialized or unspecified address.</string>

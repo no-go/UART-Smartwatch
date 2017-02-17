@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">UART Smartwatch</string>
+    <string name="app_name">UART Smartwatch (mini)</string>
     <string name="BTclosed">Bluetooth GATT beendet</string>
     <string name="BTnotAv">Bluetooth nicht verfügbar</string>
     <string name="BTnotInit">Bluetooth lässt sich nicht initialisieren</string>
@@ -19,7 +19,7 @@
     <string name="connect">Verbinden</string>
     <string name="disconnect">Unterbrechen</string>
     <string name="ble_addr_summary">Die Geräteadresse des Bluetooth Moduls deiner UART-Smartwatch</string>
-    <string name="check_device_address">Kontrolliere mal die MAC Adresse (?)</string>
+    <string name="check_device_address">Bitte suche nach dem Gerät (Adresse)!</string>
     <string name="dateFormat">Datums- und Zeitformat</string>
     <string name="dateFormat_summary">Formatierung orientiert sich an Javas SimpleDateFormat. Die UART-Smartwatch Firmware erwartet #17:05:58 …</string>
     <string name="useExistingBT">Probiere Wiederaufnahme einer Bluetooth GATT Verbindung</string>
