@@ -28,6 +28,7 @@ Is full with my private mods.
 - Button 1: get a fresh time and the notification buffer from your smart phone
 - Button 2: display the time and power level for 4 seconds
 - Button 2 (press for more than 4 seconds): switch to a different time mode
+- runs for more than 10h (first and second time mode)
 
 ### Time Modes
 
@@ -38,6 +39,8 @@ Is full with my private mods.
 ## Circuit
 
 ![circuit for the UART Smartwatch](circuit.png)
+
+**Attention!** You need a serial USB device (less than US 4$) to store the firmware on the ProMini chip. You need a small circuit (less tan US 1$ on aliexpress) to load the Lithium polimere akku (Lipo).
 
 ## License
 
