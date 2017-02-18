@@ -1,14 +1,17 @@
-
-// avrdude -c usbtiny -p m328p  -B 300 -U flash:w:UART-Smartwatch_firmware.ino.arduino_eightanaloginputs.hex:i
-
 // ---------------------------- Configure YOUR CONNECTIONS !! -------
 
 #define BUTTON1    A0
 #define BUTTON2    A1
 
-#define LED_RED     10
+#define LED_RED    10
 #define LED_GREEN   9 
 #define LED_BLUE    3
+
+// OLED (13 -> MISO/DIN, 11 ->SCK)
+#define PIN_CS     5
+#define PIN_RESET  6
+#define PIN_DC     8
+#define DC_JUMPER  0
 
 #define CHAR_TIME_REQUEST     '~'
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
@@ -34,10 +37,171 @@
 
 const int batLength = 60;
 
-#include "OledWrapper.cpp"
 #include <avr/power.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
-OledWrapper oled;
+struct OledWrapper {
+
+    Adafruit_SSD1306 * _oled;
+    
+    OledWrapper() {
+       _oled = new Adafruit_SSD1306(PIN_DC, PIN_RESET, PIN_CS);
+    }
+    
+    void begin() {
+      _oled->begin(SSD1306_SWITCHCAPVCC);
+      clear();
+      _oled->setTextSize(1); // 8 line with 21 chars
+      _oled->setTextColor(WHITE);
+      setCursor(0,0);
+    }
+    
+    void black(const char c[]) {
+      _oled->setTextColor(BLACK);
+      _oled->print(c);
+      _oled->setTextColor(WHITE);
+    } 
+    
+    void display() {
+      _oled->display();
+    }
+
+    int height() {
+      return _oled->height();
+    }
+    
+    int width() {
+      return _oled->width();
+    }
+
+    void line(const int & x, const int & y, const int & xx, const int & yy) {
+      _oled->drawLine(x,y,xx,yy, WHITE);
+    }
+    
+    void pixel(const int & x, const int & y) {
+      _oled->drawPixel(x,y, WHITE);
+    }
+    
+    void rect(const int & x, const int & y, const int & w, const int & h) {
+      _oled->drawRect(x,y,w,h, WHITE);
+    }
+    
+    void rectFill(const int & x, const int & y, const int & w, const int & h) {
+      _oled->fillRect(x,y,w,h, WHITE);
+    }
+    
+    void circle(const int & x, const int & y, const int & radius) {
+      _oled->drawCircle(x,y,radius, WHITE);
+    }
+
+    void setFontType(const int & t) {
+      _oled->setTextSize(t);
+    }
+    
+    void print(int c) {
+      _oled->print(c);
+    } 
+    void println(int c) {
+      _oled->println(c);
+    }
+    void print(long c) {
+      _oled->print(c);
+    } 
+    void println(long c) {
+      _oled->println(c);
+    }
+    
+    void print(unsigned int c) {
+      _oled->print(c);
+    } 
+    void println(unsigned int c) {
+      _oled->println(c);
+    }
+    void print(unsigned long c) {
+      _oled->print(c);
+    } 
+    void println(unsigned long c) {
+      _oled->println(c);
+    }
+    
+    void print(char c) {
+      _oled->print(c);
+    } 
+    void println(char c) {
+      _oled->println(c);
+    }    
+    void print(unsigned char c) {
+      _oled->print(c);
+    } 
+    void println(unsigned char c) {
+      _oled->println(c);
+    }
+    void print(const char c[]) {
+      _oled->print(c);
+    } 
+    void println(const char c[]) {
+      _oled->println(c);
+    }
+    void print(double d, int i) {
+      _oled->print(d,i);
+    } 
+    void println(double d, int i) {
+      _oled->println(d,i);
+    }
+    
+    void setCursor(int x, int y) {
+      _oled->setCursor(x,y);
+    }
+
+    void clear() {
+      _oled->clearDisplay();
+    }
+    
+    void free() {
+      _oled->clearDisplay();
+    }
+
+    void on() {
+      _oled->ssd1306_command(SSD1306_DISPLAYON);
+    }
+    
+    void off() {
+      _oled->ssd1306_command(SSD1306_DISPLAYOFF);
+    }
+
+    /**
+     * the hard way to handle with german(?) UTF-8 stuff
+     */
+    char umlReplace(char inChar) {
+      if (inChar == -97) {
+        inChar = 224; // ß
+      } else if (inChar == -80) {
+        inChar = 248; // °
+      } else if (inChar == -67) {
+        inChar = 171; // 1/2
+      } else if (inChar == -78) {
+        inChar = 253; // ²
+      } else if (inChar == -92) {
+        inChar = 132; // ä
+      } else if (inChar == -74) {
+        inChar = 148; // ö
+      } else if (inChar == -68) {
+        inChar = 129; // ü
+      } else if (inChar == -124) {
+        inChar = 142; // Ä
+      } else if (inChar == -106) {
+        inChar = 153; // Ö
+      } else if (inChar == -100) {
+        inChar = 154; // Ü
+      } else if (inChar == -85) {
+        inChar = 0xAE; // <<
+      } else if (inChar == -69) {
+        inChar = 0xAF; // >>
+      }
+      return inChar;  
+    }
+} oled;
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
@@ -85,71 +249,47 @@ int readVcc() {
 }
 
 void anaClock() {
-  oled.circle(32, 23, 23);
+  byte x = 60;
+  byte y = 31;
+  byte radius = 30;
+  oled.circle(x, y, radius);
   int hour = hours;
   if (hour>12) hour-=12;
   oled.line(
-    32, 23,
-    32 + 23*cos(PI * ((float)seconds-15.0) / 30),
-    23 + 23*sin(PI * ((float)seconds-15.0) / 30)
+    x, y,
+    x + radius*cos(PI * ((float)seconds-15.0) / 30),
+    y + radius*sin(PI * ((float)seconds-15.0) / 30)
   );
   
   oled.line(
-    32, 23,
-    32 + 20*cos(PI * ((float)minutes-15.0) / 30),
-    23 + 20*sin(PI * ((float)minutes-15.0) / 30)
+    x, y,
+    x + (radius-3)*cos(PI * ((float)minutes-15.0) / 30),
+    y + (radius-3)*sin(PI * ((float)minutes-15.0) / 30)
   );
   
   oled.line(
-    32, 23,
-    32 + 13*cos(PI * ((float)hour-3.0) / 6),
-    23 + 13*sin(PI * ((float)hour-3.0) / 6)
+    x, y,
+    x + (radius-12)*cos(PI * ((float)hour-3.0) / 6),
+    y + (radius-12)*sin(PI * ((float)hour-3.0) / 6)
   );
   oled.line(
-    32+1, 23,
-    32-1 + 13*cos(PI * ((float)hour-3.0) / 6),
-    23 + 13*sin(PI * ((float)hour-3.0) / 6)
+    x+1, y,
+    x-1 +(radius-12)*cos(PI * ((float)hour-3.0) / 6),
+    y +  (radius-12)*sin(PI * ((float)hour-3.0) / 6)
   );
   
   for (byte i=0; i<12; ++i) {
-    oled.pixel(32 + 20*cos(PI * ((float)i) / 6), 23 + 20*sin(PI * ((float)i) / 6));  
+    oled.pixel(x + (radius-3)*cos(PI * ((float)i) / 6), y + (radius-3)*sin(PI * ((float)i) / 6));  
   }
-  // 12 o'clock
-  oled.pixel(30, 3);
-  oled.pixel(30, 4);
-  oled.pixel(30, 5);
-  oled.pixel(30, 6);
-  oled.pixel(32, 3);
-  oled.pixel(33, 3);
-  oled.pixel(33, 4);
-  oled.pixel(32, 5);
-  oled.pixel(33, 6);
-  oled.pixel(34, 6);
-  // 3 o'clock
-  oled.pixel(49, 21);
-  oled.pixel(50, 21);
-  oled.pixel(50, 22);
-  oled.pixel(49, 23);
-  oled.pixel(50, 24);
-  oled.pixel(49, 25);
-  oled.pixel(50, 25);
-  // 6 o'clock
-  oled.pixel(32, 41);
-  oled.pixel(31, 42);
-  oled.pixel(30, 43);
-  oled.pixel(31, 43);
-  oled.pixel(30, 44);
-  oled.pixel(31, 44);
-  oled.pixel(32, 44);
-  oled.pixel(31, 45);
-  // 9 o'clock
-  oled.pixel(14, 21);
-  oled.pixel(13, 22);
-  oled.pixel(15, 22);
-  oled.pixel(14, 23);
-  oled.pixel(15, 23);
-  oled.pixel(14, 24);
-  oled.pixel(13, 25);
+
+  oled.setCursor(x-5,y-radius+4);
+  oled.print(12);
+  oled.setCursor(x-2,y+radius-11);
+  oled.print(6);
+  oled.setCursor(x+radius-9,y-3);
+  oled.print(3);
+  oled.setCursor(x-radius+6,y-3);
+  oled.print(9);
 }
 
 void filler() {
@@ -252,9 +392,20 @@ void batteryIcon() {
   oled.rect    (oled.width()-6, oled.height()  - batLength+1, 6, batLength-1);  
   oled.rectFill(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal); 
 
-  int pos = oled.height() - powerTick(3000);
-  oled.setCursor(oled.width()-30, pos);
-  oled.print(3.0, 1);
+  int pos = oled.height() - powerTick(2800);
+  oled.pixel(oled.width()-7,  pos);
+  pos = oled.height() - powerTick(2900);
+  oled.pixel(oled.width()-7,  pos);
+
+  pos = oled.height() - powerTick(3000);
+  oled.pixel(oled.width()-7,  pos);
+  oled.pixel(oled.width()-8,  pos);
+  oled.pixel(oled.width()-9,  pos);
+  pos = oled.height() - powerTick(3100);
+  oled.pixel(oled.width()-7,  pos);
+  pos = oled.height() - powerTick(3200);
+  oled.pixel(oled.width()-7,  pos);
+  pos = oled.height() - powerTick(3300);
   oled.pixel(oled.width()-7,  pos);
 }
 
