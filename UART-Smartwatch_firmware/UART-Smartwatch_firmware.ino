@@ -13,144 +13,65 @@
 
 #define MESSAGEPOS     20
 #define MEMOSTR_LIMIT 350
-const int batLength =  60;
+
+const byte batLength =  60;
+char memoStr[MEMOSTR_LIMIT] = {'\0'};
+int  memoStrPos   = MESSAGEPOS;
+int  page         = 0;
+byte COUNT        = 0;
+
+byte hours   = 10;
+byte minutes = 10;
+byte seconds = 15;
+byte tick    = 0;
+
+// 0=digi, 1=analog, 2=digi 4 ever
+byte clockMode = 0;
 
 #include <avr/power.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-struct OledWrapper {
+class OledWrapper : public Adafruit_SSD1306 {
+  public:
 
-    Adafruit_SSD1306 * _oled;
-    
-    OledWrapper() {
-       _oled = new Adafruit_SSD1306(PIN_DC, PIN_RESET, PIN_CS);
-    }
-    
+    OledWrapper(int dc, int res, int cs) : Adafruit_SSD1306(dc,res,cs) {}
+
     void begin() {
-      _oled->begin(SSD1306_SWITCHCAPVCC);
-      clear();
-      _oled->setTextSize(1); // 8 line with 21 chars
-      _oled->setTextColor(WHITE);
-      setCursor(0,0);
-    }
-    
-    void black(const char c[]) {
-      _oled->setTextColor(BLACK);
-      _oled->print(c);
-      _oled->setTextColor(WHITE);
-    } 
-    
-    void display() {
-      _oled->display();
-    }
-
-    int height() {
-      return _oled->height();
-    }
-    
-    int width() {
-      return _oled->width();
+      Adafruit_SSD1306::begin(SSD1306_SWITCHCAPVCC);
+      clearDisplay();
+      setTextSize(1); // 8 line with 21 chars
+      setTextColor(WHITE);
+      setCursor(0,0);    
     }
 
     void line(const int & x, const int & y, const int & xx, const int & yy) {
-      _oled->drawLine(x,y,xx,yy, WHITE);
+      drawLine(x,y,xx,yy, WHITE);
     }
-    
     void pixel(const int & x, const int & y) {
-      _oled->drawPixel(x,y, WHITE);
+      drawPixel(x,y, WHITE);
     }
-    
     void rect(const int & x, const int & y, const int & w, const int & h) {
-      _oled->drawRect(x,y,w,h, WHITE);
+      drawRect(x,y,w,h, WHITE);
     }
-    
     void rectFill(const int & x, const int & y, const int & w, const int & h) {
-      _oled->fillRect(x,y,w,h, WHITE);
+      fillRect(x,y,w,h, WHITE);
     }
-    
     void circle(const int & x, const int & y, const int & radius) {
-      _oled->drawCircle(x,y,radius, WHITE);
+      drawCircle(x,y,radius, WHITE);
     }
-
     void setFontType(const int & t) {
-      _oled->setTextSize(t);
+      setTextSize(t);
     }
-    
-    void print(int c) {
-      _oled->print(c);
-    } 
-    void println(int c) {
-      _oled->println(c);
-    }
-    void print(long c) {
-      _oled->print(c);
-    } 
-    void println(long c) {
-      _oled->println(c);
-    }
-    
-    void print(unsigned int c) {
-      _oled->print(c);
-    } 
-    void println(unsigned int c) {
-      _oled->println(c);
-    }
-    void print(unsigned long c) {
-      _oled->print(c);
-    } 
-    void println(unsigned long c) {
-      _oled->println(c);
-    }
-    
-    void print(char c) {
-      _oled->print(c);
-    } 
-    void println(char c) {
-      _oled->println(c);
-    }    
-    void print(unsigned char c) {
-      _oled->print(c);
-    } 
-    void println(unsigned char c) {
-      _oled->println(c);
-    }
-    void print(const char c[]) {
-      _oled->print(c);
-    } 
-    void println(const char c[]) {
-      _oled->println(c);
-    }
-    void print(double d, int i) {
-      _oled->print(d,i);
-    } 
-    void println(double d, int i) {
-      _oled->println(d,i);
-    }
-    
-    void setCursor(int x, int y) {
-      _oled->setCursor(x,y);
-    }
-
-    void clear() {
-      _oled->clearDisplay();
-    }
-    
-    void free() {
-      _oled->clearDisplay();
-    }
-
     void on() {
-      _oled->ssd1306_command(SSD1306_DISPLAYON);
+      ssd1306_command(SSD1306_DISPLAYON);
     }
-    
     void off() {
-      _oled->ssd1306_command(SSD1306_DISPLAYOFF);
+      ssd1306_command(SSD1306_DISPLAYOFF);
     }
-
-    /**
-     * the hard way to handle with german(?) UTF-8 stuff
-     */
+    void clear() {
+      clearDisplay();
+    }
     char umlReplace(char inChar) {
       if (inChar == -97) {
         inChar = 224; // ß
@@ -179,20 +100,9 @@ struct OledWrapper {
       }
       return inChar;  
     }
-} oled;
+};
 
-char memoStr[MEMOSTR_LIMIT] = {'\0'};
-int  memoStrPos   = MESSAGEPOS;
-int  page         = 0;
-byte COUNT        = 0;
-
-byte hours   = 10;
-byte minutes = 10;
-byte seconds = 15;
-byte tick    = 0;
-
-// 0=digi, 1=analog, 2=digi 4 ever
-int clockMode = 0;
+OledWrapper * oled;
 
 byte powerTick(int mv) {
   float quot = (3400-2740)/(batLength-3);
@@ -201,7 +111,6 @@ byte powerTick(int mv) {
 
 int readVcc() {
   int mv;
-  power_adc_enable();
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   delay(10); // Wait for Vref to settle
   ADCSRA |= _BV(ADSC); // Start conversion
@@ -209,7 +118,6 @@ int readVcc() {
   mv = ADCL; 
   mv |= ADCH<<8; 
   mv = 1126400L / mv;
-  power_adc_disable();
   return powerTick(mv);
 }
 
@@ -217,47 +125,47 @@ void anaClock() {
   byte x = 60;
   byte y = 31;
   byte radius = 30;
-  oled.circle(x, y, radius);
+  oled->circle(x, y, radius);
   int hour = hours;
   if (hour>12) hour-=12;
-  oled.line(
+  oled->line(
     x, y,
     x + radius*cos(PI * ((float)seconds-15.0) / 30),
     y + radius*sin(PI * ((float)seconds-15.0) / 30)
   );
   
-  oled.line(
+  oled->line(
     x, y,
     x + (radius-3)*cos(PI * ((float)minutes-15.0) / 30),
     y + (radius-3)*sin(PI * ((float)minutes-15.0) / 30)
   );
   
-  oled.line(
+  oled->line(
     x, y,
     x + (radius-12)*cos(PI * ((float)hour-3.0) / 6),
     y + (radius-12)*sin(PI * ((float)hour-3.0) / 6)
   );
-  oled.line(
+  oled->line(
     x+1, y,
     x-1 +(radius-12)*cos(PI * ((float)hour-3.0) / 6),
     y +  (radius-12)*sin(PI * ((float)hour-3.0) / 6)
   );
   
   for (byte i=0; i<12; ++i) {
-    oled.pixel(x + (radius-3)*cos(PI * ((float)i) / 6), y + (radius-3)*sin(PI * ((float)i) / 6));  
+    oled->pixel(x + (radius-3)*cos(PI * ((float)i) / 6), y + (radius-3)*sin(PI * ((float)i) / 6));  
   }
 
-  oled.setCursor(x-5,y-radius+4);
-  oled.print(12);
-  oled.setCursor(x-2,y+radius-11);
-  oled.print(6);
-  oled.setCursor(x+radius-9,y-3);
-  oled.print(3);
-  oled.setCursor(x-radius+6,y-3);
-  oled.print(9);
+  oled->setCursor(x-5,y-radius+4);
+  oled->print(12);
+  oled->setCursor(x-2,y+radius-11);
+  oled->print(6);
+  oled->setCursor(x+radius-9,y-3);
+  oled->print(3);
+  oled->setCursor(x-radius+6,y-3);
+  oled->print(9);
 }
 
-void filler() {
+inline void filler() {
   for (int i=0; i<MESSAGEPOS; ++i) {
     memoStr[i] = ' ';
   }
@@ -276,10 +184,16 @@ void setup() {
   power_timer2_disable();
   power_adc_disable();
   power_twi_disable();
+
+  oled = new OledWrapper(PIN_DC, PIN_RESET, PIN_CS);
   
-  oled.begin();
-  oled.free(); // Clear the display's internal memory logo
-  oled.display();
+  oled->begin();
+  power_adc_enable();
+  batteryIcon();
+  power_adc_disable();
+  oled->display();
+  delay(3000);
+  oled->clearDisplay();
   filler();
 }
 
@@ -289,18 +203,18 @@ void serialEvent() {
     if (inChar == -61) continue; // symbol before utf-8
     if (inChar == -62) continue; // other symbol before utf-8
     if (inChar == '\n') {
-      oled.on();
+      oled->on();
       memoStr[memoStrPos] = '\0';
       page = 0;
       continue;
     }
-    memoStr[memoStrPos] = oled.umlReplace(inChar);
+    memoStr[memoStrPos] = oled->umlReplace(inChar);
     memoStrPos++;
     if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MESSAGEPOS;
   }
 }
 
-void ticking() {
+inline void ticking() {
   tick++;
   if (tick > 9) {
     seconds += tick/10;
@@ -322,59 +236,63 @@ void ticking() {
   }
 }
 
-void digiClock() {
-  oled.setFontType(3);
-  oled.setCursor(0, 12);
-  if (hours<10) oled.print("0");
-  oled.print(hours);
+inline void digiClock() {
+  oled->setFontType(3);
+  oled->setCursor(0, 12);
+  if (hours<10) oled->print("0");
+  oled->print(hours);
 
-  oled.setFontType(2);
-  oled.setCursor(36, 15);
-  oled.print(":");
+  oled->setFontType(2);
+  oled->setCursor(36, 15);
+  oled->print(":");
 
-  oled.setFontType(3);
-  oled.setCursor(46, 12);
-  if (minutes<10) oled.print("0");
-  oled.print(minutes); 
+  oled->setFontType(3);
+  oled->setCursor(46, 12);
+  if (minutes<10) oled->print("0");
+  oled->print(minutes); 
 
-  oled.setFontType(0);
-  oled.setCursor(30, 40);
-  if (seconds<10) oled.print("0");
-  oled.print(seconds);
-  oled.print(".");
-  oled.print(tick);
+  oled->setFontType(0);
+  oled->setCursor(30, 40);
+  if (seconds<10) oled->print("0");
+  oled->print(seconds);
+  oled->print(".");
+  oled->print(tick);
 }
 
 void batteryIcon() {
   byte vccVal = readVcc();
-  oled.pixel   (oled.width()-4, oled.height() - batLength);
-  oled.pixel   (oled.width()-3, oled.height() - batLength);
-  oled.rect    (oled.width()-6, oled.height()  - batLength+1, 6, batLength-1);  
-  oled.rectFill(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal); 
+  byte lowV = powerTick(3150);
+  byte pos = oled->height() - lowV;
+  if (vccVal < lowV) {
+    oled->setCursor(oled->width()-30, pos);
+    oled->print("Low");
+  }
+  oled->pixel   (oled->width()-4, oled->height() - batLength);
+  oled->pixel   (oled->width()-3, oled->height() - batLength);
+  oled->rect    (oled->width()-6, oled->height()  - batLength+1, 6, batLength-1);  
+  oled->rectFill(oled->width()-5, oled->height()  - vccVal   -1, 4,      vccVal); 
 
-  int pos = oled.height() - powerTick(3000);
-  oled.setCursor(oled.width()-30, pos);
-  oled.print(3.0, 1);
-  oled.pixel(oled.width()-7,  pos);
+  oled->pixel(oled->width()-7,  pos);
+  oled->pixel(oled->width()-6,  pos);
 }
 
-void wakeUpIcon() {
-  oled.clear();
-  oled.circle(32, 23, 10);
-  oled.pixel(31, 20);
-  oled.pixel(35, 19);
-  oled.line (29, 27, 35, 27);
-  oled.display();
+inline void wakeUpIcon() {
+  oled->clear();
+  oled->circle(32, 23, 10);
+  oled->pixel(31, 20);
+  oled->pixel(35, 19);
+  oled->line (29, 27, 35, 27);
+  oled->display();
   delay(350);
-  oled.rect(29, 19, 3, 3);
-  oled.rect(35, 19, 3, 3);
-  oled.pixel(35, 26);
-  oled.display();  
+  oled->rect(29, 19, 3, 3);
+  oled->rect(35, 19, 3, 3);
+  oled->pixel(35, 26);
+  oled->display();  
   delay(350);
   tick += 7; 
 }
 
-byte tob(char c) { return c - '0';}
+inline byte tob(char c) { return c - '0';}
 
 void loop() {
   delay(98); // is < 100 : makes the seconds a bit faster!
@@ -389,31 +307,33 @@ void loop() {
         digitalWrite(LED_RED, HIGH);
       }
       
-      oled.on();
+      oled->on();
 
+      power_adc_enable();
       for (int j=0; j<40; ++j) { // 4sec
-        oled.clear();
+        oled->clear();
         ticking();
         if (clockMode == 1) {
           anaClock();
         } else if (clockMode == 2) {
-          oled.pixel(5, 0);
-          oled.pixel(30, 0);
+          oled->pixel(5, 0);
+          oled->pixel(30, 0);
           digiClock();
         } else {
           digiClock();
         }
         batteryIcon();
-        oled.display();
+        oled->display();
         delay(90); // 10ms in vcc mesurement
       }
+      power_adc_disable();
       
       if (digitalRead(BUTTON2) == LOW) {
         clockMode++;
         if (clockMode > 2) clockMode = 0;
       }
       
-      if (clockMode < 2) oled.off();    
+      if (clockMode < 2) oled->off();    
     }
   }
   
@@ -425,9 +345,9 @@ void loop() {
       COUNT = 0;
       digitalWrite(LED_RED, HIGH);
 
-      oled.on();
+      oled->on();
       wakeUpIcon();
-      oled.off();
+      oled->off();
                       
       // "remove" old chars from buffer
       // print ignores everyting behind \0
@@ -458,15 +378,15 @@ void loop() {
 
   // Scrolling message through display
   if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
-    oled.clear();
-    oled.setCursor(0, 0);
-    oled.print(&(memoStr[page]));
-    oled.display();
+    oled->clear();
+    oled->setCursor(0, 0);
+    oled->print(&(memoStr[page]));
+    oled->display();
   }
 
   /// Safe power and switch display off, if message is at the end
   if (page == memoStrPos) {
-    oled.off();
+    oled->off();
     // "remove" old chars from buffer
     // print ignores everyting behind \0
     memoStr[MESSAGEPOS] = '\0';
@@ -474,7 +394,7 @@ void loop() {
   }
 
   if (COUNT > 0) {
-    if (tick <= 1) {
+    if (tick == 0) {
       digitalWrite(LED_RED, LOW);
     } else {
       digitalWrite(LED_RED, HIGH);

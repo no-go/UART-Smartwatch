@@ -1,7 +1,6 @@
 package click.dummer.UartSmartwatch;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -48,10 +47,10 @@ public class MainActivity extends Activity {
     private static final String FLATTR_LINK = "https://flattr.com/thing/5195407";
     private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch/tree/gplay";
 
-    private static final char DEFAULT_BLINK_LENGTH = 'B';
+    private static final String NOADDR     = "DE:AD:FA:CE:BE:EF";
     private static final int WATCH_REQUEST = 1;
     private static final int REQUEST_SELECT_DEVICE = 42;
-    private static final int REQUEST_ENABLE_BT = 2;
+    private static final int REQUEST_ENABLE_BT     = 2;
 
     private NotificationReceiver nReceiver;
     private UartService mService = null;
@@ -60,7 +59,7 @@ public class MainActivity extends Activity {
     private TextView listMessage;
     private Button btnConnectDisconnect;
     private SharedPreferences mPreferences;
-    private String devAddr = "DE:AD:FA:CE:BE:EF";
+    private String devAddr = NOADDR;
 
     private byte COUNT = 0;
 
@@ -69,7 +68,7 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             if (msg.what == WATCH_REQUEST) {
                 Date dNow = new Date();
-                String dateFormat = "'#'HH:mm:ss";
+                String dateFormat = "'#'HH:mm:ss ";
                 SimpleDateFormat ft =
                         new SimpleDateFormat(dateFormat);
                 String timeStr = ft.format(dNow);
@@ -144,12 +143,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 if (mBtAdapter.isEnabled()) {
                     if (btnConnectDisconnect.getText().equals(getString(R.string.connect))) {
-
-                        mDevice = mBtAdapter.getRemoteDevice(devAddr);
-                        ((TextView) findViewById(R.id.rssival)).setText(
-                                "'" + devAddr + "' - "+getString(R.string.Connecting)
-                        );
-                        mService.connect(devAddr);
+                        if (devAddr.equals(NOADDR)) {
+                            Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
+                            startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                        } else {
+                            mDevice = mBtAdapter.getRemoteDevice(devAddr);
+                            ((TextView) findViewById(R.id.rssival)).setText(
+                                    "'" + devAddr + "' - "+getString(R.string.Connecting)
+                            );
+                            mService.connect(devAddr);
+                        }
                     } else {
                         //Disconnect button pressed
                         if (mDevice != null) {
@@ -332,7 +335,7 @@ public class MainActivity extends Activity {
             alertDialogBuilder.show();
         }
 
-        devAddr = mPreferences.getString("ble_addr", "DE:AD:FA:CE:BE:EF");
+        devAddr = mPreferences.getString("ble_addr", NOADDR);
         super.onResume();
         if (!mBtAdapter.isEnabled()) {
             Log.i(TAG, "onResume - BT not enabled yet");
@@ -404,11 +407,6 @@ public class MainActivity extends Activity {
         return "/";
     }
 
-    char byteInt2ABC(int val) {
-        int out = 65 + (int) Math.floor( (float) val * 57.0/255.0);
-        return Character.toChars(out)[0];
-    }
-
     class NotificationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -422,43 +420,29 @@ public class MainActivity extends Activity {
             }
 
             if (intent.getStringExtra("MSG") != null) {
-                int notifyHintLimit = 0;
-                String pack = intent.getStringExtra("App");
                 if (intent.getBooleanExtra("posted", true)) {
                     String orgMsg = intent.getStringExtra("MSG").trim();
-                    ArrayList<Integer> rgb = intent.getIntegerArrayListExtra("RGB");
                     String temp = orgMsg;
                     int messageSize = 315; // + time!
                     if (btnConnectDisconnect.getText().equals(getString(R.string.disconnect))) {
                         temp = temp + myNewLine(temp) + listMessage.getText().toString().trim();
-                        if (temp.length() > messageSize) {
+                        if (temp.getBytes().length > messageSize) {
                             temp = temp.substring(0, messageSize);
                         }
                         listMessage.setText(temp);
                         COUNT++;
                         String notifyHint = "%";
-                        if (COUNT > notifyHintLimit) {
+                        if (COUNT > 0) {
                             notifyHint += (char) COUNT;
-                            notifyHint += byteInt2ABC(rgb.get(0));
-                            notifyHint += byteInt2ABC(rgb.get(1));
-                            notifyHint += byteInt2ABC(rgb.get(2));
-                            notifyHint += DEFAULT_BLINK_LENGTH;
-                            notifyHint += pack;
                             sendMsg(notifyHint);
                             Log.i(TAG, "Count: " + COUNT);
                         }
-                        sendMsg(orgMsg);
                     }
                 } else {
                     if (COUNT > 0) COUNT--;
                     if (btnConnectDisconnect.getText().equals(getString(R.string.disconnect))) {
                         String notifyHint = "%";
                         notifyHint += (char) COUNT;
-                        notifyHint += byteInt2ABC(0);
-                        notifyHint += byteInt2ABC(0);
-                        notifyHint += byteInt2ABC(0);
-                        notifyHint += DEFAULT_BLINK_LENGTH;
-                        notifyHint += pack;
                         sendMsg(notifyHint);
                         Log.i(TAG, "Count: " + COUNT);
                     }
