@@ -377,7 +377,7 @@ void wakeUpIcon() {
 byte tob(char c) { return c - '0';}
 
 void loop() {
-  delay(93); // is < 100 : makes the seconds a bit faster!
+  delay(98); // is < 100 : makes the seconds a bit faster!
 
   if (digitalRead(BUTTON2) == LOW || clockMode > 1) {
     delay(300); 
