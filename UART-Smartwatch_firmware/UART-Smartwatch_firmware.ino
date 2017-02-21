@@ -102,11 +102,10 @@ class OledWrapper : public Adafruit_SSD1306 {
     }
 };
 
-OledWrapper * oled;
-
+OledWrapper * oled = new OledWrapper(PIN_DC, PIN_RESET, PIN_CS);
+  
 byte powerTick(int mv) {
-  float quot = (3400-2740)/(batLength-3);
-  return (mv-2740)/quot;  
+  return (mv-3000.0)*(batLength-3)/(3340-3000);  
 }
 
 int readVcc() {
@@ -174,10 +173,8 @@ inline void filler() {
 void setup() {
   pinMode(BUTTON1, INPUT_PULLUP);
   pinMode(BUTTON2, INPUT_PULLUP);
-
   pinMode(LED_RED, OUTPUT);
   digitalWrite(LED_RED, HIGH); // off
-  
   Serial.begin(9600);
 
   power_timer1_disable();
@@ -185,8 +182,6 @@ void setup() {
   power_adc_disable();
   power_twi_disable();
 
-  oled = new OledWrapper(PIN_DC, PIN_RESET, PIN_CS);
-  
   oled->begin();
   power_adc_enable();
   batteryIcon();
@@ -199,6 +194,7 @@ void setup() {
 
 void serialEvent() {
   while (Serial.available()) {
+    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MESSAGEPOS;
     char inChar = (char)Serial.read();
     if (inChar == -61) continue; // symbol before utf-8
     if (inChar == -62) continue; // other symbol before utf-8
@@ -239,23 +235,23 @@ inline void ticking() {
 inline void digiClock() {
   oled->setFontType(3);
   oled->setCursor(0, 12);
-  if (hours<10) oled->print("0");
+  if (hours<10) oled->print(0);
   oled->print(hours);
 
   oled->setFontType(2);
   oled->setCursor(36, 15);
-  oled->print(":");
+  oled->print(':');
 
   oled->setFontType(3);
   oled->setCursor(46, 12);
-  if (minutes<10) oled->print("0");
+  if (minutes<10) oled->print(0);
   oled->print(minutes); 
 
   oled->setFontType(0);
   oled->setCursor(30, 40);
-  if (seconds<10) oled->print("0");
+  if (seconds<10) oled->print(0);
   oled->print(seconds);
-  oled->print(".");
+  oled->print('.');
   oled->print(tick);
 }
 
@@ -265,7 +261,9 @@ void batteryIcon() {
   byte pos = oled->height() - lowV;
   if (vccVal < lowV) {
     oled->setCursor(oled->width()-30, pos);
-    oled->print("Low");
+    oled->print('L');
+    oled->print('o');
+    oled->print('w');
   }
   oled->pixel   (oled->width()-4, oled->height() - batLength);
   oled->pixel   (oled->width()-3, oled->height() - batLength);
@@ -353,7 +351,8 @@ void loop() {
       // print ignores everyting behind \0
       memoStr[MESSAGEPOS] = '\0';
       memoStrPos = MESSAGEPOS;
-      Serial.println( CHAR_TIME_REQUEST );
+      Serial.print(CHAR_TIME_REQUEST);
+      Serial.print('\n');
     }
   }
 
