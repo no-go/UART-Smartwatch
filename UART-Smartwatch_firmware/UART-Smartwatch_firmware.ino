@@ -12,7 +12,7 @@
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
 #define MESSAGEPOS     20
-#define MEMOSTR_LIMIT 350
+#define MEMOSTR_LIMIT 290 //  270 + 20    10 (inklusive #hh:mm:ss/)
 
 const byte batLength =  60;
 char memoStr[MEMOSTR_LIMIT] = {'\0'};

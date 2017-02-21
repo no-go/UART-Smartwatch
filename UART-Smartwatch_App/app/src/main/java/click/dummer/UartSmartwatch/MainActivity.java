@@ -48,9 +48,10 @@ public class MainActivity extends Activity {
     private static final String PROJECT_LINK = "https://github.com/no-go/UART-Smartwatch/tree/gplay";
 
     private static final String NOADDR     = "DE:AD:FA:CE:BE:EF";
-    private static final int WATCH_REQUEST = 1;
+    private static final int WATCH_REQUEST         = 1;
     private static final int REQUEST_SELECT_DEVICE = 42;
     private static final int REQUEST_ENABLE_BT     = 2;
+    private static final int BUFFERSIZE            = 260;
 
     private NotificationReceiver nReceiver;
     private UartService mService = null;
@@ -68,7 +69,7 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             if (msg.what == WATCH_REQUEST) {
                 Date dNow = new Date();
-                String dateFormat = "'#'HH:mm:ss ";
+                String dateFormat = "'#'HH:mm:ss";
                 SimpleDateFormat ft =
                         new SimpleDateFormat(dateFormat);
                 String timeStr = ft.format(dNow);
@@ -423,7 +424,7 @@ public class MainActivity extends Activity {
                 if (intent.getBooleanExtra("posted", true)) {
                     String orgMsg = intent.getStringExtra("MSG").trim();
                     String temp = orgMsg;
-                    int messageSize = 315; // + time!
+                    int messageSize = BUFFERSIZE - 10; // - time!
                     if (btnConnectDisconnect.getText().equals(getString(R.string.disconnect))) {
                         temp = temp + myNewLine(temp) + listMessage.getText().toString().trim();
                         if (temp.getBytes().length > messageSize) {
