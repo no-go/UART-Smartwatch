@@ -105,6 +105,7 @@ class OledWrapper : public Adafruit_SSD1306 {
 OledWrapper * oled = new OledWrapper(PIN_DC, PIN_RESET, PIN_CS);
   
 byte powerTick(int mv) {
+  if (mv < 3000) return 0;
   return (mv-3000.0)*(batLength-3)/(3340-3000);  
 }
 
@@ -183,6 +184,21 @@ void setup() {
   power_twi_disable();
 
   oled->begin();
+  oled->print('U'); // crazy, but saves dynamic mem
+  oled->print('A');
+  oled->print('R');
+  oled->print('T');
+  oled->print('-');
+  oled->print('S');
+  oled->print('m');
+  oled->print('a');
+  oled->print('r');
+  oled->print('t');
+  oled->print('w');
+  oled->print('a');
+  oled->print('t');
+  oled->print('c');
+  oled->print('h');
   power_adc_enable();
   batteryIcon();
   power_adc_disable();
