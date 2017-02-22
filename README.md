@@ -24,11 +24,11 @@ Is full with my private mods.
 ## Features
 
 - blinking LED, if a new notification is present
-- 315 chars notification buffer
+- 250 chars notification buffer
 - Button 1: get a fresh time and the notification buffer from your smart phone
 - Button 2: display the time and power level for 4 seconds
 - Button 2 (press for more than 4 seconds): switch to a different time mode
-- runs for more than 10h (first and second time mode)
+- runs for about 8h (first and second time mode)
 
 ### Time Modes
 
