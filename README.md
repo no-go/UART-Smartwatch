@@ -29,6 +29,7 @@ Is full with my private mods.
 - Button 2: display the time and power level for 4 seconds
 - Button 2 (press for more than 4 seconds): switch to a different time mode
 - runs for about 8h (first and second time mode)
+- Posibility to compile with DINO GAME !!! (Press both buttons)
 
 ### Time Modes
 
