@@ -42,6 +42,8 @@
     the hint will be send, if the number of new messages is above this limit.
     BUT: If you delete a notification, this hint will be send!</string>
 
+    <string name="isHm10_use">is HM10 (CC2541)</string>
+
     <string name="exit_title">Restart App Now</string>
     <string name="exit_message">Because you changed some preferences, it is better to restart the App.</string>
     <string name="check_device_address">Maybe: check the device address</string>

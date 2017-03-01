@@ -46,13 +46,19 @@
             android:key="ble_addr"
             android:summary="@string/ble_addr_summary"
             android:title="@string/ble_addr"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="isHm10"
+            android:title="@string/isHm10_use" />
+
         <EditTextPreference
             android:defaultValue="8"
             android:key="packet_limit"
             android:summary="@string/packetLimit_summary"
             android:title="@string/packetLimit" />
         <EditTextPreference
-            android:defaultValue="200"
+            android:defaultValue="60"
             android:key="packet_pause"
             android:summary="@string/packetPause_summary"
             android:title="@string/packetPause" />

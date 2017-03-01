@@ -36,6 +36,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -72,12 +73,35 @@ public class UartService extends Service {
             "click.dummer.UartNotify.EXTRA_DATA";
     public final static String DEVICE_DOES_NOT_SUPPORT_UART =
             "click.dummer.UartNotify.DEVICE_DOES_NOT_SUPPORT_UART";
-    
-    public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-    public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-    public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-    public static final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
-    
+
+    public UUID            CCCD;
+    public UUID RX_SERVICE_UUID;
+    public UUID    RX_CHAR_UUID;
+    public UUID    TX_CHAR_UUID;
+
+    private final static String CCCD_HM10  = "00002902-0000-1000-8000-00805f9b34fb";
+    private final static String SERV_HM10  = "0000ffe0-0000-1000-8000-00805f9b34fb";
+    private final static String RXUID_HM10 = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    private final static String TXUID_HM10 = "0000ffe1-0000-1000-8000-00805f9b34fb";
+
+    private final static String CCCD_nRF  = "00002902-0000-1000-8000-00805f9b34fb";
+    private final static String SERV_nRF  = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+    private final static String RXUID_nRF = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+    private final static String TXUID_nRF = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+    public void setHM10(boolean b) {
+        if (b) {
+            CCCD = UUID.fromString(CCCD_HM10);
+            RX_SERVICE_UUID = UUID.fromString(SERV_HM10);
+            RX_CHAR_UUID = UUID.fromString(RXUID_HM10);
+            TX_CHAR_UUID = UUID.fromString(TXUID_HM10);
+        } else {
+            CCCD = UUID.fromString(CCCD_nRF);
+            RX_SERVICE_UUID = UUID.fromString(SERV_nRF);
+            RX_CHAR_UUID = UUID.fromString(RXUID_nRF);
+            TX_CHAR_UUID = UUID.fromString(TXUID_nRF);
+        }
+    }
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
@@ -152,6 +176,7 @@ public class UartService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        setHM10(mPrefs.getBoolean("isHm10", false));
         return mBinder;
     }
 
@@ -251,49 +276,56 @@ public class UartService extends Service {
     	
     }
     
-    public void writeRXCharacteristic(byte[] value) {
-        int BYTE_LIMIT = Integer.parseInt(mPrefs.getString("packet_limit", "4"));
-        int SPLIT_MS = Integer.parseInt(mPrefs.getString("packet_pause", "200"));
+    public void writeRXCharacteristic(byte[] val) {
+        new AsyncTask<byte[], Void, Void>() {
+            @Override
+            protected Void doInBackground(byte[]... bytes) {
+                byte[] value = bytes[0];
 
-        int packs = (int) Math.ceil(
-                (float) value.length / (float) BYTE_LIMIT
-        );
-        int finish = BYTE_LIMIT;
-        int offset;
-        for (int i=0; i<packs; i++) {
+                int BYTE_LIMIT = Integer.parseInt(mPrefs.getString("packet_limit", "8"));
+                int SPLIT_MS = Integer.parseInt(mPrefs.getString("packet_pause", "60"));
 
-            offset = i * BYTE_LIMIT;
-            if ((offset+BYTE_LIMIT) >= value.length) {
-                finish = value.length - offset;
+                int packs = (int) Math.ceil(
+                        (float) value.length / (float) BYTE_LIMIT
+                );
+                int finish = BYTE_LIMIT;
+                int offset;
+                for (int i=0; i<packs; i++) {
+
+                    offset = i * BYTE_LIMIT;
+                    if ((offset+BYTE_LIMIT) >= value.length) {
+                        finish = value.length - offset;
+                    }
+                    outputBytes = new byte[finish];
+                    System.arraycopy(value, offset, outputBytes, 0, finish);
+
+                    BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+                    Log.d(TAG, "mBluetoothGatt null ("+(i+1)+"/"+packs+") " + mBluetoothGatt);
+                    if (RxService == null) {
+                        showMessage(getString(R.string.RXmissing));
+                        broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+                        return null;
+                    }
+                    BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
+                    if (RxChar == null) {
+                        showMessage(getString(R.string.RXcharaMissing));
+                        broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+                        return null;
+                    }
+                    RxChar.setValue(outputBytes);
+
+                    mBluetoothGatt.writeCharacteristic(RxChar);
+
+                    if (i == packs-1) showMessage(getString(R.string.all_) + packs + getString(R.string._areSend));
+                    try {
+                        Thread.sleep(SPLIT_MS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
             }
-            outputBytes = new byte[finish];
-            System.arraycopy(value, offset, outputBytes, 0, finish);
-
-            BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-            Log.d(TAG, "mBluetoothGatt null ("+(i+1)+"/"+packs+") " + mBluetoothGatt);
-            if (RxService == null) {
-                showMessage(getString(R.string.RXmissing));
-                broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-                return;
-            }
-            BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
-            if (RxChar == null) {
-                showMessage(getString(R.string.RXcharaMissing));
-                broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-                return;
-            }
-            RxChar.setValue(outputBytes);
-
-            mBluetoothGatt.writeCharacteristic(RxChar);
-
-            if (i == packs-1) showMessage(getString(R.string.all_) + packs + getString(R.string._areSend));
-            try {
-                Thread.sleep(SPLIT_MS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
+        }.execute(val);
     }
 
     private void showMessage(String msg) {

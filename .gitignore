@@ -13,8 +13,8 @@ gen/
 out/
 
 # Gradle files
-.gradle/
-build/
+UART-Smartwatch_App/.gradle/
+UART-Smartwatch_App/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -33,8 +33,7 @@ captures/
 
 # Intellij
 *.iml
-.idea/workspace.xml
-UART-Smartwatch_App/.idea/*
+UART-Smartwatch_App/.idea/
 
 # Keystore files
 *.jks
