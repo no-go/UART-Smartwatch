@@ -15,6 +15,7 @@ out/
 # Gradle files
 UART-Smartwatch_App/.gradle/
 UART-Smartwatch_App/build/
+UART-Smartwatch_App/app/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -33,7 +34,7 @@ captures/
 
 # Intellij
 *.iml
-UART-Smartwatch_App/.idea/
+UART-Smartwatch_App/.idea/*
 
 # Keystore files
 *.jks
