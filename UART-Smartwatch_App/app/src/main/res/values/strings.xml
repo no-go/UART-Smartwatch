@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UART Smartwatch</string>
+    <string name="send">Send</string>
+    <string name="preferences">Preferences</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="connect">Connect</string>
+    <string name="notConnected">Not Connected</string>
+    <string name="ble_addr">MAC Address</string>
+    <string name="ble_addr_summary">the device address of your UART-Smartwatch bluetooth device</string>
+    <string name="timeRequest">Time Request</string>
+    <string name="timeRequest_summary">Your UART-Smartwatch firmware sends this char to ask for time</string>
+    <string name="Quit">Quit</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="ok">Ok</string>
+    <string name="reallyQuit">Do you really want to quit the application and lost connection?</string>
+    <string name="messageSize">Buffer Size</string>
+    <string name="messageSize_summary">The size of the buffer, to collect messages (700 = MEMOSTR_LIMIT - MESSAGEPOS)</string>
+    <string name="dateFormat">Date and Time Format</string>
+    <string name="dateFormat_summary">Look to java Doc how to set SimpleDateFormat. The UART-Smartwatch Firmware expects e.g.: #17:05:58 …</string>
+    <string name="messageLimit">Message Limit</string>
+    <string name="messageLimit_summary">Is message bigger, then use only the message title</string>
+    <string name="messagePref">Messages</string>
+    <string name="bleLogic">Bluetooth</string>
+    <string name="packetLimit">Size of bluetooth packet</string>
+    <string name="packetLimit_summary">BLE supports max 20 Bytes each packet</string>
+
+    <string name="packetPause">Pause in ms between packets</string>
+    <string name="packetPause_summary">A too short time between packets could cause trouble</string>
+
+    <string name="hint">Notify Hint</string>
+
+    <string name="notifyHint">Char</string>
+    <string name="notifyHint_summary">If the App detects a new notification, this char is sent
+        followed by a byte (=count of new notifications). The next 3 Chars are A-z for RGB values
+        and a B (=1), to let a LED blink for 100ms every 1sec.
+        Use a char like a %, or keep it empty.</string>
+
+    <string name="notifyHintLimit">Limit</string>
+    <string name="notifyHintLimit_summary">To save power on your UART-Smartwatch,
+    the hint will be send, if the number of new messages is above this limit.
+    BUT: If you delete a notification, this hint will be send!</string>
+
+    <string name="isHm10_use">is HM10 (CC2541)</string>
+
+    <string name="exit_title">Restart App Now</string>
+    <string name="exit_message">Because you changed some preferences, it is better to restart the App.</string>
+    <string name="check_device_address">Maybe: check the device address</string>
+    <string name="noInitBT">Unable to initialize BluetoothManager.</string>
+    <string name="getNoBT">Unable to obtain a BluetoothAdapter.</string>
+    <string name="strangeBTaddr">Bluetooth Adapter not initialized or unspecified address.</string>
+    <string name="useExistingBT">Trying to use an existing Bluetooth Gatt for connection.</string>
+    <string name="unableConBT">Device not found. Unable to connect.</string>
+    <string name="tryNewBTcon">Trying to create a new connection.</string>
+    <string name="BTnotInit">BluetoothAdapter not initialized</string>
+    <string name="BTclosed">mBluetoothGatt closed</string>
+    <string name="RXmissing">Rx service not found!</string>
+    <string name="TXmissing">Tx charateristic not found!</string>
+    <string name="RXcharaMissing">Rx charateristic not found!</string>
+    <string name="all_">All </string>
+    <string name="_areSend"> packs sent.</string>
+    <string name="tryRecon">Try reconnect …</string>
+    <string name="noUART">Device doesn\'t support UART. Disconnecting</string>
+    <string name="BTnotAv">Bluetooth is not available</string>
+    <string name="Connecting">connecting …</string>
+    <string name="flattr_this">Micro-Donate !</string>
+    <string name="projPage">UART-Smartwatch Page</string>
+    <string name="sorry">Sorry, but \'%s\' needs really access to
+        your notifications. You have to add these access in
+        your phone preferences!</string>
+    <string name="toasty">debug hints</string>
+    <string name="search">Search device …</string>
+    <string name="directSend">send new at once</string>
+
+    <string name="paired">paired</string>
+    <string name="scan">scan</string>
+    <string name="cancel">cancel</string>
+    <string name="selectDevice">select device</string>
+</resources>
