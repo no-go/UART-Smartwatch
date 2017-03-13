@@ -12,6 +12,8 @@ This Branch:
 
 Maybe: scrolling is to slow or to fast :-/
 
+![](picture.jpg)
+
 ## Android App
 
 Get my App to send notifications via Bluetooth to this watch.
