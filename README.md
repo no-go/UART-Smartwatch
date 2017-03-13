@@ -12,6 +12,13 @@ This Branch:
 
 Maybe: scrolling is to slow or to fast :-/
 
+## Android App
+
+Get my App to send notifications via Bluetooth to this watch.
+
+[UART-Smartwatch APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/master/UART-Smartwatch_App/app/app-release.apk) or get the App from [f-Droid](http://f-droid.org) or the Mini Version from [google play](https://play.google.com/store/apps/details?id=click.dummer.UartSmartwatch)
+
+
 ## Missing
 
 - Message counting
