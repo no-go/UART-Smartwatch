@@ -26,12 +26,14 @@
 // Color definitions
 #define BLACK           0x0000
 #define GREYBLUE        0b0010000100010000
+#define LIGHTBLUE       0b0111000111011111
 #define BLUE            0x001F
 #define RED             0xF800
 #define GREEN           0x07E0
 #define CYAN            0x07FF
 #define MAGENTA         0xF81F
 #define YELLOW          0xFFE0  
+#define AMBER           0b1111101111100111
 #define WHITE           0xFFFF
 
 byte hours   = 0;
@@ -69,16 +71,18 @@ void filler() {
   }
 }
 
-byte powerTick(int mv) {
-  float quot = (4700-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
-  return (mv-2700)/quot;  
+byte powerVal(int mv) {
+  //float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
+  //return (mv-2700)/quot;
+  float quot = (4400-3550)/(batLength-3); // scale: 4400 -> batLength, 3550 -> 0
+  return (mv-3550)/quot;  
 }
 
 int readVcc() {
   float mv = analogRead(VBATPIN);
   mv *= 2;
   mv *= 3.3;
-  return powerTick(mv);
+  return powerVal(mv);
 }
 
 void showTime() {
@@ -92,8 +96,8 @@ void showTime() {
   secPos.y = y + (radius-3)*sin(PI * ((float)seconds-15.0) / 30);
   minPos.x = x + (radius-5)*cos(PI * ((float)minutes-15.0) / 30);
   minPos.y = y + (radius-5)*sin(PI * ((float)minutes-15.0) / 30);
-  hourPos.x =x + (radius-10)*cos(PI * ((float)hour-3.0) / 6);
-  hourPos.y =y + (radius-10)*sin(PI * ((float)hour-3.0) / 6);
+  hourPos.x =x + (radius-10)*cos(PI * (((float)hour +(float)minutes/60.0)-3.0) / 6);
+  hourPos.y =y + (radius-10)*sin(PI * (((float)hour +(float)minutes/60.0)-3.0) / 6);
 
   // remove old
   oled.drawLine(x, y, secPos.lastX, secPos.lastY, BLACK);
@@ -137,23 +141,9 @@ void showTime() {
   oled.print(seconds);
 }
 
-void ticking() {
-  seconds++; 
-  if (seconds > 59) {
-    minutes += seconds / 60;
-    seconds  = seconds % 60;
-  }
-  if (minutes > 59) {
-    hours  += minutes / 60;
-    minutes = minutes % 60;
-  }
-  if (hours > 23) {
-    hours = hours % 24;
-  }
-}
 
 short green2red(int val, int maxi) {
-  // 565
+  // 16 bit = 5+6+5
   short result = 0x0000;
   int redPart   = 0;
   int greenPart = 0;
@@ -171,11 +161,10 @@ short green2red(int val, int maxi) {
 
 void batteryBar() {
   byte vccVal = readVcc();
-  //oled.fillRect(oled.width()-5, oled.height()  - batLength+2, 4, batLength-3, BLACK);
-  oled.fillRect(oled.width()-5, oled.height()  - batLength+2, 4, batLength-3-vccVal, BLACK);
+  oled.fillRect(oled.width()-7, oled.height()  - batLength+2, 6, batLength-3-vccVal, BLACK);
   for (int v=vccVal; v>0; --v) {
     oled.drawLine(
-      oled.width()-5, oled.height()-v-1,
+      oled.width()-7, oled.height()-v-1,
       oled.width()-2, oled.height()-v-1,
       green2red(v, batLength)
     );
@@ -183,7 +172,18 @@ void batteryBar() {
 }
 
 void Timer3Callback0(struct tc_module *const module_inst) {
-  ticking();
+  seconds++; 
+  if (seconds > 59) {
+    minutes += seconds / 60;
+    seconds  = seconds % 60;
+  }
+  if (minutes > 59) {
+    hours  += minutes / 60;
+    minutes = minutes % 60;
+  }
+  if (hours > 23) {
+    hours = hours % 24;
+  }
 }
 
 char umlReplace(char inChar) {
@@ -219,21 +219,33 @@ void cleanup() {
   oled.fillCircle(clkSize+17, clkSize+1, clkSize, BLACK);
   oled.drawCircle(clkSize+17, clkSize+1, clkSize, WHITE);
 
+  oled.drawPixel(oled.width()-5, oled.height() - batLength, WHITE);
   oled.drawPixel(oled.width()-4, oled.height() - batLength, WHITE);
-  oled.drawPixel(oled.width()-3, oled.height() - batLength, WHITE);
-  oled.drawRect(oled.width()-6, oled.height()  - batLength+1, 6, batLength-1, WHITE);  
-  byte pos = oled.height() - powerTick(3000);
-  oled.drawLine(oled.width()-9,  pos, oled.width()-6,  pos, WHITE);
-  pos = oled.height() - powerTick(3500);
-  oled.drawLine(oled.width()-7,  pos, oled.width()-6,  pos, WHITE);
-  pos = oled.height() - powerTick(4000);
-  oled.drawLine(oled.width()-9,  pos, oled.width()-6,  pos, WHITE);
-  pos = oled.height() - powerTick(4500);
-  oled.drawLine(oled.width()-7,  pos, oled.width()-6,  pos, WHITE);  
+  oled.drawRect(oled.width()-8, oled.height()  - batLength+1, 8, batLength-1, WHITE);  
+  byte pos = oled.height() - powerVal(3700);
+  oled.drawLine(oled.width()-9,  pos, oled.width()-8,  pos, WHITE);
+  pos = oled.height() - powerVal(3800);
+  oled.drawLine(oled.width()-9,  pos, oled.width()-8,  pos, WHITE);
+  pos = oled.height() - powerVal(3900);
+  oled.drawLine(oled.width()-9,  pos, oled.width()-8,  pos, WHITE);
+  pos = oled.height() - powerVal(4000);
+  oled.drawLine(oled.width()-11,  pos, oled.width()-8,  pos, WHITE);
+  pos = oled.height() - powerVal(4100);
+  oled.drawLine(oled.width()-9,  pos, oled.width()-8,  pos, WHITE);  
+  pos = oled.height() - powerVal(4200);
+  oled.drawLine(oled.width()-9,  pos, oled.width()-8,  pos, WHITE);  
 }
 
 void setup() {
   oled.begin();
+  oled.setTextSize(2);
+  oled.fillScreen(AMBER);
+  oled.print(
+      "  UART\n"
+    "\n Smart-"
+    "\n watch"
+  );
+  delay(3000);
   oled.setTextSize(0);
   clkSize = oled.height()/2 -6;
   showTime();
@@ -264,8 +276,10 @@ void setup() {
 
 
 void loop() {
-  
-  if (lastsecond != seconds) {
+  if (
+    lastsecond != seconds &&
+    memoStrPos <= MESSAGEPOS
+  ) {
     showTime();
     batteryBar();
     lastsecond = seconds;   
@@ -279,6 +293,7 @@ void loop() {
       if (inChar == '\n') {
         memoStr[memoStrPos] = '\0';
         page = 0;
+        oled.fillScreen(BLACK);
         continue;
       }
       memoStr[memoStrPos] = umlReplace(inChar);
@@ -317,7 +332,7 @@ void loop() {
 
   if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
     oled.setCursor(0, 0);
-    oled.setTextColor(WHITE, BLACK);
+    oled.setTextColor(AMBER, BLACK);
     oled.print(&(memoStr[page]));
     oled.print(" ");
   }
