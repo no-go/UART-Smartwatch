@@ -256,7 +256,8 @@ void setup() {
                 TC_WAVE_GENERATION_MATCH_PWM // frequency or PWM mode 
                 );
 
-  zt3.setPeriodMatch(48000, 1, 0); // 48MHz / 1024   ->   48 = 1ms
+  //zt3.setPeriodMatch(48000, 1, 0); // 48MHz / 1024   ->   48 = 1ms (to slow. 1s = 1.024064)
+  zt3.setPeriodMatch(46845, 1, 0);
   zt3.setCallback(true, TC_CALLBACK_CC_CHANNEL0, Timer3Callback0);  // this one sets pin low
   zt3.enable(true);
 }
