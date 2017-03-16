@@ -35,7 +35,7 @@
   #define MEMOSTR_LIMIT 350 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
 #endif
 
-const int batLength = 60;
+const int batLength = 45;
 
 #include <avr/power.h>
 #include <Adafruit_GFX.h>
@@ -89,6 +89,10 @@ struct OledWrapper {
     
     void rectFill(const int & x, const int & y, const int & w, const int & h) {
       _oled->fillRect(x,y,w,h, WHITE);
+    }
+    
+    void black(const int & x, const int & y, const int & w, const int & h) {
+      _oled->fillRect(x,y,w,h, BLACK);
     }
     
     void circle(const int & x, const int & y, const int & radius) {
@@ -209,9 +213,9 @@ int  page         = 0;
 
 byte COUNT        = 0;
 
-byte hours   = 10;
-byte minutes = 10;
-byte seconds = 15;
+byte hours   = 0;
+byte minutes = 0;
+byte seconds = 0;
 byte tick    = 0;
 
 // 0=digi, 1=analog, 2=digi 4 ever, 3=adjust_hour, 4=adjust_min
@@ -230,8 +234,8 @@ int delayValue = 1;
 
 byte powerTick(int mv) {
   //float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
-  float quot = (3400-2740)/(batLength-3);
-  return (mv-2740)/quot;  
+  float quot = (3400-2800)/(batLength-3);
+  return (mv-2800)/quot;  
 }
 
 int readVcc() {
@@ -250,32 +254,27 @@ int readVcc() {
 
 void anaClock() {
   byte x = 60;
-  byte y = 31;
-  byte radius = 30;
-  oled.circle(x, y, radius);
+  byte y = 32;
+  byte radius = 32;
+  //oled.circle(x, y, radius);
   int hour = hours;
   if (hour>12) hour-=12;
   oled.line(
     x, y,
-    x + radius*cos(PI * ((float)seconds-15.0) / 30),
-    y + radius*sin(PI * ((float)seconds-15.0) / 30)
+    x + (radius-2)*cos(PI * ((float)seconds-15.0) / 30),
+    y + (radius-2)*sin(PI * ((float)seconds-15.0) / 30)
   );
   
   oled.line(
     x, y,
-    x + (radius-3)*cos(PI * ((float)minutes-15.0) / 30),
-    y + (radius-3)*sin(PI * ((float)minutes-15.0) / 30)
+    x + (radius-5)*cos(PI * ((float)minutes-15.0) / 30),
+    y + (radius-5)*sin(PI * ((float)minutes-15.0) / 30)
   );
   
   oled.line(
     x, y,
-    x + (radius-12)*cos(PI * ((float)hour-3.0) / 6),
-    y + (radius-12)*sin(PI * ((float)hour-3.0) / 6)
-  );
-  oled.line(
-    x+1, y,
-    x-1 +(radius-12)*cos(PI * ((float)hour-3.0) / 6),
-    y +  (radius-12)*sin(PI * ((float)hour-3.0) / 6)
+    x + (radius-14)*cos(PI * ((float)hour+((float)minutes/60-0) -3.0) / 6),
+    y + (radius-14)*sin(PI * ((float)hour+((float)minutes/60.0) -3.0) / 6)
   );
   
   for (byte i=0; i<12; ++i) {
@@ -290,6 +289,8 @@ void anaClock() {
   oled.print(3);
   oled.setCursor(x-radius+6,y-3);
   oled.print(9);
+  
+  oled.line (0, oled.height()-2, batLength*(tick/9.0), oled.height()-2);
 }
 
 void filler() {
@@ -364,65 +365,67 @@ void ticking() {
 
 void digiClock() {
   oled.setFontType(3);
-  oled.setCursor(0, 12);
+  oled.setCursor(0, 14);
   if (hours<10) oled.print("0");
   oled.print(hours);
 
-  oled.setFontType(2);
-  oled.setCursor(36, 15);
-  oled.print(":");
-
-  oled.setFontType(3);
-  oled.setCursor(46, 12);
+  oled.setFontType(4);
+  oled.setCursor(40, 10);
   if (minutes<10) oled.print("0");
   oled.print(minutes); 
 
-  oled.setFontType(0);
-  oled.setCursor(30, 40);
+  oled.setFontType(3);
+  oled.setCursor(91, 14);
   if (seconds<10) oled.print("0");
   oled.print(seconds);
-  oled.print(".");
-  oled.print(tick);
+  oled.line (0, oled.height()-2, batLength*(tick/9.0), oled.height()-2);
+  oled.setFontType(0);
 }
 
 void batteryIcon() {
   byte vccVal = readVcc();
-  oled.pixel   (oled.width()-4, oled.height() - batLength);
-  oled.pixel   (oled.width()-3, oled.height() - batLength);
-  oled.rect    (oled.width()-6, oled.height()  - batLength+1, 6, batLength-1);  
-  oled.rectFill(oled.width()-5, oled.height()  - vccVal   -1, 4,      vccVal); 
+  oled.pixel   (oled.width() - batLength, oled.height()-2); 
+  oled.pixel   (oled.width() - batLength, oled.height()-3);
+  oled.rect    (oled.width() - batLength+1, oled.height()-4, batLength-1, 4);  
+  oled.rectFill(oled.width() - vccVal   -1, oled.height()-3,      vccVal, 2);
 
-  int pos = oled.height() - powerTick(2800);
-  oled.pixel(oled.width()-7,  pos);
-  pos = oled.height() - powerTick(2900);
-  oled.pixel(oled.width()-7,  pos);
+  int pos = oled.width() - powerTick(2900);
+  oled.pixel(pos, oled.height()-5);
 
-  pos = oled.height() - powerTick(3000);
-  oled.pixel(oled.width()-7,  pos);
-  oled.pixel(oled.width()-8,  pos);
-  oled.pixel(oled.width()-9,  pos);
-  pos = oled.height() - powerTick(3100);
-  oled.pixel(oled.width()-7,  pos);
-  pos = oled.height() - powerTick(3200);
-  oled.pixel(oled.width()-7,  pos);
-  pos = oled.height() - powerTick(3300);
-  oled.pixel(oled.width()-7,  pos);
+  pos = oled.width() - powerTick(3000);
+  oled.pixel(pos,oled.height()-5);
+  oled.pixel(pos,oled.height()-6);
+  pos = oled.width() - powerTick(3100);
+  oled.pixel(pos,oled.height()-5);
+  pos = oled.width() - powerTick(3200);
+  oled.pixel(pos,oled.height()-5);
+  pos = oled.width() - powerTick(3300);
+  oled.pixel(pos,oled.height()-5);
 }
 
 void wakeUpIcon() {
   oled.clear();
-  oled.circle(32, 23, 10);
-  oled.pixel(31, 20);
-  oled.pixel(35, 19);
-  oled.line (29, 27, 35, 27);
+  oled.circle(oled.width()/2, oled.height()/2, 5);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
   oled.display();
-  delay(350);
-  oled.rect(29, 19, 3, 3);
-  oled.rect(35, 19, 3, 3);
-  oled.pixel(35, 26);
+  delay(100);
+  oled.circle(oled.width()/2, oled.height()/2, 10);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
+  oled.display();
+  delay(100);
+  oled.circle(oled.width()/2, oled.height()/2, 15);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
   oled.display();  
-  delay(350);
-  tick += 7; 
+  delay(100);
+  oled.circle(oled.width()/2, oled.height()/2, 20);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
+  oled.display();  
+  delay(200);
+  tick += 5;
 }
 
 byte tob(char c) {
@@ -446,21 +449,20 @@ void loop() {
       
       oled.on();
 
-      for (int j=0; j<40; ++j) { // 4sec
+      for (int j=0; j<80; ++j) { // 8sec
         oled.clear();
         ticking();
         if (clockMode == 1) {
           anaClock();
         } else if (clockMode == 2) {
-          oled.pixel(5, 0);
-          oled.pixel(30, 0);
+          oled.pixel(0, 0);
           digiClock();
         } else {
           digiClock();
         }
         batteryIcon();
         oled.display();
-        delay(90); // 10ms in vcc mesurement
+        delay(85); // +10ms in vcc mesurement
       }
       
       if (digitalRead(BUTTON1) == LOW) {
