@@ -24,12 +24,13 @@ Is full with my private mods.
 
 ## Features
 
-- Button 1: time and message request
+- Button 1: time and message request (sends a tilde char)
 - Button 1 (hold it until Time Mode exits): next time, you press Button 2, you have a other Time mode
-- Button 2: shows Time
+- Button 2: shows Time (and sends a T char)
 - Button 2 (more than 4sec pressed): start Dino Game
 - Dino game: Button 2 for jump, 3 lives, 6 speed levels, stores Highscore in EEPROM
 - receive RGB Notification and message count
+- uses MSTimer2 Library
 
 ### Time Modes
 

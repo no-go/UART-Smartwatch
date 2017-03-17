@@ -13,33 +13,37 @@
 #define PIN_DC     8
 #define DC_JUMPER  0
 
-#define CHAR_TIME_REQUEST     '~'
+#define CHAR_TIME_REQUEST     'T' //old - unused: idea was to make a deep sleep and get only the time on demand
+#define CHAR_MSG_REQUEST      '~' //new
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
-// uncomment it, if you need 330 chars as Buffer!!
-#define WITHGAME 42
-
 // ------------------------------------------------------
 
-#ifdef WITHGAME
-  #define MESSAGEPOS     20
-  #define MEMOSTR_LIMIT 250 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
-  #include <EEPROM.h>
-  int eeAddress = 0;
-  int score     = 0;
-  int highscore = 0;
-  void game();
-#else
-  #define MESSAGEPOS     20
-  #define MEMOSTR_LIMIT 350 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
-#endif
+#define MESSAGEPOS     20
+#define MEMOSTR_LIMIT 270 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
+#include <EEPROM.h>
+int eeAddress = 0;
+int score     = 0;
+int highscore = 0;
+void game();
 
-const int batLength = 45;
+const int batLength   = 45;
+const int scrollSpeed = 70; // 100 = 100ms each char
+
+/*
+  MsTimer2 is a small and very easy to use library to interface Timer2 with
+  humans. It's called MsTimer2 because it "hardcodes" a resolution of 1
+  millisecond on timer2
+  For Details see: http://www.arduino.cc/playground/Main/MsTimer2
+*/
+#include <MsTimer2.h>
+
 
 #include <avr/power.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+
 
 struct OledWrapper {
 
@@ -210,7 +214,6 @@ struct OledWrapper {
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
-
 byte COUNT        = 0;
 
 byte hours   = 0;
@@ -299,44 +302,6 @@ void filler() {
   }
 }
 
-void setup() {
-  pinMode(BUTTON1, INPUT_PULLUP);
-  pinMode(BUTTON2, INPUT_PULLUP);
-
-  pinMode(LED_RED, OUTPUT);
-  pinMode(LED_GREEN, OUTPUT);
-  pinMode(LED_BLUE, OUTPUT);
-  
-  Serial.begin(9600);
-
-  //power_timer1_disable(); // timer needed for PWM on pin 9/10 ?!
-  //power_timer2_disable(); // timer needed for PWM on pin 3 ?!
-  power_adc_disable();
-  power_twi_disable();
-  
-  oled.begin();
-  oled.free(); // Clear the display's internal memory logo
-  oled.display();
-  filler();
-}
-
-void serialEvent() {
-  while (Serial.available()) {
-    char inChar = (char)Serial.read();
-    if (inChar == -61) continue; // symbol before utf-8
-    if (inChar == -62) continue; // other symbol before utf-8
-    if (inChar == '\n') {
-      oled.on();
-      memoStr[memoStrPos] = '\0';
-      page = 0;
-      continue;
-    }
-    memoStr[memoStrPos] = oled.umlReplace(inChar);
-    memoStrPos++;
-    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MESSAGEPOS;
-  }
-}
-
 /**
  * make hours, minutes, seconds from "ticks" and
  * add it to the time (received from App)
@@ -360,6 +325,45 @@ void ticking() {
     if (hours > 23) {
       hours = hours % 24;
     }
+  }
+}
+
+void setup() {
+  pinMode(BUTTON1, INPUT_PULLUP);
+  pinMode(BUTTON2, INPUT_PULLUP);
+
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+  
+  Serial.begin(9600);
+
+  power_adc_disable();
+  power_twi_disable();
+  
+  MsTimer2::set(100, ticking); // 100ms period
+  MsTimer2::start();
+    
+  oled.begin();
+  oled.free(); // Clear the display's internal memory logo
+  oled.display();
+  filler();
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    if (inChar == -61) continue; // symbol before utf-8
+    if (inChar == -62) continue; // other symbol before utf-8
+    if (inChar == '\n') {
+      oled.on();
+      memoStr[memoStrPos] = '\0';
+      page = 0;
+      continue;
+    }
+    memoStr[memoStrPos] = oled.umlReplace(inChar);
+    memoStrPos++;
+    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MESSAGEPOS;
   }
 }
 
@@ -429,7 +433,6 @@ void wakeUpIcon() {
   oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
   oled.display();  
   delay(200);
-  tick += 5;
 }
 
 byte tob(char c) {
@@ -437,13 +440,12 @@ byte tob(char c) {
 }
 
 void loop() {
-  delay(93); // is < 100 : makes the seconds a bit faster!
-
+  delay(scrollSpeed);
+  
   if (digitalRead(BUTTON2) == LOW || clockMode > 1) {
     delay(300); 
-    tick += 3; 
     if (digitalRead(BUTTON2) == LOW || clockMode > 1) {
-      
+      Serial.println( CHAR_TIME_REQUEST );
       if (clockMode < 2) {
         COUNT = 0;
         analogWrite(LED_RED, 255);
@@ -452,10 +454,9 @@ void loop() {
       }
       
       oled.on();
-
-      for (int j=0; j<80; ++j) { // 8sec
+      int dummySec = (seconds+8)%60;
+      while(seconds != dummySec) {
         oled.clear();
-        ticking();
         if (clockMode == 1) {
           anaClock();
         } else if (clockMode == 2) {
@@ -466,7 +467,6 @@ void loop() {
         }
         batteryIcon();
         oled.display();
-        delay(85); // +10ms in vcc mesurement
       }
       
       if (digitalRead(BUTTON1) == LOW) {
@@ -476,22 +476,19 @@ void loop() {
       
       if (clockMode == 0 || clockMode == 1) oled.off();
 
-#ifdef WITHGAME
       if (digitalRead(BUTTON2) == LOW) {      
-        Serial.println("Game !");
+        //Serial.println("Game !");
         oled.on();
         power_adc_enable();
         game();
         power_adc_disable();
         oled.off();
-      }
-#endif    
+      }  
     }
   }
   
   if (digitalRead(BUTTON1) == LOW) {
     delay(300);  
-    tick += 3;
     if (digitalRead(BUTTON1) == LOW) {
       
       COUNT = 0;
@@ -507,7 +504,7 @@ void loop() {
       // print ignores everyting behind \0
       memoStr[MESSAGEPOS] = '\0';
       memoStrPos = MESSAGEPOS;
-      Serial.println( CHAR_TIME_REQUEST );
+      Serial.println( CHAR_MSG_REQUEST );
     }
   }
 
@@ -589,7 +586,6 @@ void loop() {
   }
    
   page++;
-  ticking();
 }
 
 
@@ -657,7 +653,8 @@ int bprint(int x, int y, byte b) {
 
 // =====================================================================
 
-#ifdef WITHGAME
+
+
 
 void setByte(byte b, int x, int y) {
   int tmp;
@@ -690,9 +687,34 @@ void gameStart() {
   analogWrite(LED_GREEN, 0); // 100%
 
   oled.setCursor(0, 0);
-  oled.println("  Dino");
-  oled.println("=========");
-  oled.println("Highscore:");
+  oled.print(' ');
+  oled.print(' ');
+  oled.print('D');
+  oled.print('i');
+  oled.print('n');
+  oled.print('o');
+  oled.print('\n');
+  oled.print('=');
+  oled.print('=');
+  oled.print('=');
+  oled.print('=');
+  oled.print('=');
+  oled.print('=');
+  oled.print('=');
+  oled.print('=');
+  oled.print('=');
+  oled.print('\n');
+  oled.print('H');
+  oled.print('i');
+  oled.print('g');
+  oled.print('h');
+  oled.print('s');
+  oled.print('c');
+  oled.print('o');
+  oled.print('r');
+  oled.print('e');
+  oled.print(':');
+  oled.print('\n');
   oled.print(highscore);
   oled.display();
   delay(1000); // to see the highscore!
@@ -700,7 +722,6 @@ void gameStart() {
   delay(2000);
   analogWrite(LED_BLUE, 255); // off
   analogWrite(LED_GREEN, 255); // off
-  tick += 30;
 }
 
 void gameOver() {
@@ -711,14 +732,22 @@ void gameOver() {
   }
   analogWrite(LED_GREEN, 255);
   oled.setCursor(0, 0);
-  oled.black("1");
+  oled.black('1');
   oled.setCursor(0, 0);
-  oled.print("0");
+  oled.print(0);
   oled.setCursor(0, 22);
-  oled.println(" Game Over");
+  oled.print(' ');
+  oled.print('G');
+  oled.print('a');
+  oled.print('m');
+  oled.print('e');
+  oled.print(' ');
+  oled.print('O');
+  oled.print('v');
+  oled.print('e');
+  oled.print('r');
   oled.display();
   delay(3500); // read your score
-  tick += 35;
 }
 
 void dino(byte y) {
@@ -864,7 +893,6 @@ void game() {
       analogWrite(LED_RED, 127); // 50 %
       delay(500);
       digitalWrite(LED_RED, HIGH);
-      tick += 10;
       
     } else {
       // a good jump?
@@ -897,7 +925,7 @@ void game() {
     subTick += gamespeed;
     delay(gamespeed);
     if (subTick > 100) {
-      subTick = 0; ticking();
+      subTick = 0;
     }
 
     // jump animation + sound
@@ -923,4 +951,3 @@ void game() {
   gameOver();
 }
 
-#endif //  WITHGAME
