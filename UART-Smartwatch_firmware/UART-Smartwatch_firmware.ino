@@ -7,7 +7,7 @@
 #define LED_GREEN   9 
 #define LED_BLUE    3
 
-// OLED (13 -> MISO/DIN, 11 ->SCK)
+// OLED (11 -> MOSI/DIN, 13 ->SCK)
 #define PIN_CS     5
 #define PIN_RESET  6
 #define PIN_DC     8
