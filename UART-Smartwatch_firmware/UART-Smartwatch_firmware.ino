@@ -364,22 +364,26 @@ void ticking() {
 }
 
 void digiClock() {
-  oled.setFontType(3);
-  oled.setCursor(0, 14);
-  if (hours<10) oled.print("0");
-  oled.print(hours);
+  if (hours<10) {
+    int xx = bprint(0, 10, 0);
+    bprint(xx, 10, hours);
+  } else {
+    bprint(0, 10, hours);
+  }
+  if (minutes<10) {
+    int xx = bprint(45, 10, 0);
+    bprint(xx, 10, minutes);
+  } else {
+    bprint(45, 10, minutes);
+  }
 
-  oled.setFontType(4);
-  oled.setCursor(40, 10);
-  if (minutes<10) oled.print("0");
-  oled.print(minutes); 
-
-  oled.setFontType(3);
-  oled.setCursor(91, 14);
-  if (seconds<10) oled.print("0");
-  oled.print(seconds);
+  if (seconds<10) {
+    int xx = bprint(91, 10, 0);
+    bprint(xx, 10, seconds);
+  } else {
+    bprint(91, 10, seconds);
+  }
   oled.line (0, oled.height()-2, batLength*(tick/9.0), oled.height()-2);
-  oled.setFontType(0);
 }
 
 void batteryIcon() {
@@ -587,6 +591,69 @@ void loop() {
   page++;
   ticking();
 }
+
+
+
+
+int bprint(int x, int y, byte b) {
+    int he = 32;
+    if (b>9) {
+      x = bprint(x,y,b/10);
+      b = b%10;
+    }
+    
+    if (b == 0) {
+      oled.circle(x+he/4, y+3*he/4, he/4);
+      return x+2+he/2;
+    } else if (b == 1) {
+      oled.line(x,y+5,x+5,y);
+      oled.line(x+5,y,x+5,y+he);
+      return x+8;  
+    } else if (b == 2) {
+      oled.circle(x+he/4, y-3+3*he/4, he/4);
+      oled.black(x,y,he/4,he);
+      oled.line(x+he/4,y+he-3,x+he/2,y+he);
+      return x+2+he/2;
+    } else if (b == 3) {
+      oled.circle(x+he/4, y+1*he/4, he/4);
+      oled.circle(x+he/4, y+3*he/4, he/4);
+      oled.black(x,y,he/4,he);
+      return x+2+he/2;
+    } else if (b == 4) {
+      oled.line(x,y+he/2,x+he/2,y);
+      oled.line(x,y+he/2,x+he/2,y+he/2);
+      oled.line(x+he/2,y,x+he/2,y+he);
+      return x+2+he/2;   
+    } else if (b == 5) {
+      oled.line(x+he/4,y,x+he/2,y);
+      oled.line(x+he/4,y,x+he/4,y+he/2);
+      oled.circle(x+he/4, y+3*he/4, he/4);
+      oled.black(x,y,he/4,he);
+      return x+2+he/2;   
+    } else if (b == 6) {
+      oled.line(x,y-2+3*he/4,x+he/2,y);
+      oled.circle(x+he/4, y+3*he/4, he/4);
+      return x+2+he/2;   
+    } else if (b == 7) {
+      oled.line(x,y+3,x+he/2,y);
+      oled.line(x+he/2,y,x,y+he);
+      oled.line(x+3,y+he/2,x+he/2-1,y+he/2);
+      return x+2+5;  
+    } else if (b == 8) {
+      oled.circle(x+he/4, y+1*he/4, he/4);
+      oled.circle(x+he/4, y+3*he/4, he/4);
+      return x+2+he/2;
+    } else if (b == 9) {
+      oled.circle(x+he/4, y+1*he/4, he/4);
+      oled.line  (x+he/2, y+1*he/4, x+he/2, y+he);
+      return x+2+he/2;
+    }
+}
+
+
+
+
+
 
 // =====================================================================
 
