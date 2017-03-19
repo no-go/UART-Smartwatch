@@ -17,7 +17,8 @@ Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr 
 
 ## The Firmware
 
-Is full with my private mods.
+This is a **always on** version. The timer2 is set to 1sec and the time is always shown.
+Every second Display and powerbar gets an update.
 
 [UART-Smartwatch / Arduino IDE](https://raw.githubusercontent.com/no-go/UART-Smartwatch/lowCost/UART-Smartwatch_firmware/UART-Smartwatch_firmware.ino)
 
@@ -25,25 +26,21 @@ Is full with my private mods.
 ## Features
 
 - Button 1: time and message request (sends a tilde char)
-- Button 1 (hold it until Time Mode exits): next time, you press Button 2, you have a other Time mode
-- Button 2: shows Time (and sends a T char)
-- Button 2 (more than 4sec pressed): start Dino Game
-- Dino game: Button 2 for jump, 3 lives, 6 speed levels, stores Highscore in EEPROM
+- Button 2: switch time mode
 - receive RGB Notification and message count
 - uses MSTimer2 Library
 
 ### Time Modes
 
-- Digital (4sec)
-- Analoge (4sec)
-- Digital for ever
+- Digital
+- Analoge
 
 ## Count, RGB, Blink, Package-Name
 
 Send a % followed by a byte (char 0 = 0 new messages, char '0' = 48 new messages).
 The 3 next Bytes should be 3 ASCII charaters. 'A' is 0 and 'z' is 57. This range is
-mapped from 27-255 to set a RGB value. The last byte is a char from A-I. A=0=no blinking,
-B=1 is 100ms on and 900ms of. H=8 is 800ms on and 200ms off ...
+mapped from 27-255 to set a RGB value. The last byte is a char from A-I. You can
+use it as blink delay (not implemented yet).
 
 %count,R,G,B,blink(A-I is 0-9, 0 is always on),chars (Package-Name)
 
