@@ -12,7 +12,7 @@
 #define PIN_RESET  6
 #define PIN_DC     8
 
-#define CHAR_TIME_REQUEST     'T' //old - unused: idea was to make a deep sleep and get only the time on demand
+#define CHAR_TIME_REQUEST     'T' //unused: idea was to make a deep sleep and get only the time on demand
 #define CHAR_MSG_REQUEST      '~' //new
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
@@ -22,7 +22,7 @@
 #define MESSAGEPOS     20
 #define MEMOSTR_LIMIT 270 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
 
-const int batLength   = 64;
+const int batLength   = 40;
 const int scrollSpeed = 80;
 int ledBlinkDelay     = 1; // unused
 
@@ -49,7 +49,6 @@ int blueValue  = 255;
 */
 #include <MsTimer2.h>
 
-#include <avr/power.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
@@ -219,15 +218,8 @@ struct OledWrapper {
     }
 } oled;
 
-byte powerTick(int mv) {
-  //float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
-  float quot = (3400-2800)/(batLength-3);
-  return (mv-2800)/quot;  
-}
-
 int readVcc() {
   int mv;
-  power_adc_enable();
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   delay(10); // Wait for Vref to settle
   ADCSRA |= _BV(ADSC); // Start conversion
@@ -235,8 +227,9 @@ int readVcc() {
   mv = ADCL; 
   mv |= ADCH<<8; 
   mv = 1126400L / mv;
-  power_adc_disable();
-  return powerTick(mv);
+  float quot = (3400-2800)/(batLength-3);
+  //float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
+  return (mv-2800)/quot;  
 }
 
 void anaClock() {
@@ -305,19 +298,6 @@ void batteryIcon() {
   oled.pixel   (oled.width() - batLength, oled.height()-3);
   oled.rect    (oled.width() - batLength+1, oled.height()-4, batLength-1, 4);  
   oled.rectFill(oled.width() - vccVal   -1, oled.height()-3,      vccVal, 2);
-
-  int pos = oled.width() - powerTick(2900);
-  oled.pixel(pos, oled.height()-5);
-
-  pos = oled.width() - powerTick(3000);
-  oled.pixel(pos,oled.height()-5);
-  oled.pixel(pos,oled.height()-6);
-  pos = oled.width() - powerTick(3100);
-  oled.pixel(pos,oled.height()-5);
-  pos = oled.width() - powerTick(3200);
-  oled.pixel(pos,oled.height()-5);
-  pos = oled.width() - powerTick(3300);
-  oled.pixel(pos,oled.height()-5);
 }
 
 void wakeUpIcon() {
@@ -442,6 +422,7 @@ void ticking() {
     }
     batteryIcon();
     oled.display();
+    Serial.println( CHAR_TIME_REQUEST );
   }
   
   if (digitalRead(BUTTON1) == LOW) {
