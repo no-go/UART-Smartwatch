@@ -422,7 +422,7 @@ void ticking() {
     }
     batteryIcon();
     oled.display();
-    Serial.println( CHAR_TIME_REQUEST );
+    if(seconds==0 && minutes%30==0) Serial.println( CHAR_TIME_REQUEST );
   }
   
   if (digitalRead(BUTTON1) == LOW) {
