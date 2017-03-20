@@ -448,7 +448,7 @@ void setup() {
   pinMode(LED_BLUE,  OUTPUT);
   Serial.begin(9600);
 //  Serial.begin(115200);
-  MsTimer2::set(1000, ticking); // 1000ms period
+  MsTimer2::set(987, ticking); // 1000ms period
   MsTimer2::start();
   oled.begin();
   for (int i=0; i<MESSAGEPOS; ++i) {

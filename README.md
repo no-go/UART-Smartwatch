@@ -18,7 +18,7 @@ Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr 
 ## The Firmware
 
 This is a **always on** version. The timer2 is set to 1sec and the time is always shown.
-Every second Display and powerbar gets an update.
+Every second Display and powerbar gets an update. It runs for 4 hour and 30 minutes with a 180mAh Lipo.
 
 [UART-Smartwatch / Arduino IDE](https://raw.githubusercontent.com/no-go/UART-Smartwatch/lowCost/UART-Smartwatch_firmware/UART-Smartwatch_firmware.ino)
 
