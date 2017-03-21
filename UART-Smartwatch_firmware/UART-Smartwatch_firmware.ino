@@ -1,23 +1,26 @@
 // ---------------------------- Configure YOUR CONNECTIONS !! -------
 
 #define BUTTON1    A0
-#define BUTTON2    A1
+#define BUTTON2     3
 
 #define LED_RED    10
 #define LED_GREEN   9 
-#define LED_BLUE    3
+#define LED_BLUE    5
 
 // OLED (11 -> MOSI/DIN, 13 ->SCK)
-#define PIN_CS     5
+#define PIN_CS     4
 #define PIN_RESET  6
 #define PIN_DC     8
 
-#define CHAR_TIME_REQUEST     'T' //unused: idea was to make a deep sleep and get only the time on demand
+//#define CHAR_TIME_REQUEST     'T' // idea was to make a deep sleep and get only the time on demand
+#define CHAR_TIME_REQUEST     '~' //unused: idea was to make a deep sleep and get only the time on demand
 #define CHAR_MSG_REQUEST      '~' //new
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
 // ------------------------------------------------------
+
+#define SECtoSLEEP     45
 
 #define MESSAGEPOS     20
 #define MEMOSTR_LIMIT 270 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
@@ -34,12 +37,13 @@ byte COUNT        = 0;
 byte hours   = 0;
 byte minutes = 0;
 byte seconds = 0;
-
 int clockMode = 0;
 
 int redValue   = 255;
 int greenValue = 255;
 int blueValue  = 255;
+
+int countToSleep = 0;
 
 /*
   MsTimer2 is a small and very easy to use library to interface Timer2 with
@@ -51,6 +55,8 @@ int blueValue  = 255;
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+
+#include <avr/sleep.h>
 
 struct OledWrapper {
 
@@ -378,6 +384,7 @@ int futur(int x, int y, byte b) {
 void serialEvent() {
   while (Serial.available()) {
     char inChar = (char)Serial.read();
+    countToSleep = 0;
     if (inChar == -61) continue; // symbol before utf-8
     if (inChar == -62) continue; // other symbol before utf-8
     if (inChar == '\n') {
@@ -410,8 +417,17 @@ void ticking() {
   }
   // show Clock, if there is no message scrolling
   if (! (memoStrPos > MESSAGEPOS && page <= memoStrPos) ) {
+    
+    countToSleep++;
+    
     oled.clear();
     if (digitalRead(BUTTON2) == LOW) {
+      page = memoStrPos;
+      COUNT = 0;
+      analogWrite(LED_RED, 255);
+      analogWrite(LED_GREEN, 255);
+      analogWrite(LED_BLUE, 255);
+      
       clockMode++;
       if (clockMode > 1) clockMode = 0;
     }
@@ -422,7 +438,8 @@ void ticking() {
     }
     batteryIcon();
     oled.display();
-    if(seconds==0 && minutes%30==0) Serial.println( CHAR_TIME_REQUEST );
+  } else {
+    if (digitalRead(BUTTON2) == LOW) page = memoStrPos; // stop scrolling
   }
   
   if (digitalRead(BUTTON1) == LOW) {
@@ -438,6 +455,31 @@ void ticking() {
     memoStrPos = MESSAGEPOS;
     Serial.println( CHAR_MSG_REQUEST );
   }
+}
+
+void wakeUpNow() {
+  countToSleep = 0;
+}
+
+void sleepNow() {
+  // sleep hint
+  oled.clear();
+  oled.setCursor(0, 0);
+  oled.print('t');
+  oled.print('z');
+  oled.print('z');
+  oled.print('.');
+  oled.print('.');
+  oled.display();
+  delay(800);
+  oled.off();
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sleep_enable();
+  attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
+  sleep_mode();
+  // THE PROGRAM CONTINUES FROM HERE AFTER WAKING UP
+  sleep_disable();
+  oled.on();
 }
 
 void setup() {
@@ -530,6 +572,12 @@ void loop() {
     analogWrite(LED_GREEN, 255);
     analogWrite(LED_BLUE, 255);
   }
+
+  if (countToSleep > SECtoSLEEP) {
+    sleepNow();
+    Serial.println( CHAR_TIME_REQUEST );
+  }
+
 }
 
 
