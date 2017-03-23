@@ -10,13 +10,16 @@ This branch is a bit different than the master. Firmware and circuit are modifie
 
 The UART Smartwatch (mini) App is a smaller and easier version of the non-mini App.
 
-[UART-Smartwatch (mini) APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/gplay/UART-Smartwatch_App/app/app-release.apk) or get the non mini App from [f-Droid](http://f-droid.org)
+<a href="https://f-droid.org/repository/browse/?fdid=click.dummer.UartSmartwatch" target="_blank">
+<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="90"/></a>
+<a href="https://play.google.com/store/apps/details?id=click.dummer.UartSmartwatch" target="_blank">
+<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="90"/></a>
+
+You can optionaly get a signed APK from here: [UART-Smartwatch (mini) APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/gplay/UART-Smartwatch_App/app/app-release.apk)
 
 Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr This](img/flattr.png)</a>
 
 ## The Firmware
-
-Is full with my private mods.
 
 [UART-Smartwatch / Arduino IDE](https://raw.githubusercontent.com/no-go/UART-Smartwatch/gplay/UART-Smartwatch_firmware/UART-Smartwatch_firmware.ino)
 
@@ -27,14 +30,14 @@ Is full with my private mods.
 - 250 chars notification buffer
 - Button 1: get a fresh time and the notification buffer from your smart phone
 - Button 2: display the time and power level for 4 seconds
-- Button 2 (press for more than 4 seconds): switch to a different time mode
+- Button 2 (press for more than 5 seconds): switch to a different time mode
 - runs for about 8h (first and second time mode)
 - Posibility to compile with DINO GAME !!! (Press both buttons)
 
 ### Time Modes
 
-- Digital (4sec)
-- Analoge (4sec)
+- Digital (5sec)
+- Analoge (5sec)
 - Digital for ever
 
 ## Circuit

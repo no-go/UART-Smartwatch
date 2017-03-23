@@ -1,11 +1,32 @@
+#include <avr/power.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <EEPROM.h>
+
+// HARDWARE SPI OLED (11 -> MOSI/DIN, 13 ->SCK)
+
+// CONFIG -------------------------------------------
+//#define BUTTON1    3
+//#define BUTTON2    2
+//#define LED_RED    10
+//#define LED_OFF    LOW
+//#define LED_ON     HIGH
+//#define PIN_CS     4
+//#define PIN_RESET  6
+//#define PIN_DC     8
+//#define SERIAL_SPEED   115200
+
 #define BUTTON1    A0
 #define BUTTON2    A1
 #define LED_RED    10
-// OLED (13 -> MISO/DIN, 11 ->SCK)
+#define LED_OFF    HIGH
+#define LED_ON     LOW
 #define PIN_CS     5
 #define PIN_RESET  6
 #define PIN_DC     8
-#define DC_JUMPER  0
+#define SERIAL_SPEED   9600
+
+// --------------------------------------------------
 
 #define CHAR_TIME_REQUEST     '~'
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
@@ -28,17 +49,13 @@ int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
 byte COUNT        = 0;
 
-byte hours   = 10;
-byte minutes = 10;
-byte seconds = 15;
+byte hours   = 0;
+byte minutes = 0;
+byte seconds = 0;
 byte tick    = 0;
 
 // 0=digi, 1=analog, 2=digi 4 ever
 byte clockMode = 0;
-
-#include <avr/power.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 
 class OledWrapper : public Adafruit_SSD1306 {
   public:
@@ -58,7 +75,9 @@ class OledWrapper : public Adafruit_SSD1306 {
       print(num);  
       setTextColor(WHITE);  
     }
-
+    void black(const int & x, const int & y, const int & w, const int & h) {
+      fillRect(x,y,w,h, BLACK);
+    }
     void line(const int & x, const int & y, const int & xx, const int & yy) {
       drawLine(x,y,xx,yy, WHITE);
     }
@@ -120,7 +139,8 @@ OledWrapper * oled = new OledWrapper(PIN_DC, PIN_RESET, PIN_CS);
   
 byte powerTick(int mv) {
   if (mv < 3000) return 0;
-  return (mv-3000.0)*(batLength-3)/(3340-3000);  
+  if (mv >= 3450) return batLength-3;
+  return (mv-3000.0)*(batLength-3)/(3450-3000);  
 }
 
 int readVcc() {
@@ -133,6 +153,60 @@ int readVcc() {
   mv |= ADCH<<8; 
   mv = 1126400L / mv;
   return powerTick(mv);
+}
+
+int futur(int x, int y, byte b) {
+    int he = 32;
+    if (b>9) {
+      x = futur(x,y,b/10);
+      b = b%10;
+    }
+    if (b == 0) {
+      oled->circle(x+he/4, y+3*he/4, he/4);
+      return x+2+he/2;
+    } else if (b == 1) {
+      oled->line(x,y+5,x+5,y);
+      oled->line(x+5,y,x+5,y+he);
+      return x+8;  
+    } else if (b == 2) {
+      oled->circle(x+he/4, y-3+3*he/4, he/4);
+      oled->black(x,y,he/4,he);
+      oled->line(x+he/4,y+he-3,x+he/2,y+he);
+      return x+2+he/2;
+    } else if (b == 3) {
+      oled->circle(x+he/4, y+1*he/4, he/4);
+      oled->circle(x+he/4, y+3*he/4, he/4);
+      oled->black(x,y,he/4,he);
+      return x+2+he/2;
+    } else if (b == 4) {
+      oled->line(x,y+he/2,x+he/2,y);
+      oled->line(x,y+he/2,x+he/2,y+he/2);
+      oled->line(x+he/2,y,x+he/2,y+he);
+      return x+2+he/2;   
+    } else if (b == 5) {
+      oled->line(x+he/4,y,x+he/2,y);
+      oled->line(x+he/4,y,x+he/4,y+he/2);
+      oled->circle(x+he/4, y+3*he/4, he/4);
+      oled->black(x,y,he/4,he);
+      return x+2+he/2;   
+    } else if (b == 6) {
+      oled->line(x,y-2+3*he/4,x+he/2,y);
+      oled->circle(x+he/4, y+3*he/4, he/4);
+      return x+2+he/2;   
+    } else if (b == 7) {
+      oled->line(x,y+3,x+he/2,y);
+      oled->line(x+he/2,y,x,y+he);
+      oled->line(x+3,y+he/2,x+he/2-1,y+he/2);
+      return x+2+5;  
+    } else if (b == 8) {
+      oled->circle(x+he/4, y+1*he/4, he/4);
+      oled->circle(x+he/4, y+3*he/4, he/4);
+      return x+2+he/2;
+    } else if (b == 9) {
+      oled->circle(x+he/4, y+1*he/4, he/4);
+      oled->line  (x+he/2, y+1*he/4, x+he/2, y+he);
+      return x+2+he/2;
+    }
 }
 
 void anaClock() {
@@ -189,8 +263,8 @@ void setup() {
   pinMode(BUTTON1, INPUT_PULLUP);
   pinMode(BUTTON2, INPUT_PULLUP);
   pinMode(LED_RED, OUTPUT);
-  digitalWrite(LED_RED, HIGH); // off
-  Serial.begin(9600);
+  digitalWrite(LED_RED, LED_OFF); // off
+  Serial.begin(SERIAL_SPEED);
 
   power_timer1_disable();
   power_timer2_disable();
@@ -262,27 +336,26 @@ inline void ticking() {
   }
 }
 
-inline void digiClock() {
-  oled->setFontType(3);
-  oled->setCursor(0, 12);
-  if (hours<10) oled->print(0);
-  oled->print(hours);
-
-  oled->setFontType(2);
-  oled->setCursor(36, 15);
-  oled->print(':');
-
-  oled->setFontType(3);
-  oled->setCursor(46, 12);
-  if (minutes<10) oled->print(0);
-  oled->print(minutes); 
-
-  oled->setFontType(0);
-  oled->setCursor(30, 40);
-  if (seconds<10) oled->print(0);
-  oled->print(seconds);
-  oled->print('.');
-  oled->print(tick);
+void digiClock() {
+  if (hours<10) {
+    int xx = futur(0, 10, 0);
+    futur(xx, 10, hours);
+  } else {
+    futur(0, 10, hours);
+  }
+  if (minutes<10) {
+    int xx = futur(43, 10, 0);
+    futur(xx, 10, minutes);
+  } else {
+    futur(43, 10, minutes);
+  }
+  if (seconds<10) {
+    int xx = futur(85, 10, 0);
+    futur(xx, 10, seconds);
+  } else {
+    futur(85, 10, seconds);
+  }
+  oled->line(0, oled->height()-2, batLength*(tick/9.0), oled->height()-2);
 }
 
 void batteryIcon() {
@@ -306,24 +379,33 @@ void batteryIcon() {
 
 inline void wakeUpIcon() {
   oled->clear();
-  oled->circle(32, 23, 10);
-  oled->pixel(31, 20);
-  oled->pixel(35, 19);
-  oled->line (29, 27, 35, 27);
+  oled->circle(oled->width()/2, oled->height()/2, 5);
+  oled->black(0,0,oled->width()/2, oled->height());
+  oled->black(oled->width()/2, oled->height()/2,oled->width()/2, oled->height()/2);
   oled->display();
-  delay(350);
-  oled->rect(29, 19, 3, 3);
-  oled->rect(35, 19, 3, 3);
-  oled->pixel(35, 26);
+  delay(100);
+  oled->circle(oled->width()/2, oled->height()/2, 10);
+  oled->black(0,0,oled->width()/2, oled->height());
+  oled->black(oled->width()/2, oled->height()/2,oled->width()/2, oled->height()/2);
+  oled->display();
+  delay(100);
+  oled->circle(oled->width()/2, oled->height()/2, 15);
+  oled->black(0,0,oled->width()/2, oled->height());
+  oled->black(oled->width()/2, oled->height()/2,oled->width()/2, oled->height()/2);
   oled->display();  
-  delay(350);
-  tick += 7; 
+  delay(100);
+  oled->circle(oled->width()/2, oled->height()/2, 20);
+  oled->black(0,0,oled->width()/2, oled->height());
+  oled->black(oled->width()/2, oled->height()/2,oled->width()/2, oled->height()/2);
+  oled->display();  
+  delay(200);
+  tick += 5;
 }
 
 inline byte tob(char c) { return c - '0';}
 
 void loop() {
-  delay(98); // is < 100 : makes the seconds a bit faster!
+  delay(93); // is < 100 : makes the seconds a bit faster!
 
   if (digitalRead(BUTTON2) == LOW || clockMode > 1) {
     delay(300); 
@@ -333,7 +415,7 @@ void loop() {
       
       if (clockMode < 2) {
         COUNT = 0;
-        digitalWrite(LED_RED, HIGH);
+        digitalWrite(LED_RED, LED_OFF);
       }
       
       oled->on();
@@ -344,7 +426,7 @@ void loop() {
 #endif //  WITHGAME
 
       power_adc_enable();
-      for (int j=0; j<40; ++j) { // 4sec
+      for (int j=0; j<50; ++j) { // 5sec
         oled->clear();
         ticking();
         if (clockMode == 1) {
@@ -358,7 +440,7 @@ void loop() {
         }
         batteryIcon();
         oled->display();
-        delay(90); // 10ms in vcc mesurement
+        delay(85); // 10ms in vcc mesurement
       }
       power_adc_disable();
       
@@ -377,7 +459,7 @@ void loop() {
     if (digitalRead(BUTTON1) == LOW) {
       
       COUNT = 0;
-      digitalWrite(LED_RED, HIGH);
+      digitalWrite(LED_RED, LED_OFF);
 
       oled->on();
       wakeUpIcon();
@@ -430,12 +512,12 @@ void loop() {
 
   if (COUNT > 0) {
     if (tick == 0) {
-      digitalWrite(LED_RED, LOW);
+      digitalWrite(LED_RED, LED_ON);
     } else {
-      digitalWrite(LED_RED, HIGH);
+      digitalWrite(LED_RED, LED_OFF);
     }
   } else {
-    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_RED, LED_OFF);
   }
    
   page++;
@@ -445,7 +527,6 @@ void loop() {
 //                          E A S T E R   E G G
 // ----------------------------------------------------------------------------------------
 
-#include <EEPROM.h>
 int eeAddress = 0;
 int score     = 0;
 int highscore = 0;
@@ -657,9 +738,9 @@ void game() {
       died();
       
       oled->display();
-      digitalWrite(LED_RED, LOW); // 100 %
+      digitalWrite(LED_RED, LED_ON); // 100 %
       delay(1000);
-      digitalWrite(LED_RED, HIGH);
+      digitalWrite(LED_RED, LED_OFF);
       tick += 10;
       
     } else {
