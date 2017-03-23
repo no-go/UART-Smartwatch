@@ -1,33 +1,37 @@
+#include <MsTimer2.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <avr/sleep.h>
+
 // ---------------------------- Configure YOUR CONNECTIONS !! -------
 
-#define BUTTON1    A0
+#define BUTTON1     2
 #define BUTTON2     3
 
 #define LED_RED    10
-#define LED_GREEN   9 
-#define LED_BLUE    5
 
 // OLED (11 -> MOSI/DIN, 13 ->SCK)
 #define PIN_CS     4
 #define PIN_RESET  6
 #define PIN_DC     8
 
-//#define CHAR_TIME_REQUEST     'T' // idea was to make a deep sleep and get only the time on demand
+const int scrollSpeed =  80;
+#define SECtoSLEEP       45
+#define BLE_UART_SPEED   115200 // or try 9600
+#define TIME_PITCH       987    // 1000ms = 1 sec (realy ?)
+
+// ------------------------------------------------------
+
 #define CHAR_TIME_REQUEST     '~' //unused: idea was to make a deep sleep and get only the time on demand
 #define CHAR_MSG_REQUEST      '~' //new
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
-// ------------------------------------------------------
-
-#define SECtoSLEEP     45
-
 #define MESSAGEPOS     20
-#define MEMOSTR_LIMIT 270 /// @todo:  BAD BAD ! why did ssd1306 lib take so much dyn ram ??
+#define MEMOSTR_LIMIT 270
 
 const int batLength   = 40;
-const int scrollSpeed = 80;
-int ledBlinkDelay     = 1; // unused
+int ledBlinkDelay     = 1;
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
@@ -39,24 +43,8 @@ byte minutes = 0;
 byte seconds = 0;
 int clockMode = 0;
 
-int redValue   = 255;
-int greenValue = 255;
-int blueValue  = 255;
-
 int countToSleep = 0;
 
-/*
-  MsTimer2 is a small and very easy to use library to interface Timer2 with
-  humans. It's called MsTimer2 because it "hardcodes" a resolution of 1
-  millisecond on timer2
-  For Details see: http://www.arduino.cc/playground/Main/MsTimer2
-*/
-#include <MsTimer2.h>
-
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-
-#include <avr/sleep.h>
 
 struct OledWrapper {
 
@@ -67,7 +55,7 @@ struct OledWrapper {
     }
     
     void begin() {
-      _oled->begin(SSD1306_SWITCHCAPVCC);
+      _oled->begin();
       clear();
       _oled->setTextSize(1); // 8 line with 21 chars
       _oled->setTextColor(WHITE);
@@ -233,9 +221,8 @@ int readVcc() {
   mv = ADCL; 
   mv |= ADCH<<8; 
   mv = 1126400L / mv;
-  float quot = (3400-2800)/(batLength-3);
-  //float quot = (5100-2700)/(batLength-3); // scale: 5100 -> batLength, 2710 -> 0
-  return (mv-2800)/quot;  
+  float quot = (4300-2710)/(batLength-3); // scale: 4300 -> batLength, 2710 -> 0
+  return (mv-2710)/quot;  
 }
 
 void anaClock() {
@@ -424,9 +411,7 @@ void ticking() {
     if (digitalRead(BUTTON2) == LOW) {
       page = memoStrPos;
       COUNT = 0;
-      analogWrite(LED_RED, 255);
-      analogWrite(LED_GREEN, 255);
-      analogWrite(LED_BLUE, 255);
+      digitalWrite(LED_RED, LOW);
       
       clockMode++;
       if (clockMode > 1) clockMode = 0;
@@ -444,9 +429,7 @@ void ticking() {
   
   if (digitalRead(BUTTON1) == LOW) {
     COUNT = 0;
-    analogWrite(LED_RED, 255);
-    analogWrite(LED_GREEN, 255);
-    analogWrite(LED_BLUE, 255);
+    digitalWrite(LED_RED, LOW);
     wakeUpIcon();
                     
     // "remove" old chars from buffer
@@ -471,14 +454,17 @@ void sleepNow() {
   oled.print('.');
   oled.print('.');
   oled.display();
-  delay(800);
   oled.off();
+  delay(800);
+
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
   attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
   sleep_mode();
+
   // THE PROGRAM CONTINUES FROM HERE AFTER WAKING UP
   sleep_disable();
+  detachInterrupt(1);
   oled.on();
 }
 
@@ -486,11 +472,10 @@ void setup() {
   pinMode(BUTTON1, INPUT_PULLUP);
   pinMode(BUTTON2, INPUT_PULLUP);
   pinMode(LED_RED,   OUTPUT);
-  pinMode(LED_GREEN, OUTPUT);
-  pinMode(LED_BLUE,  OUTPUT);
-  Serial.begin(9600);
-//  Serial.begin(115200);
-  MsTimer2::set(987, ticking); // 1000ms period
+  attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
+  Serial.begin(BLE_UART_SPEED);
+
+  MsTimer2::set(TIME_PITCH, ticking); // 1000ms period
   MsTimer2::start();
   oled.begin();
   for (int i=0; i<MESSAGEPOS; ++i) {
@@ -518,13 +503,9 @@ void loop() {
       
       COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
       
-      if (COUNT > 0) { // 4*57 = 228
-        redValue      = 255 - 4 * ((unsigned char) memoStr[MESSAGEPOS+2] - 'A'); // "A" -> 255, "z" -> 0
-        greenValue    = 255 - 4 * ((unsigned char) memoStr[MESSAGEPOS+3] - 'A');
-        blueValue     = 255 - 4 * ((unsigned char) memoStr[MESSAGEPOS+4] - 'A');        
-        ledBlinkDelay = (unsigned char) memoStr[MESSAGEPOS+5] - 'A';
+      if (COUNT > 0) {
+        ledBlinkDelay = 42;
       } else {
-        redValue = greenValue = blueValue = 255;
         memoStr[MESSAGEPOS] = '\0';
       }
       page = memoStrPos;       
@@ -552,25 +533,16 @@ void loop() {
   // set LEDs
   if (COUNT > 0) {
     if (ledBlinkDelay == 0) {
-        analogWrite(LED_RED, redValue);      
-        analogWrite(LED_GREEN, greenValue);      
-        analogWrite(LED_BLUE, blueValue);      
+        digitalWrite(LED_RED, HIGH);
     } else {
-      //if (seconds%ledBlinkDelay == 0) {
       if (seconds%2 == 0) {
-        analogWrite(LED_RED, redValue);      
-        analogWrite(LED_GREEN, greenValue);      
-        analogWrite(LED_BLUE, blueValue);      
+        digitalWrite(LED_RED, HIGH);      
       } else {
-        analogWrite(LED_RED, 255);
-        analogWrite(LED_GREEN, 255);
-        analogWrite(LED_BLUE, 255);
+        digitalWrite(LED_RED, LOW);
       }
     }
   } else {
-    analogWrite(LED_RED, 255);
-    analogWrite(LED_GREEN, 255);
-    analogWrite(LED_BLUE, 255);
+    digitalWrite(LED_RED, LOW);
   }
 
   if (countToSleep > SECtoSLEEP) {
