@@ -16,9 +16,10 @@
 #define PIN_DC     8
 
 const int scrollSpeed =  80;
-#define SECtoSLEEP       45
+#define SECtoSLEEP       23
 #define BLE_UART_SPEED   115200 // or try 9600
 #define TIME_PITCH       987    // 1000ms = 1 sec (realy ?)
+#define MAX_POWER        3700
 
 // ------------------------------------------------------
 
@@ -221,7 +222,7 @@ int readVcc() {
   mv = ADCL; 
   mv |= ADCH<<8; 
   mv = 1126400L / mv;
-  float quot = (4300-2710)/(batLength-3); // scale: 4300 -> batLength, 2710 -> 0
+  float quot = (MAX_POWER-2710)/(batLength-3); // scale: MAX_POWER -> batLength, 2710 -> 0
   return (mv-2710)/quot;  
 }
 
