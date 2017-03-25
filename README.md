@@ -29,9 +29,9 @@ Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr 
 - blinking LED, if a new notification is present
 - 250 chars notification buffer
 - Button 1: get a fresh time and the notification buffer from your smart phone
-- Button 2: display the time and power level for 4 seconds
+- Button 2: display the time and power level for 5 seconds
 - Button 2 (press for more than 5 seconds): switch to a different time mode
-- runs for about 8h (first and second time mode)
+- runs for about 6h
 - Posibility to compile with DINO GAME !!! (Press both buttons)
 
 ### Time Modes
