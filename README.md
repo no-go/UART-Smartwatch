@@ -19,6 +19,10 @@ The DIY smartwatch shows a calculated time without a connection to your phone. T
 
 Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr This](stuff/flattr.png)</a>
 
+Get a PDF (german) about my [UART Smartwatch Project](https://github.com/no-go/UART-Smartwatch/tree/gplay) from here:
+<a href="https://github.com/no-go/Android-nRF-UART/raw/master/Slides/Slides.pdf" target="_blank">
+<img src="https://raw.githubusercontent.com/no-go/UART-Smartwatch/master/Adobe_PDF_file_icon.png" alt="Get Slides" /></a> or as [Website](https://github.com/no-go/Android-nRF-UART/tree/master/Slides)
+
 ## App
 
 [UART-Smartwatch APK](https://raw.githubusercontent.com/no-go/UART-Smartwatch/master/UART-Smartwatch_App/app/app-release.apk) or get the App from [f-Droid](http://f-droid.org)
