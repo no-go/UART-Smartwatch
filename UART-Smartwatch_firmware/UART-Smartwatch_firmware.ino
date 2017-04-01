@@ -34,7 +34,7 @@
 
 #define MESSAGEPOS     20
 
-//#define WITHGAME 42 // -------------------- EASTER EGG
+#define WITHGAME 42 // -------------------- EASTER EGG
 
 #ifdef WITHGAME
   #define MEMOSTR_LIMIT 270

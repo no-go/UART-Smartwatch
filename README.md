@@ -6,6 +6,10 @@ Android App, Firmware and Circuit for a DIY Smartwatch working with Bluetooth Lo
 
 This branch is a bit different than the master. Firmware and circuit are modified for a low cost version.
 
+Get a PDF (german) about my [UART Smartwatch Project](https://github.com/no-go/UART-Smartwatch/tree/gplay) from here:
+<a href="https://github.com/no-go/Android-nRF-UART/raw/master/Slides/Slides.pdf" target="_blank">
+<img src="https://raw.githubusercontent.com/no-go/UART-Smartwatch/gplay/img/Adobe_PDF_file_icon.png" alt="Get Slides" /></a> or as [Website](https://github.com/no-go/Android-nRF-UART/tree/master/Slides)
+
 ## App
 
 The UART Smartwatch (mini) App is a smaller and easier version of the non-mini App.
