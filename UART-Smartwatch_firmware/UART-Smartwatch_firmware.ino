@@ -14,7 +14,7 @@
 //#define PIN_CS     4
 //#define PIN_RESET  6
 //#define PIN_DC     8
-//#define SERIAL_SPEED   115200
+//#define SERIAL_SPEED   9600
 
 #define BUTTON1    A0
 #define BUTTON2    A1
@@ -24,7 +24,7 @@
 #define PIN_CS     5
 #define PIN_RESET  6
 #define PIN_DC     8
-#define SERIAL_SPEED   9600
+#define SERIAL_SPEED   9600 // or try 115200
 
 // --------------------------------------------------
 
@@ -32,22 +32,23 @@
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
-#define MESSAGEPOS     20
-
 #define WITHGAME 42 // -------------------- EASTER EGG
 
 #ifdef WITHGAME
-  #define MEMOSTR_LIMIT 270
+  #define MEMOSTR_LIMIT 250
 #else
-  #define MEMOSTR_LIMIT 290 //  270 + 20    10 (inklusive #hh:mm:ss/)
+  #define MEMOSTR_LIMIT 270 //  270    10 (inklusive #hh:mm:ss/)
 #endif
 void game();
 
-const byte batLength =  60;
+const byte batLength =  64;
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
-int  memoStrPos   = MESSAGEPOS;
-int  page         = 0;
-byte COUNT        = 0;
+int  memoStrPos = 0;
+int  cStart     = 0;
+int  cEnd       = 0;
+char buffMem;
+
+int COUNT = 0;
 
 byte hours   = 0;
 byte minutes = 0;
@@ -105,6 +106,9 @@ class OledWrapper : public Adafruit_SSD1306 {
     void clear() {
       clearDisplay();
     }
+    void command(uint8_t cmd) {
+      ssd1306_command(cmd);
+    }
     char umlReplace(char inChar) {
       if (inChar == -97) {
         inChar = 224; // ß
@@ -143,6 +147,18 @@ byte powerTick(int mv) {
   return (mv-3000.0)*(batLength-3)/(3450-3000);  
 }
 
+void scroll() {
+  unsigned short i = 0;
+  for (i=1; i<=8; ++i) {
+    oled->black(0,0,oled->width(),i);
+    oled->command(SSD1306_SETDISPLAYOFFSET);
+    oled->command(i++);
+    oled->display();
+    delay(50);
+  }
+  tick+=4;
+}
+
 int readVcc() {
   int mv;
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
@@ -155,10 +171,10 @@ int readVcc() {
   return powerTick(mv);
 }
 
-int futur(int x, int y, byte b) {
-    int he = 32;
+int myFont(int x, int y, byte b) {
+    int he = 30;
     if (b>9) {
-      x = futur(x,y,b/10);
+      x = myFont(x,y,b/10);
       b = b%10;
     }
     if (b == 0) {
@@ -210,9 +226,9 @@ int futur(int x, int y, byte b) {
 }
 
 void anaClock() {
-  byte x = 60;
-  byte y = 31;
-  byte radius = 30;
+  byte x = 33;
+  byte y = 32;
+  byte radius = 31;
   oled->circle(x, y, radius);
   int hour = hours;
   if (hour>12) hour-=12;
@@ -251,12 +267,15 @@ void anaClock() {
   oled->print(3);
   oled->setCursor(x-radius+6,y-3);
   oled->print(9);
-}
 
-inline void filler() {
-  for (int i=0; i<MESSAGEPOS; ++i) {
-    memoStr[i] = ' ';
-  }
+  // and small digital
+  oled->setCursor(x+radius-2,0);
+  oled->setFontType(2);
+  oled->print(hours);
+  oled->print(':');
+  if(minutes < 10) oled->print('0');
+  oled->print(minutes);
+  oled->setFontType(1);
 }
 
 void setup() {
@@ -293,7 +312,7 @@ void setup() {
   oled->display();
   delay(3000);
   oled->clearDisplay();
-  filler();
+  buffMem = '\0';
 }
 
 void serialEvent() {
@@ -305,12 +324,14 @@ void serialEvent() {
     if (inChar == '\n') {
       oled->on();
       memoStr[memoStrPos] = '\0';
-      page = 0;
+      cStart = 0;
+      cEnd = 0;
+      buffMem = memoStr[cEnd];
       continue;
     }
     memoStr[memoStrPos] = oled->umlReplace(inChar);
     memoStrPos++;
-    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MEMOSTR_LIMIT;
+    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = 0;
   }
 }
 
@@ -338,22 +359,22 @@ inline void ticking() {
 
 void digiClock() {
   if (hours<10) {
-    int xx = futur(0, 10, 0);
-    futur(xx, 10, hours);
+    int xx = myFont(0, 10, 0);
+    myFont(xx, 10, hours);
   } else {
-    futur(0, 10, hours);
+    myFont(0, 10, hours);
   }
   if (minutes<10) {
-    int xx = futur(43, 10, 0);
-    futur(xx, 10, minutes);
+    int xx = myFont(43, 10, 0);
+    myFont(xx, 10, minutes);
   } else {
-    futur(43, 10, minutes);
+    myFont(43, 10, minutes);
   }
   if (seconds<10) {
-    int xx = futur(85, 10, 0);
-    futur(xx, 10, seconds);
+    int xx = myFont(85, 10, 0);
+    myFont(xx, 10, seconds);
   } else {
-    futur(85, 10, seconds);
+    myFont(85, 10, seconds);
   }
   oled->line(0, oled->height()-2, batLength*(tick/9.0), oled->height()-2);
 }
@@ -467,47 +488,58 @@ void loop() {
                       
       // "remove" old chars from buffer
       // print ignores everyting behind \0
-      memoStr[MESSAGEPOS] = '\0';
-      memoStrPos = MESSAGEPOS;
+      memoStr[0] = '\0';
+      memoStrPos = 0;
       Serial.print(CHAR_TIME_REQUEST);
       Serial.print('\n');
     }
   }
 
-  if (memoStrPos > MESSAGEPOS && page == 0) {
+  if (memoStrPos > 0 && cEnd == 0) {
 
-    if (memoStr[MESSAGEPOS] == CHAR_TIME_RESPONSE) {
+    if (memoStr[0] == CHAR_TIME_RESPONSE) {
       
       // extract the time -------------------------
       
-      memoStr[MESSAGEPOS] = ' ';
-      hours = tob(memoStr[MESSAGEPOS+1])*10 + tob(memoStr[MESSAGEPOS+2]);
-      minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
-      seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
+      memoStr[0] = ' ';
+      hours = tob(memoStr[1])*10 + tob(memoStr[2]);
+      minutes = tob(memoStr[4])*10 + tob(memoStr[5]);
+      seconds = tob(memoStr[7])*10 + tob(memoStr[8]);
 
-    } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
+    } else if (memoStr[0] == CHAR_NOTIFY_HINT) {
       // there is a new message (or a message is deleted)
       
-      COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
-      page = memoStrPos; // makes a clear and display off        
+      COUNT = (unsigned char) memoStr[1];
+      cEnd = memoStrPos; // makes a clear and display off        
      }
   }
 
   // Scrolling message through display
-  if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
+  if (memoStrPos > 0 && cEnd <= memoStrPos) {
+    if (cEnd < memoStrPos) memoStr[cEnd] = '\0';
     oled->clear();
-    oled->setCursor(0, 0);
-    oled->print(&(memoStr[page]));
+    oled->setCursor(0,0);
+    oled->print(&(memoStr[cStart]));
+    oled->command(SSD1306_SETDISPLAYOFFSET);
+    oled->command(0x0);
     oled->display();
+    
+    memoStr[cEnd] = buffMem;
+    if (cEnd%21 == 0 && cEnd > 147) {
+      cStart += 21;
+      scroll();
+    }
   }
 
   /// Safe power and switch display off, if message is at the end
-  if (page == memoStrPos) {
+  if (
+    cStart > memoStrPos || cEnd == memoStrPos+147
+  ) {
     oled->off();
     // "remove" old chars from buffer
     // print ignores everyting behind \0
-    memoStr[MESSAGEPOS] = '\0';
-    memoStrPos = MESSAGEPOS;
+    memoStr[0] = '\0';
+    memoStrPos = 0;
   }
 
   if (COUNT > 0) {
@@ -519,8 +551,9 @@ void loop() {
   } else {
     digitalWrite(LED_RED, LED_OFF);
   }
-   
-  page++;
+
+  cEnd++;
+  if (cEnd <= memoStrPos) buffMem = memoStr[cEnd];
   ticking();
 }
 
