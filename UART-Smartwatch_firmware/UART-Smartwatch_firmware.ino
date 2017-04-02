@@ -31,12 +31,13 @@ const int batLength   = 64;
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
-#define MESSAGEPOS     20
 #define MEMOSTR_LIMIT 270
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
-int  memoStrPos   = MESSAGEPOS;
-int  page         = 0;
+int  memoStrPos = 0;
+int  cStart     = 0;
+int  cEnd       = 0;
+char buffMem;
 
 byte hours   = 0;
 byte minutes = 0;
@@ -182,6 +183,10 @@ struct OledWrapper {
     void off() {
       _oled->ssd1306_command(SSD1306_DISPLAYOFF);
     }
+    
+    void command(uint8_t cmd) {
+      _oled->ssd1306_command(cmd);
+    }
 
     /**
      * the hard way to handle with german(?) UTF-8 stuff
@@ -237,8 +242,8 @@ int readVcc() {
 void anaClock() {
   byte x = 33;
   byte y = 32;
-  byte radius = 32;
-  //oled.circle(x, y, radius);
+  byte radius = 31;
+  oled.circle(x, y, radius);
   int hour = hours;
   if (hour>12) hour-=12;
   oled.line(
@@ -308,6 +313,17 @@ void printClock() {
     digiClock();
   } else {
     anaClock();
+  }
+}
+
+void scroll() {
+  unsigned short i = 0;
+  for (i=1; i<=8; ++i) {
+    oled.black(0,0,oled.width(),i);
+    oled.command(SSD1306_SETDISPLAYOFFSET);
+    oled.command(i++);
+    oled.display();
+    delay(scrollSpeed);
   }
 }
 
@@ -409,16 +425,18 @@ void serialEvent() {
     if (inChar == -62) continue; // other symbol before utf-8
     
     // Check at the message beginning for some special chars
-    if (memoStr[MESSAGEPOS] == CHAR_TIME_RESPONSE) digitalWrite(LED_RED, HIGH);
+    if (memoStr[0] == CHAR_TIME_RESPONSE) digitalWrite(LED_RED, HIGH);
     
     if (inChar == '\n') {
       memoStr[memoStrPos] = '\0';
-      page = 0;
+      cStart = 0;
+      cEnd = 0;
+      buffMem = memoStr[cEnd];
       continue;
     }
     memoStr[memoStrPos] = oled.umlReplace(inChar);
     memoStrPos++;
-    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MESSAGEPOS;
+    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = 0;
   }
 }
 
@@ -440,13 +458,13 @@ void ticking() {
     hours = hours % 24;
   }
   // show Clock, if there is no message scrolling
-  if (! (memoStrPos > MESSAGEPOS && page <= memoStrPos) ) {
+  if (! (memoStrPos > 0 && cEnd <= memoStrPos) ) {
     
     countToSleep++;
     
     oled.clear();
     if (digitalRead(BUTTON2) == LOW) {
-      page = memoStrPos;      
+      cEnd = memoStrPos;      
       clockMode++;
       if (clockMode > 1) clockMode = 0;
     }
@@ -455,7 +473,7 @@ void ticking() {
     oled.display();
   } else {
     if (digitalRead(BUTTON2) == LOW) {
-      page = memoStrPos; // stop scrolling
+      cEnd = memoStrPos; // stop scrolling
       digitalWrite(LED_RED, LOW);
     }
   }
@@ -529,9 +547,7 @@ void setup() {
   MsTimer2::set(TIME_PITCH, ticking); // 1000ms period
   MsTimer2::start();
   oled.begin();
-  for (int i=0; i<MESSAGEPOS; ++i) {
-    memoStr[i] = ' ';
-  }
+  buffMem = '\0';
 }
 
 void loop() {    
@@ -542,24 +558,24 @@ void loop() {
       getIcon();
       // "remove" old chars from buffer
       // print ignores everyting behind \0
-      memoStr[MESSAGEPOS] = '\0';
-      memoStrPos = MESSAGEPOS;
+      memoStr[0] = '\0';
+      memoStrPos = 0;
       MsTimer2::start();
       Serial.println( CHAR_MSG_REQUEST );
     }
   }
   
   // React, if there is a new message
-  if (memoStrPos > MESSAGEPOS && page == 0) {
+  if (memoStrPos > 0 && cEnd == 0) {
 
     // Check at the message beginning for some special chars
-    if (memoStr[MESSAGEPOS] == CHAR_TIME_RESPONSE) {
+    if (memoStr[0] == CHAR_TIME_RESPONSE) {
       
       // extract the time -------------------------
-      memoStr[MESSAGEPOS] = ' ';
-      hours = tob(memoStr[MESSAGEPOS+1])*10 + tob(memoStr[MESSAGEPOS+2]);
-      minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
-      seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
+      memoStr[0] = ' ';
+      hours = tob(memoStr[1])*10 + tob(memoStr[2]);
+      minutes = tob(memoStr[4])*10 + tob(memoStr[5]);
+      seconds = tob(memoStr[7])*10 + tob(memoStr[8]);
       oled.clear();
       oled.setCursor(0, 0);
       printClock();
@@ -571,21 +587,29 @@ void loop() {
   }
   
   //Scrolling message through display
-  if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
+  if (memoStrPos > 0 && cEnd <= memoStrPos) {
+    if (cEnd < memoStrPos) memoStr[cEnd] = '\0';
     oled.clear();
-    oled.setCursor(0, 0);
-    oled.print(&(memoStr[page]));
+    oled.setCursor(0,0);
+    oled.print(&(memoStr[cStart]));
+    oled.command(SSD1306_SETDISPLAYOFFSET);
+    oled.command(0x0);
     oled.display();
     delay(scrollSpeed);
-    page++;
+    
+    memoStr[cEnd] = buffMem;
+    if (cEnd%21 == 0 && cEnd > 147) {
+      cStart += 21;
+      scroll();
+    }
+    cEnd++;
+    if (cEnd <= memoStrPos) buffMem = memoStr[cEnd];
   }
   
   // message is at the end
-  if (page == memoStrPos) {
-    // "remove" old chars from buffer
-    // print ignores everyting behind \0
-    memoStr[MESSAGEPOS] = '\0';
-    memoStrPos = MESSAGEPOS;
+  if (cStart > memoStrPos) {
+    memoStr[0] = '\0';
+    memoStrPos = 0;
   }
 
   if (countToSleep > SECtoSLEEP) {
