@@ -16,8 +16,8 @@
 #define PIN_DC     8
 
 const int scrollSpeed =  80;
-#define SECtoSLEEP       23
-#define BLE_UART_SPEED   115200 // or try 9600
+#define SECtoSLEEP       30
+#define BLE_UART_SPEED   9600 // or try 115200
 #define TIME_PITCH       987    // 1000ms = 1 sec (realy ?)
 #define MAX_POWER        3700
 
@@ -103,6 +103,10 @@ struct OledWrapper {
     
     void circle(const int & x, const int & y, const int & radius) {
       _oled->drawCircle(x,y,radius, WHITE);
+    }
+    
+    void fcircle(const int & x, const int & y, const int & radius) {
+      _oled->fillCircle(x,y,radius, WHITE);
     }
 
     void setFontType(const int & t) {
@@ -294,22 +298,7 @@ void batteryIcon() {
   oled.rectFill(oled.width() - vccVal   -1, oled.height()-3,      vccVal, 2);
 }
 
-void wakeUpIcon() {
-  oled.clear();
-  oled.circle(oled.width()/2, oled.height()/2, 5);
-  oled.black(0,0,oled.width()/2, oled.height());
-  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
-  oled.circle(oled.width()/2, oled.height()/2, 10);
-  oled.black(0,0,oled.width()/2, oled.height());
-  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
-  oled.circle(oled.width()/2, oled.height()/2, 15);
-  oled.black(0,0,oled.width()/2, oled.height());
-  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
-  oled.circle(oled.width()/2, oled.height()/2, 20);
-  oled.black(0,0,oled.width()/2, oled.height());
-  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
-  oled.display();  
-}
+void wakeUpIcon() {}
 
 byte tob(char c) {
   return c - '0';
@@ -446,18 +435,9 @@ void wakeUpNow() {
 }
 
 void sleepNow() {
-  // sleep hint
   oled.clear();
-  oled.setCursor(0, 0);
-  oled.print('t');
-  oled.print('z');
-  oled.print('z');
-  oled.print('.');
-  oled.print('.');
   oled.display();
   oled.off();
-  delay(800);
-
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
   attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
@@ -482,6 +462,43 @@ void setup() {
   for (int i=0; i<MESSAGEPOS; ++i) {
     memoStr[i] = ' ';
   }
+}
+
+void eye1() {
+  oled.circle (oled.width()/2 -29, oled.height()/2, 12);
+  oled.fcircle(oled.width()/2 -29, oled.height()/2, 3);
+  
+  oled.circle (oled.width()/2 +29, oled.height()/2, 12);
+  oled.fcircle(oled.width()/2 +26, oled.height()/2+2, 3);  
+}
+
+void eye2() {
+  oled.circle (oled.width()/2 -29, oled.height()/2, 12);
+  oled.fcircle(oled.width()/2 -29, oled.height()/2, 3);
+  
+  oled.circle (oled.width()/2 +29, oled.height()/2, 12);
+  oled.fcircle(oled.width()/2 +26, oled.height()/2+2, 3);  
+
+  oled.black(0,0,oled.width(), oled.height()/2 -4);
+
+  oled.line(
+    oled.width()/2 -42,
+    oled.height()/2 -4,
+    oled.width()/2 -15,
+    oled.height()/2 -4
+  );
+  oled.line(
+    oled.width()/2 +15,
+    oled.height()/2 -4,
+    oled.width()/2 +42,
+    oled.height()/2 -4
+  );
+}
+
+void eye3() {
+  oled.circle (oled.width()/2 -29, oled.height()/2, 12);
+  oled.circle (oled.width()/2 +29, oled.height()/2, 12);
+  oled.black(0,0,oled.width(), oled.height()/2 +6);
 }
 
 void loop() { 
@@ -547,7 +564,33 @@ void loop() {
   }
 
   if (countToSleep > SECtoSLEEP) {
-    sleepNow();
+    MsTimer2::stop();
+    oled.clear();
+    eye1();
+    oled.display();
+    delay(300);
+    oled.clear();
+    eye2();
+    oled.display();
+    delay(200);
+    oled.clear();
+    eye3();
+    oled.display();
+    delay(200);
+        sleepNow();
+    oled.clear();
+    eye3();
+    oled.display();
+    delay(300);
+    oled.clear();
+    eye2();
+    oled.display();
+    delay(200);
+    oled.clear();
+    eye1();
+    oled.display();
+    delay(200);
+    MsTimer2::start();
     Serial.println( CHAR_TIME_REQUEST );
   }
 
