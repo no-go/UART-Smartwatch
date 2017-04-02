@@ -35,9 +35,9 @@
 #define WITHGAME 42 // -------------------- EASTER EGG
 
 #ifdef WITHGAME
-  #define MEMOSTR_LIMIT 250
+  #define MEMOSTR_LIMIT 265
 #else
-  #define MEMOSTR_LIMIT 270 //  270    10 (inklusive #hh:mm:ss/)
+  #define MEMOSTR_LIMIT 285 // 10 (inklusive #hh:mm:ss/)
 #endif
 void game();
 
@@ -510,7 +510,13 @@ void loop() {
       // there is a new message (or a message is deleted)
       
       COUNT = (unsigned char) memoStr[1];
-      cEnd = memoStrPos; // makes a clear and display off        
+      oled->off();
+      // "remove" old chars from buffer
+      // print ignores everyting behind \0
+      memoStr[0] = '\0';
+      memoStrPos = 0;
+      cEnd = 0;
+      cStart = 0;     
      }
   }
 
