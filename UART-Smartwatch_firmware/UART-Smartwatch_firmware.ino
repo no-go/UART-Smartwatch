@@ -19,7 +19,10 @@ const int scrollSpeed =  80;
 #define SECtoSLEEP       30
 #define BLE_UART_SPEED   9600 // or try 115200
 #define TIME_PITCH       987    // 1000ms = 1 sec (realy ?)
-#define MAX_POWER        3700
+#define MAX_POWER        3380   // or try 3340, 4300, 5000
+#define MIN_POWER        3200   // or try 2740, 3200, 3600
+
+const int batLength   = 64;
 
 // ------------------------------------------------------
 
@@ -31,19 +34,15 @@ const int scrollSpeed =  80;
 #define MESSAGEPOS     20
 #define MEMOSTR_LIMIT 270
 
-const int batLength   = 40;
-int ledBlinkDelay     = 1;
-
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
 int  memoStrPos   = MESSAGEPOS;
 int  page         = 0;
-byte COUNT        = 0;
 
 byte hours   = 0;
 byte minutes = 0;
 byte seconds = 0;
-int clockMode = 0;
 
+byte clockMode = 0;
 int countToSleep = 0;
 
 
@@ -226,12 +225,17 @@ int readVcc() {
   mv = ADCL; 
   mv |= ADCH<<8; 
   mv = 1126400L / mv;
-  float quot = (MAX_POWER-2710)/(batLength-3); // scale: MAX_POWER -> batLength, 2710 -> 0
-  return (mv-2710)/quot;  
+  if (mv > MAX_POWER) return batLength-3;
+  if (mv < MIN_POWER) return 0;
+  float quot = (MAX_POWER - MIN_POWER)/(batLength-3); // scale: MAX_POWER -> batLength, MIN_POWER -> 0
+  mv = (mv-MIN_POWER)/quot;
+  if (mv > batLength-3) return batLength-3;
+  if (mv < 0) return 0;
+  return mv;
 }
 
 void anaClock() {
-  byte x = 60;
+  byte x = 33;
   byte y = 32;
   byte radius = 32;
   //oled.circle(x, y, radius);
@@ -264,50 +268,89 @@ void anaClock() {
   oled.setCursor(x-2,y+radius-11);
   oled.print(6);
   oled.setCursor(x+radius-9,y-3);
-  oled.print(3);
+  oled.print(3);  
   oled.setCursor(x-radius+6,y-3);
-  oled.print(9);  
+  oled.print(9);
+
+  // and small digital
+  oled.setCursor(x+radius+2,5);
+  oled.setFontType(2);
+  oled.print(hours);
+  oled.print(':');
+  if(minutes < 10) oled.print('0');
+  oled.print(minutes);
+  oled.setFontType(1);
 }
 
 void digiClock() {
   if (hours<10) {
-    int xx = futur(0, 10, 0);
-    futur(xx, 10, hours);
+    int xx = myFont(0, 10, 0);
+    myFont(xx, 10, hours);
   } else {
-    futur(0, 10, hours);
+    myFont(0, 10, hours);
   }
   if (minutes<10) {
-    int xx = futur(45, 10, 0);
-    futur(xx, 10, minutes);
+    int xx = myFont(45, 10, 0);
+    myFont(xx, 10, minutes);
   } else {
-    futur(45, 10, minutes);
+    myFont(45, 10, minutes);
   }
   if (seconds<10) {
-    int xx = futur(91, 10, 0);
-    futur(xx, 10, seconds);
+    int xx = myFont(91, 10, 0);
+    myFont(xx, 10, seconds);
   } else {
-    futur(91, 10, seconds);
+    myFont(91, 10, seconds);
+  }
+}
+
+void printClock() {
+  if (clockMode == 0) {
+    digiClock();
+  } else {
+    anaClock();
   }
 }
 
 void batteryIcon() {
   byte vccVal = readVcc();
-  oled.pixel   (oled.width() - batLength, oled.height()-2); 
-  oled.pixel   (oled.width() - batLength, oled.height()-3);
-  oled.rect    (oled.width() - batLength+1, oled.height()-4, batLength-1, 4);  
-  oled.rectFill(oled.width() - vccVal   -1, oled.height()-3,      vccVal, 2);
+  oled.pixel   (oled.width() - batLength, oled.height()-3); 
+  oled.pixel   (oled.width() - batLength, oled.height()-4);
+  oled.rect    (oled.width() - batLength+1, oled.height()-6, batLength-1, 6);  
+  oled.rectFill(oled.width() - vccVal   -1, oled.height()-5,      vccVal, 4);
 }
 
-void wakeUpIcon() {}
+void getIcon() {
+  oled.clear();
+  oled.circle(oled.width()/2, oled.height()/2, 5);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
+  oled.display();
+  delay(100);
+  oled.circle(oled.width()/2, oled.height()/2, 10);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
+  oled.display();
+  delay(50);
+  oled.circle(oled.width()/2, oled.height()/2, 15);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
+  oled.display();  
+  delay(50);
+  oled.circle(oled.width()/2, oled.height()/2, 20);
+  oled.black(0,0,oled.width()/2, oled.height());
+  oled.black(oled.width()/2, oled.height()/2,oled.width()/2, oled.height()/2);
+  oled.display();  
+  delay(100);
+}
 
 byte tob(char c) {
   return c - '0';
 }
 
-int futur(int x, int y, byte b) {
-    int he = 32;
+int myFont(int x, int y, byte b) {
+    int he = 30;
     if (b>9) {
-      x = futur(x,y,b/10);
+      x = myFont(x,y,b/10);
       b = b%10;
     }
     if (b == 0) {
@@ -364,6 +407,10 @@ void serialEvent() {
     countToSleep = 0;
     if (inChar == -61) continue; // symbol before utf-8
     if (inChar == -62) continue; // other symbol before utf-8
+    
+    // Check at the message beginning for some special chars
+    if (memoStr[MESSAGEPOS] == CHAR_TIME_RESPONSE) digitalWrite(LED_RED, HIGH);
+    
     if (inChar == '\n') {
       memoStr[memoStrPos] = '\0';
       page = 0;
@@ -399,34 +446,18 @@ void ticking() {
     
     oled.clear();
     if (digitalRead(BUTTON2) == LOW) {
-      page = memoStrPos;
-      COUNT = 0;
-      digitalWrite(LED_RED, LOW);
-      
+      page = memoStrPos;      
       clockMode++;
       if (clockMode > 1) clockMode = 0;
     }
-    if (clockMode == 0) {
-      digiClock();
-    } else {
-      anaClock();
-    }
+    printClock();
     batteryIcon();
     oled.display();
   } else {
-    if (digitalRead(BUTTON2) == LOW) page = memoStrPos; // stop scrolling
-  }
-  
-  if (digitalRead(BUTTON1) == LOW) {
-    COUNT = 0;
-    digitalWrite(LED_RED, LOW);
-    wakeUpIcon();
-                    
-    // "remove" old chars from buffer
-    // print ignores everyting behind \0
-    memoStr[MESSAGEPOS] = '\0';
-    memoStrPos = MESSAGEPOS;
-    Serial.println( CHAR_MSG_REQUEST );
+    if (digitalRead(BUTTON2) == LOW) {
+      page = memoStrPos; // stop scrolling
+      digitalWrite(LED_RED, LOW);
+    }
   }
 }
 
@@ -438,7 +469,8 @@ void sleepNow() {
   oled.clear();
   oled.display();
   oled.off();
-  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  digitalWrite(LED_RED, LOW);
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN); // deep sleep - nothing works
   sleep_enable();
   attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
   sleep_mode();
@@ -447,21 +479,6 @@ void sleepNow() {
   sleep_disable();
   detachInterrupt(1);
   oled.on();
-}
-
-void setup() {
-  pinMode(BUTTON1, INPUT_PULLUP);
-  pinMode(BUTTON2, INPUT_PULLUP);
-  pinMode(LED_RED,   OUTPUT);
-  attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
-  Serial.begin(BLE_UART_SPEED);
-
-  MsTimer2::set(TIME_PITCH, ticking); // 1000ms period
-  MsTimer2::start();
-  oled.begin();
-  for (int i=0; i<MESSAGEPOS; ++i) {
-    memoStr[i] = ' ';
-  }
 }
 
 void eye1() {
@@ -496,12 +513,42 @@ void eye2() {
 }
 
 void eye3() {
-  oled.circle (oled.width()/2 -29, oled.height()/2, 12);
-  oled.circle (oled.width()/2 +29, oled.height()/2, 12);
+  oled.circle(oled.width()/2 -29, oled.height()/2, 12);
+  oled.circle(oled.width()/2 +29, oled.height()/2, 12);
   oled.black(0,0,oled.width(), oled.height()/2 +6);
 }
 
-void loop() { 
+
+void setup() {
+  pinMode(BUTTON1, INPUT_PULLUP);
+  pinMode(BUTTON2, INPUT_PULLUP);
+  pinMode(LED_RED, OUTPUT);
+  attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
+  Serial.begin(BLE_UART_SPEED);
+
+  MsTimer2::set(TIME_PITCH, ticking); // 1000ms period
+  MsTimer2::start();
+  oled.begin();
+  for (int i=0; i<MESSAGEPOS; ++i) {
+    memoStr[i] = ' ';
+  }
+}
+
+void loop() {    
+  if (digitalRead(BUTTON1) == LOW) {
+    delay(300);
+    if (digitalRead(BUTTON1) == LOW) {
+      MsTimer2::stop();
+      getIcon();
+      // "remove" old chars from buffer
+      // print ignores everyting behind \0
+      memoStr[MESSAGEPOS] = '\0';
+      memoStrPos = MESSAGEPOS;
+      MsTimer2::start();
+      Serial.println( CHAR_MSG_REQUEST );
+    }
+  }
+  
   // React, if there is a new message
   if (memoStrPos > MESSAGEPOS && page == 0) {
 
@@ -509,27 +556,20 @@ void loop() {
     if (memoStr[MESSAGEPOS] == CHAR_TIME_RESPONSE) {
       
       // extract the time -------------------------
-      
       memoStr[MESSAGEPOS] = ' ';
       hours = tob(memoStr[MESSAGEPOS+1])*10 + tob(memoStr[MESSAGEPOS+2]);
       minutes = tob(memoStr[MESSAGEPOS+4])*10 + tob(memoStr[MESSAGEPOS+5]);
       seconds = tob(memoStr[MESSAGEPOS+7])*10 + tob(memoStr[MESSAGEPOS+8]);
-
-    } else if (memoStr[MESSAGEPOS] == CHAR_NOTIFY_HINT) {
-      
-      // there is a new message (or a message is deleted)
-      
-      COUNT = (unsigned char) memoStr[MESSAGEPOS+1];
-      
-      if (COUNT > 0) {
-        ledBlinkDelay = 42;
-      } else {
-        memoStr[MESSAGEPOS] = '\0';
-      }
-      page = memoStrPos;       
-     }
+      oled.clear();
+      oled.setCursor(0, 0);
+      printClock();
+      oled.display();
+      delay(1000);
+      seconds++;
+      digitalWrite(LED_RED, LOW);
+    }
   }
-
+  
   //Scrolling message through display
   if (memoStrPos > MESSAGEPOS && page <= memoStrPos) {
     oled.clear();
@@ -539,7 +579,7 @@ void loop() {
     delay(scrollSpeed);
     page++;
   }
-
+  
   // message is at the end
   if (page == memoStrPos) {
     // "remove" old chars from buffer
@@ -548,48 +588,33 @@ void loop() {
     memoStrPos = MESSAGEPOS;
   }
 
-  // set LEDs
-  if (COUNT > 0) {
-    if (ledBlinkDelay == 0) {
-        digitalWrite(LED_RED, HIGH);
-    } else {
-      if (seconds%2 == 0) {
-        digitalWrite(LED_RED, HIGH);      
-      } else {
-        digitalWrite(LED_RED, LOW);
-      }
-    }
-  } else {
-    digitalWrite(LED_RED, LOW);
-  }
-
   if (countToSleep > SECtoSLEEP) {
     MsTimer2::stop();
     oled.clear();
     eye1();
     oled.display();
-    delay(300);
+    delay(200);
     oled.clear();
     eye2();
     oled.display();
-    delay(200);
+    delay(100);
     oled.clear();
     eye3();
     oled.display();
-    delay(200);
+    delay(100);
         sleepNow();
     oled.clear();
     eye3();
     oled.display();
-    delay(300);
+    delay(200);
     oled.clear();
     eye2();
     oled.display();
-    delay(200);
+    delay(100);
     oled.clear();
     eye1();
     oled.display();
-    delay(200);
+    delay(100);
     MsTimer2::start();
     Serial.println( CHAR_TIME_REQUEST );
   }

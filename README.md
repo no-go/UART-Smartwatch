@@ -1,7 +1,7 @@
 # UART-Smartwatch
 
 This branch is a bit different than the master. Firmware and circuit are
-modified for a low cost version.
+modified for a low cost version and long live via sleep mode
 
 ## App
 
@@ -20,6 +20,7 @@ Every second Display and powerbar gets an update. It runs for ..?
 - Button 2: switch (analog/digital) and wakeup on sleep
 - uses MSTimer2 Library
 - uses INT1 on Pin3 to wake up the CPU
+- LED: just notify, if the clock get a valid(?) time response
 
 ## Circuit
 
