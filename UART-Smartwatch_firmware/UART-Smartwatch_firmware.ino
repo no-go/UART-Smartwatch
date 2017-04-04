@@ -39,9 +39,9 @@ int  cStart     = 0;
 int  cEnd       = 0;
 char buffMem;
 
-byte hours   = 0;
-byte minutes = 0;
-byte seconds = 0;
+byte hours   = 42;
+byte minutes = 42;
+byte seconds = 42;
 
 byte clockMode = 0;
 int countToSleep = 0;
@@ -245,7 +245,7 @@ void anaClock() {
   byte radius = 31;
   oled.circle(x, y, radius);
   int hour = hours;
-  if (hour>12) hour-=12;
+  if (hour>12) hour = hour%12;
   oled.line(
     x, y,
     x + (radius-2)*cos(PI * ((float)seconds-15.0) / 30),
@@ -454,7 +454,7 @@ void ticking() {
     hours  += minutes / 60;
     minutes = minutes % 60;
   }
-  if (hours > 23) {
+  if (hours != 42 && hours > 23) {
     hours = hours % 24;
   }
   // show Clock, if there is no message scrolling
@@ -626,6 +626,10 @@ void loop() {
     eye3();
     oled.display();
     delay(100);
+    hours   = 42;
+    minutes = 42;
+    seconds = 42;
+    memoStr[0] = '\0';
         sleepNow();
     oled.clear();
     eye3();

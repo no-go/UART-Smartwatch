@@ -12,7 +12,7 @@ Perferences have a button to use HM10 bluetooth module.
 ## The Firmware
 
 This is a **deep sleep** version. The timer2 is set to 1sec and the time is always shown.
-Every second Display and powerbar gets an update. It runs for ..?
+Every second Display and powerbar gets an update. It runs for more than 8h (still testing)?
 
 ## Features
 
