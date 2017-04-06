@@ -1,4 +1,6 @@
 #include <MsTimer2.h>
+#include <SPI.h>
+#include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <avr/sleep.h>
@@ -10,10 +12,11 @@
 
 #define LED_RED    10
 
-// OLED (11 -> MOSI/DIN, 13 ->SCK)
-#define PIN_CS     4
+// OLED (A4 -> DIN, A5 ->SCK)
 #define PIN_RESET  6
-#define PIN_DC     8
+
+#define PIN_CS 4
+#define PIN_DC 8
 
 const int scrollSpeed =  80;
 #define SECtoSLEEP       30
@@ -52,7 +55,7 @@ struct OledWrapper {
     Adafruit_SSD1306 * _oled;
     
     OledWrapper() {
-       _oled = new Adafruit_SSD1306(PIN_DC, PIN_RESET, PIN_CS);
+       _oled = new Adafruit_SSD1306(PIN_RESET);
     }
     
     void begin() {
@@ -541,6 +544,12 @@ void setup() {
   pinMode(BUTTON1, INPUT_PULLUP);
   pinMode(BUTTON2, INPUT_PULLUP);
   pinMode(LED_RED, OUTPUT);
+  //pinMode(PIN_CS, OUTPUT);
+  pinMode(PIN_DC, OUTPUT);
+  //digitalWrite(PIN_CS, HIGH);
+  //digitalWrite(PIN_DC, LOW); // LOW = ADDRESS 0x3C
+  digitalWrite(PIN_DC, HIGH); // HIGH = ADDRESS 0x3D
+
   attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
   Serial.begin(BLE_UART_SPEED);
 
