@@ -495,6 +495,7 @@ void setup() {
   pinMode(LED_RED, OUTPUT);
   attachInterrupt(1, wakeUpNow, HIGH); // INT1 is on PIN3
   Serial.begin(BLE_UART_SPEED);
+  Serial.println("AT+NAMEPitBoy Watch");
 
   MsTimer2::set(TIME_PITCH, ticking); // 250ms period
   MsTimer2::start();
