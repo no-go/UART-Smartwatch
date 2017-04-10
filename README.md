@@ -35,7 +35,7 @@ Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr 
 - Button 1: get a fresh time and the notification buffer from your smart phone
 - Button 2: display the time and power level for 5 seconds
 - Button 2 (press for more than 5 seconds): switch to a different time mode
-- runs for about 6h
+- runs for about 7h
 - Posibility to compile with DINO GAME !!! (Press both buttons)
 
 ### Time Modes
