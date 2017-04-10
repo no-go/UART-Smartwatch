@@ -15,7 +15,7 @@
    width="229.34642mm"
    sodipodi:docname="circuit.svg"
    inkscape:version="0.92.1 r"
-   inkscape:export-filename="/home/unknwon/Android/Projects/UART-Smartwatch/circuit.png"
+   inkscape:export-filename="/home/unknwon/Android/Projekts/UART-Smartwatch/pitboy_stuff/circuit.png"
    inkscape:export-xdpi="68.400002"
    inkscape:export-ydpi="68.400002">
   <sodipodi:namedview
@@ -2739,23 +2739,23 @@
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:40.45772171px;line-height:40.45772171px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#d40000;fill-opacity:1;stroke:none;stroke-width:1.6183089px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="395.90787"
-     y="485.55002"
+     x="440.11069"
+     y="462.05426"
      id="text4908"
-     transform="scale(0.95678469,1.0451672)"><tspan
+     transform="scale(0.9567847,1.0451672)"><tspan
        sodipodi:role="line"
        id="tspan4906"
-       x="395.90787"
-       y="485.55002"
+       x="440.11069"
+       y="462.05426"
        style="fill:#d40000;stroke-width:1.6183089px">how power</tspan><tspan
        sodipodi:role="line"
-       x="395.90787"
-       y="526.00775"
+       x="440.11069"
+       y="502.51199"
        style="fill:#d40000;stroke-width:1.6183089px"
        id="tspan4910">tolerant are</tspan><tspan
        sodipodi:role="line"
-       x="395.90787"
-       y="566.46545"
+       x="440.11069"
+       y="542.96967"
        style="fill:#d40000;stroke-width:1.6183089px"
        id="tspan4912">they ?</tspan></text>
   <ellipse
@@ -2869,12 +2869,12 @@
        x="670.61646"
        y="401.0191"
        style="text-align:center;text-anchor:middle;fill:#f2f2f2;stroke-width:0.26370767px"
-       id="tspan563"></tspan><tspan
+       id="tspan563" /><tspan
        sodipodi:role="line"
        x="670.61646"
        y="407.61182"
        style="text-align:center;text-anchor:middle;fill:#f2f2f2;stroke-width:0.26370767px"
-       id="tspan567"></tspan><tspan
+       id="tspan567" /><tspan
        sodipodi:role="line"
        x="670.61646"
        y="414.2045"
@@ -2925,4 +2925,21 @@
        y="130.62187"
        style="stroke-width:0.53918773px"
        id="tspan1407">HM10 possible</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:15.05547333px;line-height:15.05547333px;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000080;fill-opacity:1;stroke:none;stroke-width:0.60221893px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="750.77753"
+     y="111.26424"
+     id="text449"
+     transform="scale(0.83835297,1.192815)"><tspan
+       sodipodi:role="line"
+       id="tspan447"
+       x="750.77753"
+       y="111.26424"
+       style="fill:#000080;stroke-width:0.60221893px">~7h with Bluetooth LED</tspan><tspan
+       sodipodi:role="line"
+       x="750.77753"
+       y="126.31971"
+       style="fill:#000080;stroke-width:0.60221893px"
+       id="tspan451">~13h without</tspan></text>
 </svg>
