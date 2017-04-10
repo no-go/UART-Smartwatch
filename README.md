@@ -42,14 +42,14 @@ Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr 
 
 - Digital (5sec)
 - Analoge (5sec)
-- PitBoy Clock design (5sec)
+- PipBoy Clock design (5sec)
 - Digital for ever
 
 ![digital UART Smartwatch mode](img/digital.png)
 
 ![analoge UART Smartwatch mode](img/analog.png)
 
-![pitboy UART Smartwatch mode](img/pitboy.png)
+![pipBoy UART Smartwatch mode](img/pipboy.png)
 
 ## Circuit
 
