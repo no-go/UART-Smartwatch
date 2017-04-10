@@ -42,6 +42,7 @@ Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr 
 
 - Digital (5sec)
 - Analoge (5sec)
+- PitBoy Clock design (5sec)
 - Digital for ever
 
 ## Circuit
