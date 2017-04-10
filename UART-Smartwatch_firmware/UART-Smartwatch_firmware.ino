@@ -26,8 +26,8 @@
 #define PIN_DC     8
 #define SERIAL_SPEED   9600 // or try 115200
 
-#define MAX_POWER        3440   // or try 3340, 4300, 5000
-#define MIN_POWER        3100   // or try 2740, 3200, 3600
+#define MAX_POWER        3440.0   // or try 3340, 4300, 5000
+#define MIN_POWER        3100.0   // or try 2740, 3200, 3600
 
 // --------------------------------------------------
 
