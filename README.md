@@ -45,6 +45,12 @@ Support me: <a href="https://flattr.com/thing/5195407" target="_blank">![Flattr 
 - PitBoy Clock design (5sec)
 - Digital for ever
 
+![digital UART Smartwatch mode](img/digital.png)
+
+![analoge UART Smartwatch mode](img/analog.png)
+
+![pitboy UART Smartwatch mode](img/pitboy.png)
+
 ## Circuit
 
 ![circuit for the UART Smartwatch](img/circuit.png)

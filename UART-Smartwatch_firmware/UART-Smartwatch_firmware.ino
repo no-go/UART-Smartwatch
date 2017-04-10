@@ -385,7 +385,11 @@ void serialEvent() {
     }
     memoStr[memoStrPos] = oled->umlReplace(inChar);
     memoStrPos++;
-    if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = 0;
+    if (memoStrPos >= MEMOSTR_LIMIT) {
+      // ignore the other chars
+      memoStrPos = MEMOSTR_LIMIT;
+      memoStr[memoStrPos] = '\0';
+    }
   }
 }
 
