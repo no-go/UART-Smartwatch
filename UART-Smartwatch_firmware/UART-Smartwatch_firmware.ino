@@ -513,6 +513,7 @@ inline byte tob(char c) { return c - '0';}
 
 void loop() {
   delay(95); // is < 100 : makes the seconds a bit faster!
+  if(tick == 1) delay(14); // fine tunning ;-)
 
   if (digitalRead(BUTTON2) == LOW || clockMode > 2) {
     delay(300); 
