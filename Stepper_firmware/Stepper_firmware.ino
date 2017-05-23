@@ -458,6 +458,8 @@ inline void ticking() {
     if (seconds > 59) {
       minutes += seconds / 60;
       seconds  = seconds % 60;
+      if (minutes%5 == 0 || steps%500 == 0) Serial.println(steps);
+      
       // modify limits every 1min to make a better re-calibration 
       if (minx > 1 && maxx < 399 && ( (maxx-minx) < MINDIF)) {
         maxx--; minx++;
