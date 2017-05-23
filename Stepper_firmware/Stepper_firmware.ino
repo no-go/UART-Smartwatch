@@ -28,7 +28,7 @@ Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 #define LED_ON     HIGH
 
 #define SERIAL_SPEED   9600
-#define DISPLAYSEC     15
+#define DISPLAYSEC     20
 
 #define SYS_SWITCH A7
 #define MAS_SWITCH A0
@@ -44,7 +44,7 @@ Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
-#define MEMOSTR_LIMIT   115
+#define MEMOSTR_LIMIT   120
 #define STEP_TRESHOLD   0.2
 
 #define MOVIE_X  7
@@ -70,7 +70,7 @@ struct Orient {
 
 enum {NORT, EAS, SOU, WES, FIN};
 
-int storeMode = NORT;
+byte storeMode = NORT;
 Orient north, east, south, west;
 
 char memoStr[MEMOSTR_LIMIT] = {'\0'};
@@ -78,7 +78,7 @@ int  memoStrPos = 0;
 char buffMem;
 int  cEnd  = 0;
 int  cStart= 0;
-int  COUNT = 0;
+byte COUNT = 0;
 
 byte hours   = 0;
 byte minutes = 0;
@@ -89,7 +89,7 @@ int  dsec    = DISPLAYSEC;
 class OledWrapper : public Adafruit_SSD1306 {
   public:
 
-    OledWrapper(int dc, int res, int cs) : Adafruit_SSD1306(dc,res,cs) {}
+    OledWrapper(const int & dc, const int & res, const int & cs) : Adafruit_SSD1306(dc,res,cs) {}
 
     void begin() {
       Adafruit_SSD1306::begin(SSD1306_SWITCHCAPVCC);
@@ -401,28 +401,26 @@ void mesure() {
   }
 }
 
-int readVcc() {
-  int mv;
+void readVcc() {
   ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   delay(10); // Wait for Vref to settle
   ADCSRA |= _BV(ADSC); // Start conversion
   while (bit_is_set(ADCSRA,ADSC)); // measuring
-  mv = ADCL; 
-  mv |= ADCH<<8; 
-  mv = 1126400L / mv;
-  return mv;
+  vcc = ADCL; 
+  vcc |= ADCH<<8; 
+  vcc = 1126400L / vcc;
 }
 
-void balken(int x, int y, int maxVal, int minVal, int val) {
-  if (val <= minVal) {
-    val = 0;
-  } else if(val >= maxVal) {
-    val = maxVal;
+void power(int x, int y) {
+  if (vcc <= MIN_POWER) {
+    vcc = 0;
+  } else if(vcc >= MAX_POWER) {
+    vcc = MAX_POWER;
   } else {
-    val = 35 * (float)(val-minVal)/((float)(maxVal-minVal));
+    vcc = 35 * (float)(vcc-MIN_POWER)/(MAX_POWER-MIN_POWER);
   }
-  oled->rect(    x,   y,                 8, 35+3);
-  oled->rectFill(x+2, y+1+35-val, 4, val);    
+  oled->rect(    x,   y,        8, 38);
+  oled->rectFill(x+2, y+36-vcc, 4, vcc);    
 }
 
 void serialEvent() {
@@ -495,7 +493,7 @@ inline void ticking() {
 }
 void printDirection() {
   oled->setTextSize(1);
-  oled->setCursor(50, 27);
+  oled->setCursor(50, 29);
   if (
     north.x > xx-5 && north.x < xx+5 &&
     north.y > yy-5 && north.y < yy+5 &&
@@ -523,7 +521,7 @@ void printDirection() {
 }
 
 int myFont(int x, int y, byte b) {
-    int he = 18;
+    int he = 25;
     if (b>9) {
       x = myFont(x,y,b/10);
       b = b%10;
@@ -577,19 +575,19 @@ int myFont(int x, int y, byte b) {
 }
 
 void printClock() {
-  oled->line(20, 0, 20 + tick*10, 0);
+  oled->line(17, 0, 17 + tick*10, 0);
 
   if (hours<10) {
-    int xx = myFont(20, 2, 0);
+    int xx = myFont(17, 2, 0);
     myFont(xx, 2, hours);
   } else {
-    myFont(20, 2, hours);
+    myFont(17, 2, hours);
   }
   if (minutes<10) {
-    int xx = myFont(53, 2, 0);
+    int xx = myFont(52, 2, 0);
     myFont(xx, 2, minutes);
   } else {
-    myFont(53, 2, minutes);
+    myFont(52, 2, minutes);
   }
   if (seconds<10) {
     int xx = myFont(86, 2, 0);
@@ -722,11 +720,11 @@ void setup() {
   oled->drawBitmap(56, 20, move0a, 16, 24, WHITE);
   oled->display();
 
-  digitalWrite(SYS_SWITCH, HIGH);
-  digitalWrite(MAS_SWITCH, HIGH);
-  delay(2000);
-  Serial.println("AT+NAMEStep Watch");
-  Serial.println("AT+ROLE0");
+  //digitalWrite(SYS_SWITCH, HIGH);
+  //digitalWrite(MAS_SWITCH, HIGH);
+  //delay(2000);
+  //Serial.println("AT+NAMEStep Watch");
+  //Serial.println("AT+ROLE0");
 
   oled->clearDisplay();
   buffMem = '\0';
@@ -747,9 +745,9 @@ void setup() {
 
 void loop() {
   delay(151);
-
+  readVcc();
+  
   if (seconds == 10) {
-    vcc = readVcc();
     if (vcc < WARN_POWER) {
       powerlow = true;
     } else {
@@ -762,10 +760,9 @@ void loop() {
   oled->setTextSize(1);
   mesure();
   
-  vcc = readVcc();
   oled->line(121,23,124,23);
   oled->line(121,24,124,24);
-  balken(119,25,MAX_POWER,MIN_POWER,vcc);
+  power(119,25);
   
   if (dsec < DISPLAYSEC && cStart < memoStrPos) {
     oled->setCursor(0,22);
@@ -853,7 +850,7 @@ void loop() {
       memoStr[l-2] == 'a' &&
       memoStr[l-1] == 'r') || iconType == MSG_CAL
     ) {
-      oled->drawBitmap(4, 5, icon_calendar, 8, 8, WHITE);
+      oled->drawBitmap(2, 5, icon_calendar, 8, 8, WHITE);
       iconType = MSG_CAL;
     }
     if (
@@ -868,7 +865,7 @@ void loop() {
       memoStr[l-2] == 'n' &&
       memoStr[l-1] == 'g') || iconType == MSG_SMS
     ) {
-      oled->drawBitmap(4, 5, icon_messaging, 8, 8, WHITE);
+      oled->drawBitmap(2, 5, icon_messaging, 8, 8, WHITE);
       iconType = MSG_SMS;
     }
     if (
@@ -881,7 +878,7 @@ void loop() {
       memoStr[l-2] == 'k' &&
       memoStr[l-1] == '9') || iconType == MSG_MAIL
     ) {
-      oled->drawBitmap(4, 5, icon_mail, 8, 8, WHITE);
+      oled->drawBitmap(2, 5, icon_mail, 8, 8, WHITE);
       iconType = MSG_MAIL;
     }
     if (
@@ -896,7 +893,7 @@ void loop() {
       memoStr[l-2] == 'e' &&
       memoStr[l-1] == 'r') || iconType == MSG_OTHER
     ) {
-      oled->drawBitmap(4, 5, icon_other, 8, 8, WHITE);
+      oled->drawBitmap(2, 5, icon_other, 8, 8, WHITE);
       iconType = MSG_OTHER;
     }
   } else {
