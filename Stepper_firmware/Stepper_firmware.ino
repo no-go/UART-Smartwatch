@@ -395,7 +395,10 @@ void mesure() {
   delta =  ab(changes_old - changes);
   changes_old = changes;
 
-  if (delta > STEP_TRESHOLD) steps++;
+  if (delta > STEP_TRESHOLD) {
+    steps++;
+    if (steps%500 == 0) Serial.println(steps);
+  }
 }
 
 int readVcc() {
@@ -458,7 +461,7 @@ inline void ticking() {
     if (seconds > 59) {
       minutes += seconds / 60;
       seconds  = seconds % 60;
-      if (minutes%5 == 0 || steps%500 == 0) Serial.println(steps);
+      if (minutes%5 == 0) Serial.println(steps);
       
       // modify limits every 1min to make a better re-calibration 
       if (minx > 1 && maxx < 399 && ( (maxx-minx) < MINDIF)) {
