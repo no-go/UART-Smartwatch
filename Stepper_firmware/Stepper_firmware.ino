@@ -674,7 +674,7 @@ void loop() {
       oled->off();
       Serial.print("Steps: ");
       Serial.println(steps);
-      Serial.println(vcc);
+      Serial.print(vcc);
       Serial.println(" mv");
     } else {
       powerlow = false;
@@ -747,6 +747,10 @@ void loop() {
       digitalWrite(LED_GREEN, LED_OFF);
       digitalWrite(LED_BLUE,  LED_OFF);
 
+      Serial.print("Steps: ");
+      Serial.println(steps);
+      Serial.print(vcc);
+      Serial.println(" mv");
       wakeUpIcon();
                       
       // "remove" old chars from buffer
