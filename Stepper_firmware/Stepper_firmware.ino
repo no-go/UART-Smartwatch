@@ -322,6 +322,11 @@ void mesure() {
 
   if (delta > STEP_TRESHOLD) {
     steps++;
+    if (steps%20 == 0) {
+      digitalWrite(LED_GREEN,  LED_ON);
+      delay(50);
+      digitalWrite(LED_GREEN,  LED_OFF);
+    }
     if (steps%500 == 0) Serial.println(steps);
   }
 }
@@ -512,26 +517,28 @@ void printClock() {
   
   oled->setTextSize(1);
   if (COUNT > 0) {
-    oled->setCursor(95, 54);
+    oled->setCursor(97, 54);
     oled->print(COUNT);  
   }
 
-  oled->setCursor(119,55);
-  switch(storeMode) {
-    case NORT:
-      oled->print('n');
-      break;
-    case EAS:
-      oled->print('e');
-      break;
-    case SOU:
-      oled->print('s');
-      break;
-    default:
-      oled->print('w');
-  }
-  
   if (delta > 0.05) {
+
+/*
+    oled->setCursor(119,55);
+    switch(storeMode) {
+      case NORT:
+        oled->print('n');
+        break;
+      case EAS:
+        oled->print('e');
+        break;
+      case SOU:
+        oled->print('s');
+        break;
+      default:
+        oled->print('w');
+    }
+*/  
     // moving
     if (tick==0 || tick==1) {
       oled->drawBitmap(MOVIE_X+2*tick, MOVIE_Y, move1, 8, 12, WHITE);
@@ -544,8 +551,8 @@ void printClock() {
     } else {
       oled->drawBitmap(MOVIE_X+2*tick, MOVIE_Y, move3, 8, 12, WHITE);      
     }    
-    oled->setTextSize(2);
-    oled->setCursor(18+2*tick,45);
+    oled->setTextSize(1);
+    oled->setCursor(18+2*tick,55);
     oled->print(steps);
     
   } else {
@@ -566,7 +573,7 @@ void printClock() {
       oled->drawBitmap(MOVIE_X, MOVIE_Y, move0a, 8, 12, WHITE);      
     }
     oled->setTextSize(1);
-    oled->setCursor(18,54);
+    oled->setCursor(18,55);
     oled->print(steps);
   }
 }
