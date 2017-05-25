@@ -669,8 +669,13 @@ void loop() {
   
   if (seconds == 10 || tick == 1) {
     readVcc();
-    if (vcc < WARN_POWER) {
+    if (vcc < WARN_POWER && powerlow == false) {
       powerlow = true;
+      oled->off();
+      Serial.print("Steps: ");
+      Serial.println(steps);
+      Serial.println(vcc);
+      Serial.println(" mv");
     } else {
       powerlow = false;
     }
