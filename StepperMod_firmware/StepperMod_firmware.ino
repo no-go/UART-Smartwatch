@@ -44,8 +44,8 @@ Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
-#define MEMOSTR_LIMIT   120
-#define STEP_TRESHOLD   0.25
+#define MEMOSTR_LIMIT   110
+#define STEP_TRESHOLD   0.125
 
 #define MOVIE_X  7
 #define MOVIE_Y  41
@@ -437,11 +437,12 @@ void serialEvent() {
       buffMem = memoStr[cEnd];
       continue;
     }
+    
     memoStr[memoStrPos] = oled->umlReplace(inChar);
-    memoStrPos++;
+    memoStrPos++;    
     if (memoStrPos >= MEMOSTR_LIMIT) {
       // ignore the other chars
-      memoStrPos = MEMOSTR_LIMIT;
+      memoStrPos = MEMOSTR_LIMIT-1;
       memoStr[memoStrPos] = '\0';
     }
   }
@@ -722,11 +723,11 @@ void setup() {
   oled->drawBitmap(56, 20, move0a, 16, 24, WHITE);
   oled->display();
 
-  //digitalWrite(SYS_SWITCH, HIGH);
-  //digitalWrite(MAS_SWITCH, HIGH);
-  //delay(2000);
-  //Serial.println("AT+NAMEStep Watch");
-  //Serial.println("AT+ROLE0");
+  digitalWrite(SYS_SWITCH, HIGH);
+  digitalWrite(MAS_SWITCH, HIGH);
+  delay(1200);
+  Serial.println("AT+NAMEStep Watch");
+  Serial.println("AT+ROLE0");
 
   oled->clearDisplay();
   buffMem = '\0';

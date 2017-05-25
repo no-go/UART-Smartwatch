@@ -34,9 +34,7 @@ Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 #define MAS_SWITCH A0
 #define BLE_LED    7  //unused
 
-#define MAX_POWER        3380.0   // or try 3340, 4300, 5000
-#define WARN_POWER       3270.0   // or try 3200, 3500, 3600
-#define MIN_POWER        3240.0   // or try 2740, 3200, 3600
+#define WARN_POWER 3270.0   // or try 3200, 3500, 3600
 
 // --------------------------------------------------
 
@@ -44,16 +42,16 @@ Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 #define CHAR_TIME_RESPONSE    '#' //#HH:mm:ss
 #define CHAR_NOTIFY_HINT      '%' //%[byte]
 
-#define MEMOSTR_LIMIT   120
-#define STEP_TRESHOLD   0.2
+#define MEMOSTR_LIMIT   110
+#define STEP_TRESHOLD   0.125
 
 #define MOVIE_X  7
-#define MOVIE_Y  41
+#define MOVIE_Y  52
 
 int  vcc;
 bool powerlow = false;
 
-#define MINDIF    10
+#define MINDIF  10
 
 int xx,yy,zz;
 int minx=400, maxx=0;
@@ -170,162 +168,89 @@ class OledWrapper : public Adafruit_SSD1306 {
 OledWrapper * oled = new OledWrapper(PIN_DC, PIN_RESET, OLED_CS);
 
 
-
-
 static const uint8_t PROGMEM move0a[] = {
-B00001100,B00110000,
-B00001100,B00110000,
-B00001111,B11110000,
-B00001111,B11110000,
-B00110011,B11001100,
-B00110011,B11001100,
-B00110011,B11001100,
-B00110011,B11001100,
-B00001111,B11110000,
-B00001111,B11110000,
-B00000011,B11000000,
-B00000011,B11000000,
-B00001111,B11110000,
-B00001111,B11110000,
-B00110011,B11001100,
-B00110011,B11001100,
-B00000011,B11000000,
-B00000011,B11000000,
-B00001100,B00110000,
-B00001100,B00110000,
-B00001100,B00110000,
-B00001100,B00110000,
-B00111100,B00111100,
-B00111100,B00111100
+B00100100,
+B00111100,
+B01011010,
+B01011010,
+B00111100,
+B00011000,
+B00111100,
+B01011010,
+B00011000,
+B00100100,
+B00100100,
+B01100110
 };
 static const uint8_t PROGMEM move0b[] = { // taps
-B00001100,B00110000,
-B00001100,B00110000,
-B00001111,B11110000,
-B00001111,B11110000,
-B00110011,B11001100,
-B00110011,B11001100,
-B00110011,B11001100,
-B00110011,B11001100,
-B00001111,B11110000,
-B00001111,B11110000,
-B00000011,B11000000,
-B00000011,B11000000,
-B00001111,B11110000,
-B00001111,B11110000,
-B00110011,B11001100,
-B00110011,B11001100,
-B00000011,B11000000,
-B00000011,B11000000,
-B00001100,B00110000,
-B00001100,B00110000,
-B00111100,B00110000,
-B00111100,B00110000,
-B00000000,B00111100,
-B00000000,B00111100
+B00100100,
+B00111100,
+B01011010,
+B01011010,
+B00111100,
+B00011000,
+B00111100,
+B01011010,
+B00011000,
+B00100100,
+B01100100,
+B00000110
 };
 static const uint8_t PROGMEM move0c[] = { // blink
-B00001100,B00110000,
-B00001100,B00110000,
-B00001111,B11110000,
-B00001111,B11110000,
-B00111111,B11111100,
-B00111111,B11111100,
-B00111111,B11111100,
-B00111111,B11111100,
-B00001111,B11110000,
-B00001111,B11110000,
-B00000011,B11000000,
-B00000011,B11000000,
-B00001111,B11110000,
-B00001111,B11110000,
-B00110011,B11001100,
-B00110011,B11001100,
-B00000011,B11000000,
-B00000011,B11000000,
-B00001100,B00110000,
-B00001100,B00110000,
-B00001100,B00110000,
-B00001100,B00110000,
-B00111100,B00111100,
-B00111100,B00111100
+B00100100,
+B00111100,
+B01111110,
+B01111110,
+B00111100,
+B00011000,
+B00111100,
+B01011010,
+B00011000,
+B00100100,
+B00100100,
+B01100110
 };
 static const uint8_t PROGMEM move1[] = {
-B00001111,B11000000,
-B00001111,B11000000,
-B00111111,B11110000,
-B00111111,B11110000,
-B00111111,B11001100,
-B00111111,B11001100,
-B00111111,B11001100,
-B00111111,B11001100,
-B00001111,B11110000,
-B00001111,B11110000,
-B00001111,B11000000,
-B00001111,B11000000,
-B00001111,B11111100,
-B00001111,B11111100,
-B00001111,B11000000,
-B00001111,B11000000,
-B00000011,B11000000,
-B00000011,B11000000,
-B00111111,B11110000,
-B00111111,B11110000,
-B11000000,B00001100,
-B11000000,B00001100,
-B00000000,B00001111,
-B00000000,B00001111
+B00111000,
+B01111100,
+B01111010,
+B01111010,
+B00111100,
+B00111000,
+B00111110,
+B00111000,
+B00011000,
+B01111100,
+B10000010,
+B00000011
 };
 static const uint8_t PROGMEM move2[] = {
-B00001111,B11000000,
-B00001111,B11000000,
-B00111111,B11110000,
-B00111111,B11110000,
-B00111111,B11001100,
-B00111111,B11001100,
-B00111111,B11001100,
-B00111111,B11001100,
-B00001111,B11110000,
-B00001111,B11110000,
-B00001111,B11000000,
-B00001111,B11000000,
-B00001111,B11111100,
-B00001111,B11111100,
-B00001111,B11000000,
-B00001111,B11000000,
-B00000011,B11000000,
-B00000011,B11000000,
-B00111111,B00110000,
-B00111111,B00110000,
-B00110000,B00110000,
-B00110000,B00110000,
-B00110000,B00111100,
-B00110000,B00111100
+B00111000,
+B01111100,
+B01111010,
+B01111010,
+B00111100,
+B00111000,
+B00111110,
+B00111000,
+B00011000,
+B01110100,
+B01000100,
+B01000110
 };
 static const uint8_t PROGMEM move3[] = {
-B00001111,B11000000,
-B00001111,B11000000,
-B00111111,B11110000,
-B00111111,B11110000,
-B00111111,B11001100,
-B00111111,B11001100,
-B00111111,B11001100,
-B00111111,B11001100,
-B00001111,B11110000,
-B00001111,B11110000,
-B00001111,B11000000,
-B00001111,B11000000,
-B00001111,B11111100,
-B00001111,B11111100,
-B00001111,B11000000,
-B00001111,B11000000,
-B00000011,B11000000,
-B00111111,B11110000,
-B00111111,B11110000,
-B00111111,B11110000,
-B00111111,B11110000,
-B00111111,B00000000,
-B00111111,B00000000
+B00111000,
+B01111100,
+B01111010,
+B01111010,
+B00111100,
+B00111000,
+B00111110,
+B00111000,
+B00011000,
+B01111100,
+B01111100,
+B01110000
 };
 
 enum {MSG_NO, MSG_CAL, MSG_MAIL, MSG_SMS, MSG_OTHER};
@@ -411,18 +336,6 @@ void readVcc() {
   vcc = 1126400L / vcc;
 }
 
-void power(int x, int y) {
-  if (vcc <= MIN_POWER) {
-    vcc = 0;
-  } else if(vcc >= MAX_POWER) {
-    vcc = MAX_POWER;
-  } else {
-    vcc = 35 * (float)(vcc-MIN_POWER)/(MAX_POWER-MIN_POWER);
-  }
-  oled->rect(    x,   y,        8, 38);
-  oled->rectFill(x+2, y+36-vcc, 4, vcc);    
-}
-
 void serialEvent() {
   while (Serial.available()) {
     if (memoStrPos >= MEMOSTR_LIMIT) memoStrPos = MEMOSTR_LIMIT;
@@ -437,11 +350,12 @@ void serialEvent() {
       buffMem = memoStr[cEnd];
       continue;
     }
+    
     memoStr[memoStrPos] = oled->umlReplace(inChar);
-    memoStrPos++;
+    memoStrPos++;    
     if (memoStrPos >= MEMOSTR_LIMIT) {
       // ignore the other chars
-      memoStrPos = MEMOSTR_LIMIT;
+      memoStrPos = MEMOSTR_LIMIT-1;
       memoStr[memoStrPos] = '\0';
     }
   }
@@ -493,7 +407,7 @@ inline void ticking() {
 }
 void printDirection() {
   oled->setTextSize(1);
-  oled->setCursor(50, 29);
+  oled->setCursor(50, 34);
   if (
     north.x > xx-5 && north.x < xx+5 &&
     north.y > yy-5 && north.y < yy+5 &&
@@ -521,7 +435,7 @@ void printDirection() {
 }
 
 int myFont(int x, int y, byte b) {
-    int he = 25;
+    int he = 30;
     if (b>9) {
       x = myFont(x,y,b/10);
       b = b%10;
@@ -575,19 +489,17 @@ int myFont(int x, int y, byte b) {
 }
 
 void printClock() {
-  oled->line(17, 0, 17 + tick*10, 0);
-
   if (hours<10) {
-    int xx = myFont(17, 2, 0);
+    int xx = myFont(7, 2, 0);
     myFont(xx, 2, hours);
   } else {
-    myFont(17, 2, hours);
+    myFont(7, 2, hours);
   }
   if (minutes<10) {
-    int xx = myFont(52, 2, 0);
+    int xx = myFont(47, 2, 0);
     myFont(xx, 2, minutes);
   } else {
-    myFont(52, 2, minutes);
+    myFont(47, 2, minutes);
   }
   if (seconds<10) {
     int xx = myFont(86, 2, 0);
@@ -600,16 +512,11 @@ void printClock() {
   
   oled->setTextSize(1);
   if (COUNT > 0) {
-    oled->setCursor(2,14);
+    oled->setCursor(95, 54);
     oled->print(COUNT);  
   }
 
-  oled->setTextSize(2);
-  oled->setCursor(31,45);
-  oled->print(steps);
-
-  oled->setTextSize(1);
-  oled->setCursor(119,0);
+  oled->setCursor(119,55);
   switch(storeMode) {
     case NORT:
       oled->print('n');
@@ -627,33 +534,40 @@ void printClock() {
   if (delta > 0.05) {
     // moving
     if (tick==0 || tick==1) {
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move1, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X+2*tick, MOVIE_Y, move1, 8, 12, WHITE);
     } else if (tick==2 || tick==3) {
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move2, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X+2*tick, MOVIE_Y, move2, 8, 12, WHITE);
     } else if (tick==6 || tick==7 || tick==9) {
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move2, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X+2*tick, MOVIE_Y, move2, 8, 12, WHITE);
     } else if (tick == 8) {
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move1, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X+2*tick, MOVIE_Y, move1, 8, 12, WHITE);
     } else {
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move3, 16, 24, WHITE);      
+      oled->drawBitmap(MOVIE_X+2*tick, MOVIE_Y, move3, 8, 12, WHITE);      
     }    
+    oled->setTextSize(2);
+    oled->setCursor(18+2*tick,45);
+    oled->print(steps);
+    
   } else {
     if (tick == 2) {
       // tap
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0b, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0b, 8, 12, WHITE);
     } else if (tick == 4) {
       // tap
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0b, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0b, 8, 12, WHITE);
     } else if (tick == 6) {
       // tap
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0b, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0b, 8, 12, WHITE);
     } else if (tick == 8) {
       // blink
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0c, 16, 24, WHITE);
+      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0c, 8, 12, WHITE);
     } else {
       // normal
-      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0a, 16, 24, WHITE);      
+      oled->drawBitmap(MOVIE_X, MOVIE_Y, move0a, 8, 12, WHITE);      
     }
+    oled->setTextSize(1);
+    oled->setCursor(18,54);
+    oled->print(steps);
   }
 }
 
@@ -717,12 +631,12 @@ void setup() {
 
   oled->begin();
   oled->clearDisplay();
-  oled->drawBitmap(56, 20, move0a, 16, 24, WHITE);
+  oled->drawBitmap(60, 20, move0a, 8, 12, WHITE);
   oled->display();
 
   //digitalWrite(SYS_SWITCH, HIGH);
   //digitalWrite(MAS_SWITCH, HIGH);
-  //delay(2000);
+  //delay(1200);
   //Serial.println("AT+NAMEStep Watch");
   //Serial.println("AT+ROLE0");
 
@@ -744,10 +658,10 @@ void setup() {
 }
 
 void loop() {
-  delay(151);
-  readVcc();
+  delay(111);
   
-  if (seconds == 10) {
+  if (seconds == 10 || tick == 1) {
+    readVcc();
     if (vcc < WARN_POWER) {
       powerlow = true;
     } else {
@@ -759,10 +673,6 @@ void loop() {
   printClock();
   oled->setTextSize(1);
   mesure();
-  
-  oled->line(121,23,124,23);
-  oled->line(121,24,124,24);
-  power(119,25);
   
   if (dsec < DISPLAYSEC && cStart < memoStrPos) {
     oled->setCursor(0,22);
@@ -850,10 +760,9 @@ void loop() {
       memoStr[l-2] == 'a' &&
       memoStr[l-1] == 'r') || iconType == MSG_CAL
     ) {
-      oled->drawBitmap(2, 5, icon_calendar, 8, 8, WHITE);
+      oled->drawBitmap(86, 55, icon_calendar, 8, 8, WHITE);
       iconType = MSG_CAL;
-    }
-    if (
+    } else if (
       (l > 9 &&
       memoStr[l-9] == 'm' &&
       memoStr[l-8] == 'e' &&
@@ -865,10 +774,9 @@ void loop() {
       memoStr[l-2] == 'n' &&
       memoStr[l-1] == 'g') || iconType == MSG_SMS
     ) {
-      oled->drawBitmap(2, 5, icon_messaging, 8, 8, WHITE);
+      oled->drawBitmap(86, 55, icon_messaging, 8, 8, WHITE);
       iconType = MSG_SMS;
-    }
-    if (
+    } else if (
       (l > 7 &&
       memoStr[l-7] == 'f' &&
       memoStr[l-6] == 's' &&
@@ -878,22 +786,12 @@ void loop() {
       memoStr[l-2] == 'k' &&
       memoStr[l-1] == '9') || iconType == MSG_MAIL
     ) {
-      oled->drawBitmap(2, 5, icon_mail, 8, 8, WHITE);
+      oled->drawBitmap(86, 55, icon_mail, 8, 8, WHITE);
       iconType = MSG_MAIL;
-    }
-    if (
-      (l > 9 &&
-      memoStr[l-9] == 'm' &&
-      memoStr[l-8] == 'e' &&
-      memoStr[l-7] == 's' &&
-      memoStr[l-6] == 's' &&
-      memoStr[l-5] == 'e' &&
-      memoStr[l-4] == 'n' &&
-      memoStr[l-3] == 'g' &&
-      memoStr[l-2] == 'e' &&
-      memoStr[l-1] == 'r') || iconType == MSG_OTHER
+    } else if (
+      (l > 5) || iconType == MSG_OTHER
     ) {
-      oled->drawBitmap(2, 5, icon_other, 8, 8, WHITE);
+      oled->drawBitmap(86, 55, icon_other, 8, 8, WHITE);
       iconType = MSG_OTHER;
     }
   } else {
