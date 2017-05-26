@@ -42,6 +42,9 @@
     the hint will be send, if the number of new messages is above this limit.
     BUT: If you delete a notification, this hint will be send!</string>
 
+    <string name="Trim_Regex">Regex to remove</string>
+    <string name="Trim_Regex_summary">Some notification are very similar. Use a regular expression like (Nachricht von \+?[\d- ]*) to remove this.</string>
+
     <string name="isHm10_use">is HM10 (CC2541)</string>
 
     <string name="exit_title">Restart App Now</string>
@@ -72,7 +75,6 @@
     <string name="toasty">debug hints</string>
     <string name="search">Search device …</string>
     <string name="directSend">send new at once</string>
-
     <string name="paired">paired</string>
     <string name="scan">scan</string>
     <string name="cancel">cancel</string>

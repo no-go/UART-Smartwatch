@@ -9,6 +9,11 @@
             android:summary="@string/dateFormat_summary"
             android:title="@string/dateFormat"/>
         <EditTextPreference
+            android:defaultValue="(Nachricht von \+?[\d- ]*)"
+            android:key="Trim_Regex"
+            android:summary="@string/Trim_Regex_summary"
+            android:title="@string/Trim_Regex"/>
+        <EditTextPreference
             android:defaultValue="200"
             android:key="messageSize"
             android:summary="@string/messageSize_summary"

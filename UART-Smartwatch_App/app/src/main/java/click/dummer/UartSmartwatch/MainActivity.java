@@ -225,6 +225,8 @@ public class MainActivity extends Activity {
                 String message = edtMessage.getText().toString().trim();
                 int messageSize = Integer.parseInt(mPreferences.getString("messageSize", "200"));
                 if (message.length() > messageSize) message = message.substring(0, messageSize);
+                String rege = mPreferences.getString("Trim_Regex", "(Nachricht von \\+?[\\d- ]*)");
+                message = message.replaceAll(rege, "");
                 listMessage.setText(message);
                 sendMsg(message);
                 edtMessage.setText("");
@@ -347,9 +349,12 @@ public class MainActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
+                            SimpleDateFormat ft =
+                                    new SimpleDateFormat("HH:mm:ss");
+                            String timeStr = ft.format(new Date());
                             String text = new String(txValue, "UTF-8");
                             TextView tv = (TextView) findViewById(R.id.receiveText);
-                            tv.setText(text + tv.getText());
+                            tv.setText("[" + timeStr + "] " + text + tv.getText());
                             String timeRequest = mPreferences.getString("timeRequest", "~");
                             if (txValue[0] == timeRequest.charAt(0)) {
                                 COUNT = 0;

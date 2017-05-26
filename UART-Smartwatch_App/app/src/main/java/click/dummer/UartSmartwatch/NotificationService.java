@@ -51,6 +51,7 @@ public class NotificationService extends NotificationListenerService {
         String msg = (String) noti.tickerText;
         String msg2 = extras.getString(Notification.EXTRA_TEXT);
         String msg3 = null;
+        String msg4 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             msg3 = extras.getString(Notification.EXTRA_BIG_TEXT);
         }
@@ -63,16 +64,19 @@ public class NotificationService extends NotificationListenerService {
         rgb.add(Color.blue(noti.ledARGB));
 
         try {
-            Log.d(MainActivity.TAG, title);
-            Log.d(MainActivity.TAG, getPackageName());
-            Log.d(MainActivity.TAG, msg);
-            Log.d(MainActivity.TAG, " "+msg2);
-            Log.d(MainActivity.TAG, " "+msg3);
+            msg4 = extras.getCharSequence("android.text").toString();
+            Log.d(MainActivity.TAG, "title "+title);
+            Log.d(MainActivity.TAG, "pack " + getPackageName());
+            Log.d(MainActivity.TAG, "ticker " +msg);
+            Log.d(MainActivity.TAG, "text "+msg2);
+            Log.d(MainActivity.TAG, "big.text "+msg3);
+            Log.d(MainActivity.TAG, "android.text "+msg4);
             Log.d(MainActivity.TAG, "RGB: " + rgb.get(0) + " " +rgb.get(1) + " " + rgb.get(2) );
         } catch (Exception e) {}
 
-        //if (msg2 != null && msg2.length()>0) msg = msg2;
-        //if (msg3 != null && msg3.length()>0) msg = msg3;
+        if (msg4 != null && msg4.length()>0) msg = msg4;
+        if (msg2 != null && msg2.length()>0) msg = msg2;
+        if (msg3 != null && msg3.length()>0) msg = msg3;
 
         // catch not normal message .-----------------------------
         if (!sbn.isClearable()) return;
@@ -90,11 +94,15 @@ public class NotificationService extends NotificationListenerService {
         lastTitle = title;
         //--------------------------------------------------------
 
+
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int messageLimit = Integer.parseInt(mPreferences.getString("messageLimit", "100"));
+        String rege = mPreferences.getString("Trim_Regex", "(Nachricht von \\+?[\\d- ]*)");
+        msg = msg.replaceAll(rege, "");
+        title = title.replaceAll(rege, "");
 
         Intent i = new  Intent("click.dummer.UartNotify.NOTIFICATION_LISTENER");
-        if (msg.length() > messageLimit) {
+        if (msg.length() > messageLimit && title.length() < messageLimit) {
             msg = title;
         }
         i.putExtra("MSG", msg);

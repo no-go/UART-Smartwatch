@@ -50,6 +50,9 @@
         erreicht ist. Beim Löschen einer Benachrichtigung wird aber weiterhin ein
     Vermerk gesendet.</string>
 
+    <string name="Trim_Regex">Regex Müll</string>
+    <string name="Trim_Regex_summary">Manche Benachrichtigungen sind immer wieder gleich. Nutz einen regulären Ausdruck wie (Nachricht von \+?[\d- ]*), um das zu kürzen.</string>
+
     <string name="isHm10_use">ist HM10 (CC2541)</string>
 
     <string name="packetLimit">Größe der Bluetooth Pakete</string>
