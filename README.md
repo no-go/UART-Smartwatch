@@ -68,6 +68,13 @@ In `stuff/` is a small c program to make you own Smartwatch startup logo:
 - paste it into / replace the hex-chars of `static uint8_t screenmemory [] = {...}`
 - rebuild the UART-Smartwatch Firmware with Arduino IDE
 
+# to do
+
+- make the *aggressive* message getting (rev 3.1) as an option, because
+  the downcounting (how many unread messages) does not work with that
+- better "down and upcounting" to fix the above problem
+
+
 # Sign Of Gratitude
 
 Thank you to [NORDIC SEMICONDUCTOR](http://www.nordicsemi.com/) for the OpenSource App like [nRF UART v2](https://github.com/NordicSemiconductor/Android-nRF-UART) to make it easy to use their products!!
