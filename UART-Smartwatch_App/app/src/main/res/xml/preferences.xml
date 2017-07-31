@@ -28,6 +28,11 @@
             android:key="timeRequest"
             android:summary="@string/timeRequest_summary"
             android:title="@string/timeRequest"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="aggressive_msg"
+            android:title="@string/aggressive_msg"
+            android:summary="@string/aggressive_msg_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -46,16 +51,40 @@
 
     <PreferenceCategory
         android:title="@string/bleLogic">
+
         <EditTextPreference
             android:defaultValue="DE:D2:4A:F4:F9:47"
             android:key="ble_addr"
             android:summary="@string/ble_addr_summary"
             android:title="@string/ble_addr"/>
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="isHm10"
-            android:title="@string/isHm10_use" />
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/device_type_names"
+            android:entryValues="@array/device_type_values"
+            android:key="device_type"
+            android:title="@string/device_type" />
+
+        <EditTextPreference
+            android:defaultValue="00002902-0000-1000-8000-00805f9b34fb"
+            android:key="ble_cccd"
+            android:summary="@string/free_config"
+            android:title="@string/ble_cccd"/>
+        <EditTextPreference
+            android:defaultValue="6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+            android:key="ble_srv"
+            android:summary="@string/free_config"
+            android:title="@string/ble_srv"/>
+        <EditTextPreference
+            android:defaultValue="6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+            android:key="ble_rxuuid"
+            android:summary="@string/free_config"
+            android:title="@string/ble_rxuuid"/>
+        <EditTextPreference
+            android:defaultValue="6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+            android:key="ble_txuuid"
+            android:summary="@string/free_config"
+            android:title="@string/ble_txuuid"/>
 
         <EditTextPreference
             android:defaultValue="8"

@@ -44,6 +44,9 @@ public class NotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean aggrMsg = mPreferences.getBoolean("aggressive_msg", false);
+
         Notification noti = sbn.getNotification();
         Bundle extras = noti.extras;
         String title = extras.getString(Notification.EXTRA_TITLE);
@@ -74,18 +77,18 @@ public class NotificationService extends NotificationListenerService {
             Log.d(MainActivity.TAG, "RGB: " + rgb.get(0) + " " +rgb.get(1) + " " + rgb.get(2) );
         } catch (Exception e) {}
 
-        if (msg4 != null && msg4.length()>0) msg = msg4;
+        if (aggrMsg && msg4 != null && msg4.length()>0) msg = msg4;
         if (msg2 != null && msg2.length()>0) msg = msg2;
         if (msg3 != null && msg3.length()>0) msg = msg3;
 
         // catch not normal message .-----------------------------
         if (!sbn.isClearable()) return;
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (!aggrMsg && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if (sbn.isGroup()) {
                 Log.d(MainActivity.TAG, "is group");
                 return;
             }
-        }*/
+        }
         if (msg == null) return;
         if (msg.equals(lastPost) ) return;
         if (title.equals(lastTitle) ) msg = msg.replaceFirst(title, "");
@@ -95,7 +98,6 @@ public class NotificationService extends NotificationListenerService {
         //--------------------------------------------------------
 
 
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int messageLimit = Integer.parseInt(mPreferences.getString("messageLimit", "100"));
         String rege = mPreferences.getString("Trim_Regex", "(Nachricht von \\+?[\\d- ]*)");
         msg = msg.replaceAll(rege, "");

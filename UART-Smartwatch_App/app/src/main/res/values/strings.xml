@@ -45,8 +45,6 @@
     <string name="Trim_Regex">Regex to remove</string>
     <string name="Trim_Regex_summary">Some notification are very similar. Use a regular expression like (Nachricht von \+?[\d- ]*) to remove this.</string>
 
-    <string name="isHm10_use">is HM10 (CC2541)</string>
-
     <string name="exit_title">Restart App Now</string>
     <string name="exit_message">Because you changed some preferences, it is better to restart the App.</string>
     <string name="check_device_address">Maybe: check the device address</string>
@@ -79,4 +77,30 @@
     <string name="scan">scan</string>
     <string name="cancel">cancel</string>
     <string name="selectDevice">select device</string>
+
+    <string name="device_type">device type</string>
+
+    <string name="free_config">(free config)</string>
+    <string name="ble_cccd">Client Characteristic Configuration Descriptor</string>
+    <string name="ble_srv">RX service</string>
+    <string name="ble_rxuuid">RX char</string>
+    <string name="ble_txuuid">TX char</string>
+
+    <string-array name="device_type_names">
+        <item>nRF51 Bluefruit</item>
+        <item>HM10 - CC2541</item>
+        <item>nRF51822-04AT</item>
+        <item>(free config)</item>
+    </string-array>
+
+    <string-array name="device_type_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="aggressive_msg">aggressive msg</string>
+    <string name="aggressive_msg_summary">This function trys to get any message in the message stream.</string>
+
 </resources>

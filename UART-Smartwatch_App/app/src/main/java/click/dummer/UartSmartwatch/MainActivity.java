@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -47,11 +48,13 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
@@ -179,7 +182,10 @@ public class MainActivity extends Activity {
             finish();
             return;
         }
-
+        try {
+            ActionBar ab = getActionBar();
+            if (ab != null) ab.setTitle(" " + getString(R.string.app_name));
+        } catch (Exception e) {}
 
         // ----------------------------------------------------------
         if (mBtAdapter.isEnabled() && mBtAdapter.isDiscovering()) {

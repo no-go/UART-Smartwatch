@@ -53,8 +53,6 @@
     <string name="Trim_Regex">Regex Müll</string>
     <string name="Trim_Regex_summary">Manche Benachrichtigungen sind immer wieder gleich. Nutz einen regulären Ausdruck wie (Nachricht von \+?[\d- ]*), um das zu kürzen.</string>
 
-    <string name="isHm10_use">ist HM10 (CC2541)</string>
-
     <string name="packetLimit">Größe der Bluetooth Pakete</string>
     <string name="packetLimit_summary">BLE kann max. 20 Bytes an einem Stück senden</string>
     <string name="notConnected">nicht verbunden</string>
@@ -82,4 +80,30 @@
     <string name="scan">scannen</string>
     <string name="cancel">Abbruch</string>
     <string name="selectDevice">wähle ein Gerät</string>
+
+    <string name="device_type">Geräte Type</string>
+
+    <string name="free_config">(frei einstellbar)</string>
+    <string name="ble_cccd">Client Characteristic Configuration Descriptor</string>
+    <string name="ble_srv">RX Service</string>
+    <string name="ble_rxuuid">RX char</string>
+    <string name="ble_txuuid">TX char</string>
+
+    <string-array name="device_type_names">
+        <item>nRF51 Bluefruit</item>
+        <item>HM10 - CC2541</item>
+        <item>nRF51822-04AT</item>
+        <item>(frei einstellbar)</item>
+    </string-array>
+
+    <string-array name="device_type_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="aggressive_msg">Aggressiv MSG</string>
+    <string name="aggressive_msg_summary">Diese Funktion versucht so viele Infos wie möglich aus dem Nachrichten-Stream zu holen.</string>
+
 </resources>

@@ -79,30 +79,6 @@ public class UartService extends Service {
     public UUID    RX_CHAR_UUID;
     public UUID    TX_CHAR_UUID;
 
-    private final static String CCCD_HM10  = "00002902-0000-1000-8000-00805f9b34fb";
-    private final static String SERV_HM10  = "0000ffe0-0000-1000-8000-00805f9b34fb";
-    private final static String RXUID_HM10 = "0000ffe1-0000-1000-8000-00805f9b34fb";
-    private final static String TXUID_HM10 = "0000ffe1-0000-1000-8000-00805f9b34fb";
-
-    private final static String CCCD_nRF  = "00002902-0000-1000-8000-00805f9b34fb";
-    private final static String SERV_nRF  = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-    private final static String RXUID_nRF = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-    private final static String TXUID_nRF = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-
-    public void setHM10(boolean b) {
-        if (b) {
-            CCCD = UUID.fromString(CCCD_HM10);
-            RX_SERVICE_UUID = UUID.fromString(SERV_HM10);
-            RX_CHAR_UUID = UUID.fromString(RXUID_HM10);
-            TX_CHAR_UUID = UUID.fromString(TXUID_HM10);
-        } else {
-            CCCD = UUID.fromString(CCCD_nRF);
-            RX_SERVICE_UUID = UUID.fromString(SERV_nRF);
-            RX_CHAR_UUID = UUID.fromString(RXUID_nRF);
-            TX_CHAR_UUID = UUID.fromString(TXUID_nRF);
-        }
-    }
-
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -176,7 +152,42 @@ public class UartService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        setHM10(mPrefs.getBoolean("isHm10", false));
+        int deviceType = Integer.parseInt(mPrefs.getString("device_type", "0"));
+
+        switch (deviceType) {
+            case 0:
+                // Bluefruit
+                CCCD            = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+                RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+                RX_CHAR_UUID    = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+                TX_CHAR_UUID    = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+                break;
+            case 1:
+                // HM10 (CC2541)
+                CCCD            = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+                RX_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
+                RX_CHAR_UUID    = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+                TX_CHAR_UUID    = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+                break;
+            case 2:
+                // nRF51822-04AT
+                CCCD            = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+                RX_SERVICE_UUID = UUID.fromString("00001234-0000-1000-8000-00805f9b34fb");
+                RX_CHAR_UUID    = UUID.fromString("00001235-0000-1000-8000-00805f9b34fb");
+                TX_CHAR_UUID    = UUID.fromString("00001236-0000-1000-8000-00805f9b34fb");
+                break;
+            default:
+                CCCD            = UUID.fromString(
+                        mPrefs.getString("ble_cccd",   "00002902-0000-1000-8000-00805f9b34fb"));
+                RX_SERVICE_UUID = UUID.fromString(
+                        mPrefs.getString("ble_srv",    "6e400001-b5a3-f393-e0a9-e50e24dcca9e"));
+                RX_CHAR_UUID    = UUID.fromString(
+                        mPrefs.getString("ble_rxuuid", "6e400002-b5a3-f393-e0a9-e50e24dcca9e"));
+                TX_CHAR_UUID    = UUID.fromString(
+                        mPrefs.getString("ble_txuuid", "6e400003-b5a3-f393-e0a9-e50e24dcca9e"));
+                break;
+        }
+
         return mBinder;
     }
 
